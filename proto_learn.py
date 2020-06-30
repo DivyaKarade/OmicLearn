@@ -171,7 +171,7 @@ def main():
 
     if feature_method == 'Manual':
         manual_features = st.multiselect("Manually select proteins", proteins, default=None)
-        top_features = manual_features +  additional_features
+        features = manual_features +  additional_features
 
     if df is not None:
         if class_0 and class_1:
