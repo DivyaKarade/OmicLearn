@@ -22,6 +22,8 @@ with open("__version__.py") as version_file:
 #Todo: Parser for MaxQuant default files
 #Check if proteins are really float
 #ToDo: Include hyperparameters for other optimiziers
+#Better import for excel sheets #
+#SVG Export  Plot.background_fill_color and Plot.border_fill_color
 
 
 blue_color = '#0068c9'
