@@ -114,7 +114,7 @@ def normalize_dataset(X, normalization):
 
     if normalization == 'None':
         pass
-    elif normalization == 'Standard':
+    elif normalization == 'StandardScaler':
         scaler = StandardScaler()
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
     elif normalization == 'MinMaxScaler':
@@ -135,7 +135,7 @@ def normalize_dataset(X, normalization):
     elif normalization == 'QuantileTransformer(uniform)':
         scaler = QuantileTransformer(output_distribution='uniform')
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
-    elif normaliation == 'Normalizer':
+    elif normalization == 'Normalizer':
         scaler = Normalizer()
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
     else:
@@ -213,8 +213,6 @@ def impute_nan(X, missing_value):
         X = X.fillna(X.median(axis=0))
     elif missing_value == 'None':
         pass
-    elif missing_value == 'Mean of column':
-        X.fillna(X.mean())
     else:
         raise NotImplementedError('Method {} not implemented'.format(missing_value))
 

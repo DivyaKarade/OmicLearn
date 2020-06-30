@@ -133,7 +133,8 @@ def main():
 
     if n_missing > 0:
         st.sidebar.markdown('## [Missing value imputation](https://scikit-learn.org/stable/modules/impute.html)')
-        missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer', 'None']
+        #missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer', 'None']
+        missing_values = ['Zero', 'Mean', 'Median', 'None']
         missing_value = selectbox_("Missing value imputation", missing_values)
     else:
         missing_value = 'None'
