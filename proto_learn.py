@@ -134,7 +134,7 @@ def main():
     if n_missing > 0:
         st.sidebar.markdown('## [Missing value imputation](https://scikit-learn.org/stable/modules/impute.html)')
         #missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer', 'None']
-        missing_values = ['Zero', 'Mean', 'Median', 'None']
+        missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer','None']
         missing_value = selectbox_("Missing value imputation", missing_values)
     else:
         missing_value = 'None'
@@ -203,7 +203,7 @@ def main():
                 st.markdown('Using features {}'.format(features))
 
                 X = X[features]
-                X = impute_nan(X, missing_value)
+                X = impute_nan(X, missing_value, random_state)
 
                 st.markdown("Running Cross-Validation")
                 _cv_results, roc_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, st.progress(0))

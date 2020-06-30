@@ -31,6 +31,8 @@ from bokeh.models import HoverTool
 import itertools
 from bokeh.palettes import Dark2_5 as palette
 
+from sklearn.impute import KNNImputer
+
 
 blue_color = '#0068c9'
 red_color = '#f63366'
@@ -200,10 +202,12 @@ def plot_feature_importance(features, feature_importance, pvalues):
     return p
 
 
-def impute_nan(X, missing_value):
+def impute_nan(X, missing_value, random_state):
     """
     Missing value imputation
     """
+
+    #missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer','None']
                 #['SimpleImputer (Zero)', 'SimpleImputer (Mean)', 'SimpleImputer (Median)', 'IterativeImputer', 'KNNImputer', 'None']
     if missing_value == 'Zero':
         X = X.fillna(0)
@@ -213,6 +217,14 @@ def impute_nan(X, missing_value):
         X = X.fillna(X.median(axis=0))
     elif missing_value == 'None':
         pass
+    elif missing_value == 'IterativeImputer':
+        from sklearn.experimental import enable_iterative_imputer
+        from sklearn.impute import IterativeImputer
+        imp_mean = IterativeImputer(random_state=random_state)
+        X = pd.DataFrame(imp_mean.fit_transform(X), columns = X.columns)
+    elif missing_value == 'KNNImputer':
+        imputer = KNNImputer(n_neighbors=2)
+        X = pd.DataFrame(imputer.fit_transform(X), columns = X.columns)
     else:
         raise NotImplementedError('Method {} not implemented'.format(missing_value))
 
