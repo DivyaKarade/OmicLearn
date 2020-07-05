@@ -239,6 +239,7 @@ def main():
                 #st.text('Performed on the last CV split')
 
                 names = ['CV_split {}'.format(_+1) for _ in range(len(split_results))]
+                names.insert(0, 'Sum of all splits')
 
                 st.bokeh_chart(plot_confusion_matrices(class_0, class_1, split_results, names))
 
@@ -261,6 +262,7 @@ def main():
                     st.subheader('Confusion matrix')
 
                     names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
+                    names.insert(0, 'Sum of cohort comparisons')
 
                     st.bokeh_chart(plot_confusion_matrices(class_0, class_1, cohort_results, names))
 

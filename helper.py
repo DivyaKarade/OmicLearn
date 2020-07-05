@@ -33,6 +33,8 @@ from bokeh.palettes import Dark2_5 as palette
 
 from sklearn.impute import KNNImputer
 
+from itertools import chain
+
 from bokeh.io.export import get_svgs
 from io import BytesIO
 import base64
@@ -394,6 +396,13 @@ def calculate_cm(y_test, y_pred):
 def plot_confusion_matrices(class_0, class_1, results, names):
 
     cm_results = [calculate_cm(*_) for _ in results]
+
+    #also include a summary confusion_matrix
+    y_test_ = np.array(list(chain.from_iterable([_[0] for _ in results])))
+    y_pred_ = np.array(list(chain.from_iterable([_[1] for _ in results])))
+
+    cm_results.insert(0, calculate_cm(y_test_, y_pred_))
+
     texts = []
     for j in cm_results:
         texts.append(['{}\n{:.0f} %'.format(_[0], _[1]*100) for _ in zip(*j)])
@@ -403,7 +412,7 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     x_ = [cats[0], cats[0], cats[1], cats[1]]
     y_ = [cats[0], cats[1], cats[1], cats[0]]
 
-    slider = Slider(start=0, end=len(results)-1, value=0, step=1, title='')
+    slider = Slider(start=0, end=len(cm_results)-1, value=0, step=1, title='')
 
     p = figure(x_range=cats, y_range=cats[::-1])
 
