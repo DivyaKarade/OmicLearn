@@ -35,9 +35,9 @@ from sklearn.impute import KNNImputer
 
 from itertools import chain
 
-from bokeh.io.export import get_svgs
 from io import BytesIO
 import base64
+
 
 
 
@@ -564,6 +564,7 @@ def get_svg_download_link(p, name='file.svg'):
     """
     Generates a link for a bokeh plot to be downloaded
     """
+    from bokeh.io.export import get_svgs
     p.output_backend = "svg"
     svgs = get_svgs(p)
     svg = svgs[0]

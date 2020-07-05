@@ -1,19 +1,18 @@
 import streamlit as st
 import pandas as pd
 
+
+xgboost_installed = False
 try:
     from xgboost import XGBClassifier
     import xgboost
     xgboost_installed = True
-except:
-    xgboost_installed = False
-
+except ModuleNotFoundError:
+    st.markdown('Xgboost not installed. To use xgboost install using `conda install py-xgboost`')
 
 from helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
 from helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
 from helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, get_system_report
-
-from helper import get_svg_download_link
 
 from PIL import Image
 icon = Image.open('proto_learn.png')
@@ -21,12 +20,16 @@ icon = Image.open('proto_learn.png')
 with open("__version__.py") as version_file:
     version = version_file.read().strip()
 
-svg_export = True
+from bokeh.io.export import get_svgs
+from helper import get_svg_download_link
+
+svg_export = False
 try:
-    True #Todo include argument
-except:
-    raise
-    svg_export = False
+    import selenium
+    svg_export = True
+except ModuleNotFoundError:
+    st.markdown('Selenium not installed. To use svg export install using `conda install selenium geckodriver firefox -c conda-forge`')
+    pass
 
 #Todo: Parser for MaxQuant default files
 #Check if proteins are really float
