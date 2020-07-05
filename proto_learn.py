@@ -241,7 +241,10 @@ def main():
                 names = ['CV_split {}'.format(_+1) for _ in range(len(split_results))]
                 names.insert(0, 'Sum of all splits')
 
-                st.bokeh_chart(plot_confusion_matrices(class_0, class_1, split_results, names))
+                layout, p  = plot_confusion_matrices(class_0, class_1, split_results, names)
+                st.bokeh_chart(layout)
+                if svg_export:
+                    get_svg_download_link(p, 'cm_cohorts.svg')
 
                 st.subheader('Run Results for {}'.format(classifier))
 
@@ -264,7 +267,12 @@ def main():
                     names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
                     names.insert(0, 'Sum of cohort comparisons')
 
-                    st.bokeh_chart(plot_confusion_matrices(class_0, class_1, cohort_results, names))
+                    layout, p = plot_confusion_matrices(class_0, class_1, cohort_results, names)
+                    st.bokeh_chart(layout)
+                    if svg_export:
+                        get_svg_download_link(p, 'cm.svg')
+
+                        #get_svg_download_link(p, 'confusion_matrix.svg')
 
                     st.subheader('Run Results for {}'.format(classifier))
 

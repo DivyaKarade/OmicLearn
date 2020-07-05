@@ -450,9 +450,8 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     p.add_glyph(source, glyph)
 
     slider.js_on_change('value', callback)
-
     layout = column(div, slider, p)
-    return layout
+    return layout, p
 
 def plot_roc_curve_cv(roc_curve_results):
     """
