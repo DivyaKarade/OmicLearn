@@ -46,9 +46,6 @@ gray_color ='#f3f4f7'
 
 
 def main():
-
-    plots = {}
-
     st.sidebar.image(icon, use_column_width=True)
     st.sidebar.text(version)
 
