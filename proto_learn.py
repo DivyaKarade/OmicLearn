@@ -13,11 +13,20 @@ from helper import make_recording_widget, load_data, transform_dataset, normaliz
 from helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
 from helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, get_system_report
 
+from helper import get_svg_download_link
+
 from PIL import Image
 icon = Image.open('proto_learn.png')
 
 with open("__version__.py") as version_file:
     version = version_file.read().strip()
+
+svg_export = True
+try:
+    True #Todo include argument
+except:
+    raise
+    svg_export = False
 
 #Todo: Parser for MaxQuant default files
 #Check if proteins are really float
@@ -31,7 +40,11 @@ red_color = '#f63366'
 gray_color ='#f3f4f7'
 
 
+
+
 def main():
+
+    plots = {}
 
     st.sidebar.image(icon, use_column_width=True)
     st.sidebar.text(version)
@@ -200,6 +213,9 @@ def main():
                     p = plot_feature_importance(features, feature_importance, p_values)
                     st.bokeh_chart(p, use_container_width=True)
 
+                    if svg_export:
+                        get_svg_download_link(p, 'features.svg')
+
                 st.markdown('Using classifier {}'.format(classifier))
                 #result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
                 st.markdown('Using features {}'.format(features))
@@ -215,6 +231,8 @@ def main():
 
                 p = plot_roc_curve_cv(roc_curve_results)
                 st.bokeh_chart(p)
+                if svg_export:
+                    get_svg_download_link(p, 'roc_curve.svg')
 
 
                 st.subheader('Confusion matrix')
@@ -236,8 +254,9 @@ def main():
                     _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, st.progress(0))
 
                     p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
-
                     st.bokeh_chart(p)
+                    if svg_export:
+                        get_svg_download_link(p, 'roc_curve_cohort.svg')
 
                     st.subheader('Confusion matrix')
 

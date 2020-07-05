@@ -33,6 +33,11 @@ from bokeh.palettes import Dark2_5 as palette
 
 from sklearn.impute import KNNImputer
 
+from bokeh.io.export import get_svgs
+from io import BytesIO
+import base64
+
+
 
 blue_color = '#0068c9'
 red_color = '#f63366'
@@ -438,7 +443,6 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     slider.js_on_change('value', callback)
 
     layout = column(div, slider, p)
-
     return layout
 
 def plot_roc_curve_cv(roc_curve_results):
@@ -548,3 +552,16 @@ def get_system_report():
     report['sklearn_version'] = sklearn.__version__
 
     return report
+
+def get_svg_download_link(p, name='file.svg'):
+    """
+    Generates a link for a bokeh plot to be downloaded
+    """
+    p.output_backend = "svg"
+    svgs = get_svgs(p)
+    svg = svgs[0]
+
+    b64 = base64.b64encode(svg.encode('utf-8')).decode("utf-8")
+    href = f'<a href="data:image/svg+xml;base64,%s" download="%s" >Download as *.svg</a>' % (b64, name)
+
+    st.markdown(href, unsafe_allow_html=True)
