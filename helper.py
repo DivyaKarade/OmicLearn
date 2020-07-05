@@ -125,28 +125,28 @@ def normalize_dataset(X, normalization):
         pass
     elif normalization == 'StandardScaler':
         scaler = StandardScaler()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'MinMaxScaler':
         scaler = MinMaxScaler()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'MaxAbsScaler':
         scaler = MaxAbsScaler()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'RobustScaler':
         scaler = RobustScaler()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'PowerTransformer':
         scaler = PowerTransformer()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'QuantileTransformer(Gaussian)':
         scaler = QuantileTransformer(output_distribution='normal')
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'QuantileTransformer(uniform)':
         scaler = QuantileTransformer(output_distribution='uniform')
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'Normalizer':
         scaler = Normalizer()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     else:
         raise NotImplementedError('Normalization not implemented')
 
@@ -322,7 +322,6 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
     for metric_name, metric_fct in scorer_dict.items():
 
         _cohort_results[metric_name] = []
-
 
     cohorts = subset[cohort_column].unique().tolist()
     cohort_combos = []
