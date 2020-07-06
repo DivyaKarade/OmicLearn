@@ -29,7 +29,6 @@ try:
     svg_export = True
 except ModuleNotFoundError:
     st.markdown('Selenium not installed. To use svg export install using `conda install selenium geckodriver firefox -c conda-forge`')
-    pass
 
 #Todo: Parser for MaxQuant default files
 #Check if proteins are really float
@@ -46,6 +45,18 @@ gray_color ='#f3f4f7'
 
 
 def main():
+    hide_menu_style = """
+        <style>
+        #MainMenu {visibility: hidden;}
+        </style>
+        """
+    st.markdown(hide_menu_style, unsafe_allow_html=True)
+    hide_footer_style = """
+    <style>
+    .reportview-container .main footer {visibility: hidden;}
+    """
+    st.markdown(hide_footer_style, unsafe_allow_html=True)
+
     st.sidebar.image(icon, use_column_width=True)
     st.sidebar.text(version)
 
@@ -64,7 +75,7 @@ def main():
     multiselect = make_recording_widget(st.multiselect, widget_values)
 
     st.title("Clinical Proteomics Machine Learning Tool")
-    st.text("* Upload your excel / csv file here.")
+    st.text("* Upload your excel / csv file here. Maximum size is 200 Mb.")
     st.text("* Each row corresponds to a sample, each column to a feature")
     st.text("* Protein names should be uppercase")
     st.text("* Additional features should be marked with a leading '_'")
