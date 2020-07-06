@@ -18,6 +18,15 @@ To use SVVG export:
 `streamlit run proto_learn.py --browser.gatherUsageStats False`
 
 
+## Running Docker
+Need to rely on the relatively large conda environment 
+
+`docker build -f Dockerfile -t proto_learn:latest .`
+`docker run -p 8501:8501 proto_learn:latest`
+
+Access via `http://localhost:8501`
+
+
 ## Todo
 
-* Check selenium integration and deactivate if not installed. 
+* Check selenium integration and deactivate if not installed.
