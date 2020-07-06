@@ -8,7 +8,7 @@ import sklearn
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer, Normalizer
 
 from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
-from xgboost import XGBClassifier
+
 import numpy as np
 
 from sklearn.feature_selection import mutual_info_classif, f_classif
@@ -242,6 +242,7 @@ def return_classifier(classifier, random_state):
     Returns classifier object based on name
     """
     if classifier == 'XGBoost':
+        from xgboost import XGBClassifier
         clf = XGBClassifier(random_state = random_state)
     elif classifier == 'LogisticRegression':
         clf = linear_model.LogisticRegression(random_state = random_state)
