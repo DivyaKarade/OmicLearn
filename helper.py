@@ -153,10 +153,10 @@ def normalize_dataset(X, normalization):
     return X
 
 
-def select_features(feature_method, X, y, max_features):
+def select_features(feature_method, X, y, max_features, random_state):
 
     if feature_method == 'DecisionTree':
-        clf = tree.DecisionTreeClassifier()
+        clf = tree.DecisionTreeClassifier(random_state = random_state)
         clf = clf.fit(X.fillna(0), y)
         feature_importance = clf.feature_importances_
         top_sortindex = np.argsort(feature_importance)[::-1]

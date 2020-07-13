@@ -220,7 +220,7 @@ def main():
                 if feature_method == 'Manual':
                     pass
                 else:
-                    features, feature_importance, p_values = select_features(feature_method, X, y, max_features)
+                    features, feature_importance, p_values = select_features(feature_method, X, y, max_features, random_state)
                     p = plot_feature_importance(features, feature_importance, p_values)
                     st.bokeh_chart(p, use_container_width=True)
 
