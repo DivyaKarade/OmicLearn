@@ -9,7 +9,7 @@ Machine learning for proteomics data
 To use Xgboost:
 * `conda install py-xgboost`
 
-To use SVVG export:
+To use SVG export:
 
 * `conda install selenium geckodriver firefox -c conda-forge`
 
@@ -17,15 +17,13 @@ To use SVVG export:
 
 `streamlit run proto_learn.py --browser.gatherUsageStats False`
 
-
 ## Running Docker
-Need to rely on the relatively large conda environment 
+Need to rely on the relatively large conda environment
 
 `docker build -f Dockerfile -t proto_learn:latest .`
 `docker run -p 8501:8501 proto_learn:latest`
 
 Access via `http://localhost:8501`
-
 
 ## Todo
 
