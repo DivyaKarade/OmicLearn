@@ -1,30 +1,9 @@
-# proto_learn
+# 🧪 Proto Learn
 Machine learning for proteomics data
 
-## Installation
+<p align="center"> <img src="https://raw.githubusercontent.com/OmicEra/proto_learn/master/proto_learn.png?token=AL3BHZXRE2OMHRXFAWINQYS7C73W2" height="240" width="277" /> </p>
+<h2 align="center"> 📰 Manual and Documentation is available at: <a href="https://github.com/OmicEra/proto_learn/wiki">Proto Learn Wiki Page </a> </h2>
 
-* `conda create --name proto-learn python=3.7`
-* `pip install -r requirements.txt`
+---
 
-To use Xgboost:
-* `conda install py-xgboost`
-
-To use SVG export:
-
-* `conda install selenium geckodriver firefox -c conda-forge`
-
-## Running
-
-`streamlit run proto_learn.py --browser.gatherUsageStats False`
-
-## Running Docker
-Need to rely on the relatively large conda environment
-
-`docker build -f Dockerfile -t proto_learn:latest .`
-`docker run -p 8501:8501 proto_learn:latest`
-
-Access via `http://localhost:8501`
-
-## Todo
-
-* Check selenium integration and deactivate if not installed.
+Coming soon!
