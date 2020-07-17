@@ -104,7 +104,7 @@ def main():
 
         st.subheader("Features")
         option = st.selectbox("Select target column", not_proteins)
-        st.text("Unique elements in {}".format(option))
+        st.markdown("Unique elements in `{}` column.".format(option))
         unique_elements = df_sub[option].value_counts()
 
         st.write(unique_elements)
@@ -211,9 +211,9 @@ def main():
                     if svg_export:
                         get_svg_download_link(p, 'features.svg')
 
-                st.markdown('Using classifier {}'.format(classifier))
+                st.markdown('Using classifier `{}`.'.format(classifier))
                 #result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
-                st.markdown('Using features {}'.format(features))
+                st.markdown('Using features `{}`.'.format(features))
 
                 X = X[features]
                 X = impute_nan(X, missing_value, random_state)
