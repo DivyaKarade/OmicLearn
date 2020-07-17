@@ -38,56 +38,56 @@ def main():
 
     # External CSS
     main_external_css = """
-    <style>
-        #MainMenu, .reportview-container .main footer {display: none;}
-    </style>
+        <style>
+            #MainMenu, .reportview-container .main footer {display: none;}
+        </style>
     """
     st.markdown(main_external_css, unsafe_allow_html=True)
-
     st.sidebar.image(icon, use_column_width=True, caption="Proto Learn v" + version,)
 
     widget_values = {}
     n_missing = 0
-
     class_0, class_1 = None, None
 
-    #Sidebar widgets
+    # Sidebar widgets
     button_ = make_recording_widget(st.sidebar.button, widget_values)
     slider_ = make_recording_widget(st.sidebar.slider, widget_values)
     multiselect_ = make_recording_widget(st.sidebar.multiselect, widget_values)
     number_input_ = make_recording_widget(st.sidebar.number_input, widget_values)
     selectbox_ = make_recording_widget(st.sidebar.selectbox, widget_values)
-
     multiselect = make_recording_widget(st.multiselect, widget_values)
 
+    # Main Page
     st.title("Clinical Proteomics Machine Learning Tool")
-    st.text("* Upload your excel / csv file here. Maximum size is 200 Mb.")
-    st.text("* Each row corresponds to a sample, each column to a feature")
-    st.text("* Protein names should be uppercase")
-    st.text("* Additional features should be marked with a leading '_'")
-
+    st.info(""" 
+        * Upload your excel / csv file here. Maximum size is 200 Mb.
+        * Each row corresponds to a sample, each column to a feature
+        * Protein names should be uppercase
+        * Additional features should be marked with a leading '_'
+    """)
     st.sidebar.title("Options")
     st.subheader("Dataset")
-    file_buffer = st.file_uploader("Upload dataset below", type=["csv", "xlsx"])
-    sample_file = st.selectbox("Or select sample file here:", ['None','Sample'])
-
+    file_buffer = st.file_uploader("Upload your dataset below", type=["csv", "xlsx"])
+    sample_file = st.selectbox("Or select sample file here:", ["None", "Sample"])
     df = load_data(file_buffer)
 
+    # Checkpoint for whether data uploaded/selected
     if len(df) == 0:
         if sample_file != 'None':
             df = pd.read_excel('data/sample_data.xlsx')
             st.write(df)
         else:
-            st.text('No dataset uploaded.')
+            st.error('No dataset uploaded.')
     else:
-        st.write(df)
+        st.dataframe(df)
 
     n_missing = df.isnull().sum().sum()
 
     if len(df) > 0:
         if n_missing > 0:
-            st.text('Found {} missing values. Use missing value imputation or xgboost classifier.'.format(n_missing))
+            st.warning('Found {} missing values. Use missing value imputation or xgboost classifier.'.format(n_missing))
 
+        # Distinguish the proteins from others
         proteins = [_ for _ in df.columns.to_list() if _[0] != '_']
         not_proteins = [_ for _ in df.columns.to_list() if _[0] == '_']
 
@@ -105,16 +105,14 @@ def main():
         st.subheader("Features")
         option = st.selectbox("Select target column", not_proteins)
         st.text("Unique elements in {}".format(option))
-
         unique_elements = df_sub[option].value_counts()
 
         st.write(unique_elements)
-
         unique_elements_lst = unique_elements.index.tolist()
 
         st.subheader("Define classes".format(option))
 
-
+        # Define classes
         class_0 = multiselect("Class 0", unique_elements_lst, default=None)
         class_1 = multiselect("Class 1", [_ for _ in unique_elements_lst if _ not in class_0], default=None)
 
