@@ -134,9 +134,8 @@ def main():
         st.text('Select cohort column to train on one and predict on another')
         cohort_column = st.selectbox("Select cohort column", ['None']+not_proteins)
 
-
+    # Sidebar widgets
     random_state = st.sidebar.slider("RandomState", min_value = 0, max_value = 99, value=23)
-
     st.sidebar.markdown('## [Preprocessing](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html)')
     normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'MaxAbsScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer(Gaussian)','QuantileTransformer(uniform)','Normalizer']
     normalization = selectbox_("Normalization", normalizations)
@@ -172,7 +171,6 @@ def main():
     if classifier == 'AdaBoost':
         n_estimators = number_input_('number of estimators', value = 100, min_value = 1, max_value = 2000)
 
-
     st.sidebar.markdown('## [Cross Validation](https://scikit-learn.org/stable/modules/cross_validation.html)')
     cv_splits = number_input_('CV Splits', min_value = 2, max_value = 10, value=5)
     cv_repeats = number_input_('CV Repeats', min_value = 1, max_value = 50, value=10)
@@ -192,7 +190,7 @@ def main():
 
                 class_names = [df[option].value_counts().index[0], df_sub[option].value_counts().index[1]]
 
-                st.markdown("Using the following identifiers: Class 0 {}, Class 1 {}".format(class_0, class_1))
+                st.markdown("Using the following identifiers: Class 0 `{}`, Class 1 `{}`".format(class_0, class_1))
                 subset = df_sub[df_sub[option].isin(class_0) | df_sub[option].isin(class_1)].copy()
 
                 st.write(subset[option].value_counts())
@@ -241,7 +239,7 @@ def main():
                 if svg_export:
                     get_svg_download_link(p, 'cm_cohorts.svg')
 
-                st.subheader('Run Results for {}'.format(classifier))
+                st.subheader('Run Results for `{}`'.format(classifier))
 
                 summary = pd.DataFrame(_cv_results).describe()
                 st.write(pd.DataFrame(summary))
@@ -269,7 +267,7 @@ def main():
 
                         #get_svg_download_link(p, 'confusion_matrix.svg')
 
-                    st.subheader('Run Results for {}'.format(classifier))
+                    st.subheader('Run Results for `{}`'.format(classifier))
 
                     summary = pd.DataFrame(_cohort_results).describe()
                     st.write(pd.DataFrame(summary))
