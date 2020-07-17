@@ -29,34 +29,22 @@ except ModuleNotFoundError:
 with open("./utils/__version__.py") as version_file:
     version = version_file.read().strip()
 
-# Set color variables
+# Set color palette
 blue_color = '#0068c9'
 red_color = '#f63366'
 gray_color ='#f3f4f7'
 
-
-#Todo: Parser for MaxQuant default files
-#Check if proteins are really float
-#ToDo: Include hyperparameters for other optimiziers
-#Better import for excel sheets #
-#SVG Export  Plot.background_fill_color and Plot.border_fill_color
-
-
 def main():
-    hide_menu_style = """
-        <style>
-        #MainMenu {visibility: hidden;}
-        </style>
-        """
-    st.markdown(hide_menu_style, unsafe_allow_html=True)
-    hide_footer_style = """
-    <style>
-    .reportview-container .main footer {visibility: hidden;}
-    """
-    st.markdown(hide_footer_style, unsafe_allow_html=True)
 
-    st.sidebar.image(icon, use_column_width=True)
-    st.sidebar.text(version)
+    # External CSS
+    main_external_css = """
+    <style>
+        #MainMenu, .reportview-container .main footer {display: none;}
+    </style>
+    """
+    st.markdown(main_external_css, unsafe_allow_html=True)
+
+    st.sidebar.image(icon, use_column_width=True, caption="Proto Learn v" + version,)
 
     widget_values = {}
     n_missing = 0
