@@ -1,47 +1,45 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
+from bokeh.io.export import get_svgs
+from utils.helper import get_svg_download_link
+from utils.helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
+from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
+from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, get_system_report
+from PIL import Image
+icon = Image.open('./utils/proto_learn.png')
 
-
+# Checkpoint for XGBoost
 xgboost_installed = False
 try:
     from xgboost import XGBClassifier
     import xgboost
     xgboost_installed = True
 except ModuleNotFoundError:
-    st.markdown('Xgboost not installed. To use xgboost install using `conda install py-xgboost`')
+    st.error('Xgboost not installed. To use xgboost install using `conda install py-xgboost`')
 
-from helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
-from helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
-from helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, get_system_report
-
-from PIL import Image
-icon = Image.open('proto_learn.png')
-
-with open("__version__.py") as version_file:
-    version = version_file.read().strip()
-
-from bokeh.io.export import get_svgs
-from helper import get_svg_download_link
-
+# Checkpoint for Selenium
 svg_export = False
 try:
     import selenium
     svg_export = True
 except ModuleNotFoundError:
-    st.markdown('Selenium not installed. To use svg export install using `conda install selenium geckodriver firefox -c conda-forge`')
+    st.error('Selenium not installed. To use svg export install using `conda install selenium geckodriver firefox -c conda-forge`')
+
+# Get Version
+with open("./utils/__version__.py") as version_file:
+    version = version_file.read().strip()
+
+# Set color variables
+blue_color = '#0068c9'
+red_color = '#f63366'
+gray_color ='#f3f4f7'
+
 
 #Todo: Parser for MaxQuant default files
 #Check if proteins are really float
 #ToDo: Include hyperparameters for other optimiziers
 #Better import for excel sheets #
 #SVG Export  Plot.background_fill_color and Plot.border_fill_color
-
-
-blue_color = '#0068c9'
-red_color = '#f63366'
-gray_color ='#f3f4f7'
-
-
 
 
 def main():
@@ -89,7 +87,7 @@ def main():
 
     if len(df) == 0:
         if sample_file != 'None':
-            df = pd.read_excel('sample_data.xlsx')
+            df = pd.read_excel('data/sample_data.xlsx')
             st.write(df)
         else:
             st.text('No dataset uploaded.')
