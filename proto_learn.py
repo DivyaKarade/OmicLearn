@@ -203,11 +203,12 @@ def main():
                     pass
                 else:
                     features, feature_importance, p_values = select_features(feature_method, X, y, max_features, random_state)
-                    p = plot_feature_importance(features, feature_importance, p_values)
-                    st.bokeh_chart(p, use_container_width=True)
-
-                    if svg_export:
-                        get_svg_download_link(p, 'features.svg')
+                    p, feature_df = plot_feature_importance(features, feature_importance, p_values)
+                    st.plotly_chart(p, use_container_width=True)
+                    st.dataframe(feature_df)
+                    
+                    # if svg_export:
+                    #     get_svg_download_link(p, 'sil.svg')
 
                 st.markdown('Using classifier `{}`.'.format(classifier))
                 #result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
