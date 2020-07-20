@@ -38,7 +38,9 @@ from itertools import chain
 from io import BytesIO
 import base64
 
-
+# Plotly Graphs
+import plotly.express as px
+import plotly.graph_objects as go
 
 
 blue_color = '#0068c9'
@@ -193,20 +195,20 @@ def plot_feature_importance(features, feature_importance, pvalues):
     """
     Creates a bokeh barplot to plot feature importance
     """
+    
     n_features = len(features)
-
-    p = figure(y_range=features, title='Top {} features'.format(n_features), tooltips =[("Name", "@Name"), ("Importance", "@Feature_importance"),("p-value", "@P_value")], tools="pan,reset,save,wheel_zoom")
-
     feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance','P_value'])
-    p.hbar(right='Feature_importance', y='Name', source=feature_df, height=0.9, line_color='white', color=red_color)
 
-    p.xgrid.grid_line_color = None
-    p.ygrid.grid_line_color = None
-    p.x_range.start = 0
-    p.legend.orientation = "horizontal"
-    p.legend.location = "top_center"
+    p = px.bar(feature_df, x="Feature_importance", y="Name", color='Name', orientation='h',
+            hover_data=["Name", "Feature_importance", "P_value"],
+            labels={
+                    "Feature_importance": "Feature importance",
+            },
+            height=600,
+            title='Top {} features'.format(n_features))
+    p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)',)
+    return p, feature_df
 
-    return p
 
 
 def impute_nan(X, missing_value, random_state):
