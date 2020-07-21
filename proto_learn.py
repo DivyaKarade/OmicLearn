@@ -222,7 +222,7 @@ def main():
                 st.subheader('Receiver operating characteristic')
 
                 p = plot_roc_curve_cv(roc_curve_results)
-                st.bokeh_chart(p)
+                st.plotly_chart(p)
                 # if svg_export:
                 #     get_svg_download_link(p, 'roc_curve.svg')
 
