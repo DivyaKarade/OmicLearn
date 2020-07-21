@@ -186,15 +186,13 @@ def main():
             if st.button('Run Analysis',key='run'):
                 proteins = [_ for _ in proteins if _ not in exclude_features]
 
+                # Feature Selection
                 st.subheader("Feature selection")
-
                 class_names = [df[option].value_counts().index[0], df_sub[option].value_counts().index[1]]
-
                 st.markdown("Using the following identifiers: Class 0 `{}`, Class 1 `{}`".format(class_0, class_1))
                 subset = df_sub[df_sub[option].isin(class_0) | df_sub[option].isin(class_1)].copy()
 
                 st.write(subset[option].value_counts())
-
                 y = subset[option].isin(class_0) #is class 0 will be 1!
                 X = transform_dataset(subset, additional_features, proteins)
                 X = normalize_dataset(X, normalization)
@@ -208,7 +206,7 @@ def main():
                     st.dataframe(feature_df)
                     
                     # if svg_export:
-                    #     get_svg_download_link(p, 'sil.svg')
+                    #     get_svg_download_link(p, 'feature_importance.svg')
 
                 st.markdown('Using classifier `{}`.'.format(classifier))
                 #result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
@@ -217,16 +215,16 @@ def main():
                 X = X[features]
                 X = impute_nan(X, missing_value, random_state)
 
+                # Cross-Validation                
                 st.markdown("Running Cross-Validation")
                 _cv_results, roc_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, st.progress(0))
-
                 st.header('Cross-Validation')
                 st.subheader('Receiver operating characteristic')
 
                 p = plot_roc_curve_cv(roc_curve_results)
                 st.bokeh_chart(p)
-                if svg_export:
-                    get_svg_download_link(p, 'roc_curve.svg')
+                # if svg_export:
+                #     get_svg_download_link(p, 'roc_curve.svg')
 
 
                 st.subheader('Confusion matrix')
