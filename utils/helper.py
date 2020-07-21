@@ -193,13 +193,14 @@ def select_features(feature_method, X, y, max_features, random_state):
 
 def plot_feature_importance(features, feature_importance, pvalues):
     """
-    Creates a bokeh barplot to plot feature importance
+    Creates a Plotly barplot to plot feature importance
     """
     
     n_features = len(features)
     feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance','P_value'])
 
-    p = px.bar(feature_df, x="Feature_importance", y="Name", color='Name', orientation='h',
+    p = px.bar(feature_df, x="Feature_importance", y="Name", color='Name', 
+            orientation='h',
             hover_data=["Name", "Feature_importance", "P_value"],
             labels={
                     "Feature_importance": "Feature importance",
@@ -208,7 +209,6 @@ def plot_feature_importance(features, feature_importance, pvalues):
             title='Top {} features'.format(n_features))
     p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)',)
     return p, feature_df
-
 
 
 def impute_nan(X, missing_value, random_state):
@@ -456,24 +456,18 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     return layout, p
 
 def plot_roc_curve_cv(roc_curve_results):
-    """
-    Plot roc curve for cross validation
-
-    """
+    """Plot roc curve for cross validation"""
 
     tprs = []
     base_fpr = np.linspace(0, 1, 101)
     roc_aucs = []
-    hover = HoverTool(names=["mean"])
-
-    p = figure(tooltips =[("False positive rate", "@base_fpr"),("True positive rate, upper", "@upper"), ("True positive rate, mean", "@mean_tprs"), ("True positive rate, lower", "@lower")], tools=[hover,"pan,reset,save,wheel_zoom"])
+    p = go.Figure()
 
     for fpr, tpr, threshold in roc_curve_results:
         roc_auc = auc(fpr, tpr)
         roc_aucs.append(roc_auc)
-
-        p.line(fpr, tpr, color=blue_color, alpha=0.1)
-
+        hover_text = "FPR: " + str(fpr) + "| TPR: " + str(tpr)
+        p.add_trace(go.Scatter(x=fpr, y=tpr, text=hover_text, hoverinfo='text', mode='lines', line=dict(color=blue_color), showlegend=False))
         tpr = np.interp(base_fpr, fpr, tpr)
         tpr[0]=0.0
         tprs.append(tpr)
@@ -481,25 +475,32 @@ def plot_roc_curve_cv(roc_curve_results):
     tprs = np.array(tprs)
     mean_tprs = tprs.mean(axis=0)
     std = tprs.std(axis=0)
-
     tprs_upper = mean_tprs + std
     tprs_lower = mean_tprs - std
-
     mean_rocauc = np.mean(roc_aucs).round(2)
     sd_rocauc = np.std(roc_aucs).round(2)
-
     roc_df = pd.DataFrame({'base_fpr':base_fpr,'mean_tprs':mean_tprs,'lower':tprs_lower,'upper':tprs_upper})
 
-    p.varea(base_fpr, tprs_lower, tprs_upper, color='gray', alpha=0.5, legend = '±1 std. dev')
-    p.line(x = 'base_fpr', y='mean_tprs', source = roc_df, color='black', line_width=2, name = 'mean', legend = 'Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc))
-    p.line([0, 1], [0, 1], line_color =red_color, line_dash ='dashed')
+    p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill='tozeroy', line_color='gray', opacity=0.5, name='±1 std. dev'))
+    p.add_trace(go.Scatter(x=base_fpr, y=mean_tprs, hoverinfo='x+y', line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc)))
+    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), showlegend=False))
 
-    p.legend.location = "bottom_right"
-    p.xgrid.grid_line_color = None
-    p.ygrid.grid_line_color = None
-    p.xaxis.axis_label = 'False Positive Rate'
-    p.yaxis.axis_label = 'True Positive Rate'
-
+    #hover_data=[("False positive rate", "@base_fpr"),("True positive rate, upper", "@upper"), ("True positive rate, mean", "@mean_tprs"), ("True positive rate, lower", "@lower")]
+    p.update_layout(autosize=True,
+                    width=800,
+                    height=700,
+                    xaxis_title='False Positive Rate',
+                    yaxis_title='True Positive Rate', 
+                    xaxis_showgrid=False, 
+                    yaxis_showgrid=False, 
+                    plot_bgcolor= 'rgba(0, 0, 0, 0)',
+                    legend=dict(
+                            orientation="h",
+                            yanchor="bottom",
+                            y=1.02,
+                            xanchor="right",
+                            x=1
+                        ))
     return p
 
 
@@ -556,7 +557,6 @@ def get_system_report():
     """
 
     report = {}
-
     report['python_version'] = sys.version[:5]
     report['pandas_version'] = pd.__version__
     report['sklearn_version'] = sklearn.__version__
