@@ -6,11 +6,3 @@
 Machine learning for proteomics data
 
 **More details coming soon**
-
-## :hash: TO-DO List
-
-- [x] ~~File organization~~
-- [ ] Parser for MaxQuant default files
-- [ ] Include hyperparameters for other optimiziers
-- [ ] Better import for excel sheets
-- [ ] SVG Export  Plot.background_fill_color and Plot.border_fill_color
