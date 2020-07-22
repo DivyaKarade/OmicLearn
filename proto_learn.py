@@ -170,7 +170,7 @@ def main():
     if classifier == 'AdaBoost':
         n_estimators = number_input_('number of estimators', value = 100, min_value = 1, max_value = 2000)
 
-    st.sidebar.markdown('## [Cross Validation](https://scikit-learn.org/stable/modules/cross_validation.html)')
+    st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Cross-Validation)')
     cv_splits = number_input_('CV Splits', min_value = 2, max_value = 10, value=5)
     cv_repeats = number_input_('CV Repeats', min_value = 1, max_value = 50, value=10)
 
