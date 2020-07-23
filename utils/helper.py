@@ -207,7 +207,9 @@ def plot_feature_importance(features, feature_importance, pvalues):
             },
             height=600,
             title='Top {} features'.format(n_features))
-    p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)',)
+    p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)')
+    p.update_xaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     return p, feature_df
 
 
@@ -488,6 +490,8 @@ def plot_roc_curve_cv(roc_curve_results):
     p.add_trace(go.Scatter(x=base_fpr, y=mean_tprs, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc)))
     p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), showlegend=False))
 
+    p.update_xaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     p.update_layout(autosize=True,
                     width=800,
                     height=700,
@@ -497,17 +501,16 @@ def plot_roc_curve_cv(roc_curve_results):
                     yaxis_showgrid=False,
                     plot_bgcolor= 'rgba(0, 0, 0, 0)',
                     yaxis = dict(
-                    scaleanchor = "x",
-                    scaleratio = 1,
-                    zeroline=True,
-                    ),
-                    legend=dict(
-                            orientation="h",
-                            yanchor="bottom",
-                            y=1.02,
-                            xanchor="right",
-                            x=1
-                        ))
+                        scaleanchor = "x",
+                        scaleratio = 1,
+                        zeroline=True,
+                        ),
+                    # legend=dict(
+                    #         yanchor="bottom",
+                    #         y=0.01,
+                    #         xanchor="right",
+                    #         x=0.99)
+                    )
     return p
 
 
