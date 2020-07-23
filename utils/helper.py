@@ -398,26 +398,23 @@ def calculate_cm(y_test, y_pred):
     return (tp, fp, tn, fn), (tpr, fpr, tnr, fnr)
 
 def plot_confusion_matrices(class_0, class_1, results, names):
+    "Plotly chart for confusion matrices"
 
     cm_results = [calculate_cm(*_) for _ in results]
-
     #also include a summary confusion_matrix
     y_test_ = np.array(list(chain.from_iterable([_[0] for _ in results])))
     y_pred_ = np.array(list(chain.from_iterable([_[1] for _ in results])))
-
     cm_results.insert(0, calculate_cm(y_test_, y_pred_))
 
     texts = []
     for j in cm_results:
         texts.append(['{}\n{:.0f} %'.format(_[0], _[1]*100) for _ in zip(*j)])
-
     cats = ['_'.join(class_0), '_'.join(class_1)]
 
     x_ = [cats[0], cats[0], cats[1], cats[1]]
     y_ = [cats[0], cats[1], cats[1], cats[0]]
 
     slider = Slider(start=0, end=len(cm_results)-1, value=0, step=1, title='')
-
     p = figure(x_range=cats, y_range=cats[::-1])
 
     div = Div(text= names[0], style={'font-size': '100%', 'color': 'black'})
@@ -455,10 +452,40 @@ def plot_confusion_matrices(class_0, class_1, results, names):
 
     slider.js_on_change('value', callback)
     layout = column(div, slider, p)
-    return layout, p
+
+
+    #  Plotly sample
+    cm = [x_, y_, cm_results[0][1], texts[0]]
+    labels = ["a", "b"]
+    # data = go.Heatmap(z=cm, y=labels, x=labels)
+    data= go.Heatmap(x=x_, y=y_, z=cm_results[0][1], colorscale = 'Blues')
+    annotations = []
+    for i, row in enumerate(cm[0]):
+        for j, value in enumerate(row):
+            print("C:", labels[i], labels[j])
+            text = str(cm_results[0][1][i])
+            annotations.append(
+                {
+                    "x": labels[i],
+                    "y": labels[j],
+                    "text": text,
+                    "xref": "x1",
+                    "yref": "y1",
+                    "showarrow": False
+                }
+            )
+    layout_plotly = {
+        "xaxis": {"title": "Predicted value"},
+        "yaxis": {"title": "True value"},
+        "annotations": annotations
+    }
+    fig = go.Figure(data=data, layout=layout_plotly)
+
+
+    return layout, p, fig
 
 def plot_roc_curve_cv(roc_curve_results):
-    """Plot roc curve for cross validation"""
+    """Plotly chart for roc curve for cross validation"""
 
     tprs = []
     base_fpr = np.linspace(0, 1, 101)
@@ -515,7 +542,7 @@ def plot_roc_curve_cv(roc_curve_results):
 
 
 def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
-    """Plot roc curve for cohort comparison"""
+    """Plotly chart for roc curve for cohort comparison"""
 
     tprs = []
     #base_fpr = np.linspace(0, 1, 101)
