@@ -234,8 +234,8 @@ def main():
 
                 layout, p  = plot_confusion_matrices(class_0, class_1, split_results, names)
                 st.bokeh_chart(layout)
-                if svg_export:
-                    get_svg_download_link(p, 'cm_cohorts.svg')
+                # if svg_export:
+                #     get_svg_download_link(p, 'cm_cohorts.svg')
 
                 st.subheader('Run Results for `{}`'.format(classifier))
 
@@ -250,8 +250,8 @@ def main():
 
                     p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
                     st.bokeh_chart(p)
-                    if svg_export:
-                        get_svg_download_link(p, 'roc_curve_cohort.svg')
+                    # if svg_export:
+                    #     get_svg_download_link(p, 'roc_curve_cohort.svg')
 
                     st.subheader('Confusion matrix')
 
@@ -260,10 +260,8 @@ def main():
 
                     layout, p = plot_confusion_matrices(class_0, class_1, cohort_results, names)
                     st.bokeh_chart(layout)
-                    if svg_export:
-                        get_svg_download_link(p, 'cm.svg')
-
-                        #get_svg_download_link(p, 'confusion_matrix.svg')
+                    # if svg_export:
+                    #     get_svg_download_link(p, 'cm.svg')
 
                     st.subheader('Run Results for `{}`'.format(classifier))
 
