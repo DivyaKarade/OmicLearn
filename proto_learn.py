@@ -232,12 +232,13 @@ def main():
                 names = ['CV_split {}'.format(_+1) for _ in range(len(split_results))]
                 names.insert(0, 'Sum of all splits')
 
-                layout, p  = plot_confusion_matrices(class_0, class_1, split_results, names)
+                layout, p, fig  = plot_confusion_matrices(class_0, class_1, split_results, names)
                 st.bokeh_chart(layout)
+                st.plotly_chart(fig)
                 # if svg_export:
                 #     get_svg_download_link(p, 'cm_cohorts.svg')
 
-                st.subheader('Run Results for `{}`'.format(classifier))
+                st.subheader('Run ResuSlts for `{}`'.format(classifier))
 
                 summary = pd.DataFrame(_cv_results).describe()
                 st.write(pd.DataFrame(summary))
@@ -258,8 +259,9 @@ def main():
                     names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
                     names.insert(0, 'Sum of cohort comparisons')
 
-                    layout, p = plot_confusion_matrices(class_0, class_1, cohort_results, names)
+                    layout, p, fig = plot_confusion_matrices(class_0, class_1, cohort_results, names)
                     st.bokeh_chart(layout)
+                    st.plotly_chart(fig)
                     # if svg_export:
                     #     get_svg_download_link(p, 'cm.svg')
 
