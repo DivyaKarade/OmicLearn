@@ -195,11 +195,11 @@ def plot_feature_importance(features, feature_importance, pvalues):
     """
     Creates a Plotly barplot to plot feature importance
     """
-    
+
     n_features = len(features)
     feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance','P_value'])
 
-    p = px.bar(feature_df, x="Feature_importance", y="Name", color='Name', 
+    p = px.bar(feature_df, x="Feature_importance", y="Name", color='Name',
             orientation='h',
             hover_data=["Name", "Feature_importance", "P_value"],
             labels={
@@ -466,8 +466,7 @@ def plot_roc_curve_cv(roc_curve_results):
     for fpr, tpr, threshold in roc_curve_results:
         roc_auc = auc(fpr, tpr)
         roc_aucs.append(roc_auc)
-        hover_text = "FPR: " + str(fpr) + "| TPR: " + str(tpr)
-        p.add_trace(go.Scatter(x=fpr, y=tpr, text=hover_text, hoverinfo='text', mode='lines', line=dict(color=blue_color), showlegend=False))
+        p.add_trace(go.Scatter(x=fpr, y=tpr, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.2))
         tpr = np.interp(base_fpr, fpr, tpr)
         tpr[0]=0.0
         tprs.append(tpr)
@@ -479,21 +478,29 @@ def plot_roc_curve_cv(roc_curve_results):
     tprs_lower = mean_tprs - std
     mean_rocauc = np.mean(roc_aucs).round(2)
     sd_rocauc = np.std(roc_aucs).round(2)
-    roc_df = pd.DataFrame({'base_fpr':base_fpr,'mean_tprs':mean_tprs,'lower':tprs_lower,'upper':tprs_upper})
 
-    p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill='tozeroy', line_color='gray', opacity=0.5, name='±1 std. dev'))
-    p.add_trace(go.Scatter(x=base_fpr, y=mean_tprs, hoverinfo='x+y', line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc)))
+    p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill = None, line_color='gray', opacity=0.2))
+    p.add_trace(go.Scatter(x=base_fpr, y=tprs_upper, fill='tonexty', line_color='gray', opacity=0.2, name='±1 std. dev'))
+
+    hovertemplate = "Base FPR %{x:.2f} <br> %{text}"
+    text = ["Upper TPR {:.2f} <br> Mean TPR {:.2f} <br> Lower TPR {:.2f}".format(u, m, l) for u, m, l in zip(tprs_upper, mean_tprs, tprs_lower)]
+
+    p.add_trace(go.Scatter(x=base_fpr, y=mean_tprs, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc)))
     p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), showlegend=False))
 
-    #hover_data=[("False positive rate", "@base_fpr"),("True positive rate, upper", "@upper"), ("True positive rate, mean", "@mean_tprs"), ("True positive rate, lower", "@lower")]
     p.update_layout(autosize=True,
                     width=800,
                     height=700,
                     xaxis_title='False Positive Rate',
-                    yaxis_title='True Positive Rate', 
-                    xaxis_showgrid=False, 
-                    yaxis_showgrid=False, 
+                    yaxis_title='True Positive Rate',
+                    xaxis_showgrid=False,
+                    yaxis_showgrid=False,
                     plot_bgcolor= 'rgba(0, 0, 0, 0)',
+                    yaxis = dict(
+                    scaleanchor = "x",
+                    scaleratio = 1,
+                    zeroline=True,
+                    ),
                     legend=dict(
                             orientation="h",
                             yanchor="bottom",
