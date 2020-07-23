@@ -249,7 +249,7 @@ def main():
                     _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, st.progress(0))
 
                     p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
-                    st.bokeh_chart(p)
+                    st.plotly_chart(p)
                     # if svg_export:
                     #     get_svg_download_link(p, 'roc_curve_cohort.svg')
 
