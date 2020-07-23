@@ -515,26 +515,22 @@ def plot_roc_curve_cv(roc_curve_results):
 
 
 def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
-    """
-    Plot roc curve for cohort comparison
-    """
-    p = figure(tooltips =[("False positive rate", "@fpr"),("True positive rate", "@tpr"),("Train","@train"),("Test","@test")], tools=["pan,reset,save,wheel_zoom"])
+    """Plot roc curve for cohort comparison"""
 
     tprs = []
     #base_fpr = np.linspace(0, 1, 101)
     base_fpr = np.linspace(0, 1, 101)
     roc_aucs = []
-
+    p = go.Figure()
     colors = itertools.cycle(palette)
     for idx, res in enumerate(roc_curve_results_cohort):
         fpr, tpr, threshold = res
         roc_auc = auc(fpr, tpr)
         roc_aucs.append(roc_auc)
-
         roc_df = pd.DataFrame({'fpr':fpr,'tpr':tpr, 'train':cohort_combos[idx][0], 'test':cohort_combos[idx][1]})
-
-        p.line(x = 'fpr', y='tpr', source = roc_df, color = next(colors), alpha=1, legend = 'Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], roc_auc))
-
+        text= "Train: {} <br>Test: {}".format(cohort_combos[idx][0], cohort_combos[idx][1])
+        hovertemplate = "False positive rate: %{x:.2f} <br>True positive rate: %{y:.2f}" + "<br>" + text
+        p.add_trace(go.Scatter(x=fpr, y=tpr, hovertemplate=hovertemplate, hoverinfo='all', mode='lines', name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], roc_auc)))
         tpr = np.interp(base_fpr, fpr, tpr)
         tpr[0]=0.0
         tprs.append(tpr)
@@ -542,22 +538,29 @@ def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
     tprs = np.array(tprs)
     mean_tprs = tprs.mean(axis=0)
     std = tprs.std(axis=0)
-
     tprs_upper = mean_tprs + std
     tprs_lower = mean_tprs - std
-
     mean_rocauc = np.mean(roc_aucs).round(2)
     sd_rocauc = np.std(roc_aucs).round(2)
-
     roc_df = pd.DataFrame({'base_fpr':base_fpr,'mean_tprs':mean_tprs,'lower':tprs_lower,'upper':tprs_upper})
 
-    p.line([0, 1], [0, 1], line_color =red_color, line_dash ='dashed')
-    p.legend.location = "bottom_right"
-    p.xgrid.grid_line_color = None
-    p.ygrid.grid_line_color = None
-    p.xaxis.axis_label = 'False Positive Rate'
-    p.yaxis.axis_label = 'True Positive Rate'
-
+    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color='black', dash='dash'), showlegend=False))
+    p.update_xaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_yaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_layout(autosize=True,
+                    width=800,
+                    height=700,
+                    xaxis_title='False Positive Rate',
+                    yaxis_title='True Positive Rate',
+                    xaxis_showgrid=False,
+                    yaxis_showgrid=False,
+                    plot_bgcolor= 'rgba(0, 0, 0, 0)',
+                    yaxis = dict(
+                        scaleanchor = "x",
+                        scaleratio = 1,
+                        zeroline=True,
+                        )
+                    )
     return p
 
 
