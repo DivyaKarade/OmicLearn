@@ -17,14 +17,6 @@ try:
 except ModuleNotFoundError:
     st.error('Xgboost not installed. To use xgboost install using `conda install py-xgboost`')
 
-# Checkpoint for Selenium
-svg_export = False
-try:
-    import selenium
-    svg_export = True
-except ModuleNotFoundError:
-    st.error('Selenium not installed. To use svg export install using `conda install selenium geckodriver firefox -c conda-forge`')
-
 # Get Version
 with open("./utils/__version__.py") as version_file:
     version = version_file.read().strip()
@@ -40,6 +32,7 @@ def main():
     main_external_css = """
         <style>
             #MainMenu, .reportview-container .main footer {display: none;}
+            .download_link {color: #f63366 !important; text-decoration: none !important;}
         </style>
     """
     st.markdown(main_external_css, unsafe_allow_html=True)
@@ -202,8 +195,8 @@ def main():
                     features, feature_importance, p_values = select_features(feature_method, X, y, max_features, random_state)
                     p, feature_df = plot_feature_importance(features, feature_importance, p_values)
                     st.plotly_chart(p, use_container_width=True)
-                    st.dataframe(feature_df)
                     get_svg_download_link(p, 'feature_simportance.svg')
+                    st.dataframe(feature_df)
 
                 st.markdown('Using classifier `{}`.'.format(classifier))
                 #result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
@@ -234,7 +227,7 @@ def main():
                 st.plotly_chart(fig)
                 get_svg_download_link(p, 'cm_cohorts.svg')
 
-                st.subheader('Run ResuSlts for `{}`'.format(classifier))
+                st.subheader('Run Results for `{}`'.format(classifier))
 
                 summary = pd.DataFrame(_cv_results).describe()
                 st.write(pd.DataFrame(summary))
