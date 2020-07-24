@@ -456,7 +456,7 @@ def plot_confusion_matrices(class_0, class_1, results, names):
 
     #  Plotly sample
     cm = [x_, y_, cm_results[0][1], texts[0]]
-    labels = ["a", "b"]
+    labels = ["a", "b", "a", "b"]
     # data = go.Heatmap(z=cm, y=labels, x=labels)
     data= go.Heatmap(x=x_, y=y_, z=cm_results[0][1], colorscale = 'Blues')
     annotations = []
@@ -605,9 +605,11 @@ def get_system_report():
 
 def get_svg_download_link(p, name='file.svg'):
     """Generates a link for a Plotly chart to be downloaded"""
+    st_button_class = "st-em st-en st-b4 st-b3 st-dn st-dp st-do st-dq st-ct st-cu st-cv st-cw st-b2 st-eo st-bh st-ep st-eq st-er st-c6 st-es st-al st-et st-gv st-gw st-gx st-d6 st-cx st-cz st-cy st-bt st-bu st-bv st-bw st-an st-ao st-am st-ap st-gy st-gz st-h0 st-h1 st-b1 st-cc st-ez st-h2 st-gq st-h3 st-h4 st-h5 st-h6 st-ek st-bj st-h7 st-bk st-h8 st-h9 st-h"
+    st_button_style = ".reportview-container .markdown-text-container a { color: f63366 !important; text-decoration: none !important; }"
     p.write_image("downloads/"+ name)
     with open("downloads/" + name) as f:
         svg = f.read()
     b64 = base64.b64encode(svg.encode()).decode()
-    href = f'<a href="data:image/svg+xml;base64,%s" download="%s" >Download as *.svg</a>' % (b64, name)
+    href = f'<a class="%s" style="%s" href="data:image/svg+xml;base64,%s" download="%s" >Download as *.svg</a>' % (st_button_class, st_button_style, b64, name)
     st.markdown(href, unsafe_allow_html=True)
