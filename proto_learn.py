@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
-from bokeh.io.export import get_svgs
-from utils.helper import get_svg_download_link
+from utils.helper import get_svg_download_link, get_pdf_download_link
 from utils.helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
 from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
 from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, get_system_report
@@ -195,7 +194,7 @@ def main():
                     features, feature_importance, p_values = select_features(feature_method, X, y, max_features, random_state)
                     p, feature_df = plot_feature_importance(features, feature_importance, p_values)
                     st.plotly_chart(p, use_container_width=True)
-                    get_svg_download_link(p, 'feature_simportance.svg')
+                    get_pdf_download_link(p, 'feature_simportance.pdf')
                     st.dataframe(feature_df)
 
                 st.markdown('Using classifier `{}`.'.format(classifier))
@@ -213,7 +212,7 @@ def main():
 
                 p = plot_roc_curve_cv(roc_curve_results)
                 st.plotly_chart(p)
-                get_svg_download_link(p, 'roc_curve.svg')
+                get_pdf_download_link(p, 'roc_curve.pdf')
 
 
                 st.subheader('Confusion matrix')
@@ -225,7 +224,7 @@ def main():
                 layout, p, fig  = plot_confusion_matrices(class_0, class_1, split_results, names)
                 st.bokeh_chart(layout)
                 st.plotly_chart(fig)
-                get_svg_download_link(p, 'cm_cohorts.svg')
+                get_pdf_download_link(p, 'cm_cohorts.pdf')
 
                 st.subheader('Run Results for `{}`'.format(classifier))
 
@@ -240,7 +239,7 @@ def main():
 
                     p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
                     st.plotly_chart(p)
-                    get_svg_download_link(p, 'roc_curve_cohort.svg')
+                    get_pdf_download_link(p, 'roc_curve_cohort.pdf')
 
                     st.subheader('Confusion matrix')
 
@@ -250,7 +249,7 @@ def main():
                     layout, p, fig = plot_confusion_matrices(class_0, class_1, cohort_results, names)
                     st.bokeh_chart(layout)
                     st.plotly_chart(fig)
-                    get_svg_download_link(p, 'cm.svg')
+                    get_pdf_download_link(p, 'cm.pdf')
 
                     st.subheader('Run Results for `{}`'.format(classifier))
 
