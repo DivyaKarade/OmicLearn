@@ -203,9 +203,7 @@ def main():
                     p, feature_df = plot_feature_importance(features, feature_importance, p_values)
                     st.plotly_chart(p, use_container_width=True)
                     st.dataframe(feature_df)
-                    
-                    # if svg_export:
-                    #     get_svg_download_link(p, 'feature_importance.svg')
+                    get_svg_download_link(p, 'feature_simportance.svg')
 
                 st.markdown('Using classifier `{}`.'.format(classifier))
                 #result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
@@ -222,8 +220,7 @@ def main():
 
                 p = plot_roc_curve_cv(roc_curve_results)
                 st.plotly_chart(p)
-                # if svg_export:
-                #     get_svg_download_link(p, 'roc_curve.svg')
+                get_svg_download_link(p, 'roc_curve.svg')
 
 
                 st.subheader('Confusion matrix')
@@ -235,8 +232,7 @@ def main():
                 layout, p, fig  = plot_confusion_matrices(class_0, class_1, split_results, names)
                 st.bokeh_chart(layout)
                 st.plotly_chart(fig)
-                # if svg_export:
-                #     get_svg_download_link(p, 'cm_cohorts.svg')
+                get_svg_download_link(p, 'cm_cohorts.svg')
 
                 st.subheader('Run ResuSlts for `{}`'.format(classifier))
 
@@ -251,8 +247,7 @@ def main():
 
                     p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
                     st.plotly_chart(p)
-                    # if svg_export:
-                    #     get_svg_download_link(p, 'roc_curve_cohort.svg')
+                    get_svg_download_link(p, 'roc_curve_cohort.svg')
 
                     st.subheader('Confusion matrix')
 
@@ -262,8 +257,7 @@ def main():
                     layout, p, fig = plot_confusion_matrices(class_0, class_1, cohort_results, names)
                     st.bokeh_chart(layout)
                     st.plotly_chart(fig)
-                    # if svg_export:
-                    #     get_svg_download_link(p, 'cm.svg')
+                    get_svg_download_link(p, 'cm.svg')
 
                     st.subheader('Run Results for `{}`'.format(classifier))
 

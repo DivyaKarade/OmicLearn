@@ -604,15 +604,10 @@ def get_system_report():
     return report
 
 def get_svg_download_link(p, name='file.svg'):
-    """
-    Generates a link for a bokeh plot to be downloaded
-    """
-    from bokeh.io.export import get_svgs
-    p.output_backend = "svg"
-    svgs = get_svgs(p)
-    svg = svgs[0]
-
-    b64 = base64.b64encode(svg.encode('utf-8')).decode("utf-8")
+    """Generates a link for a Plotly chart to be downloaded"""
+    p.write_image("downloads/"+ name)
+    with open("downloads/" + name) as f:
+        svg = f.read()
+    b64 = base64.b64encode(svg.encode()).decode()
     href = f'<a href="data:image/svg+xml;base64,%s" download="%s" >Download as *.svg</a>' % (b64, name)
-
     st.markdown(href, unsafe_allow_html=True)
