@@ -146,7 +146,7 @@ def main():
     if feature_method != 'Manual':
         max_features = number_input_('Maximum number of features', value = 20, min_value = 1, max_value = 2000)
 
-    st.sidebar.markdown('## [Classification](https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html?highlight=classifiers)')
+    st.sidebar.markdown('## [Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
 
     if xgboost_installed:
         classifiers = ['AdaBoost','LogisticRegression','RandomForest','XGBoost','DecisionTree']
