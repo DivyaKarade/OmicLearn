@@ -139,7 +139,7 @@ def main():
     else:
         missing_value = 'None'
 
-    st.sidebar.markdown('## [Feature selection](https://scikit-learn.org/stable/modules/feature_selection.html#feature-selection)')
+    st.sidebar.markdown('## [Feature selection](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection)')
     feature_methods = ['DecisionTree', 'k-best (mutual_info)','k-best (f_classif)', 'Manual']
     feature_method = selectbox_("Feature selection method", feature_methods)
 
