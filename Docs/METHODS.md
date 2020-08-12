@@ -29,6 +29,12 @@ Please visit the related pages from the list below:
 	- [3. 5. DecisionTree](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-5-decisiontree)
 
 - [4. Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Cross-Validation#4-cross-validation)
-
-
+- [5. Imputation of missing values](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-imputation-of-missing-values)
+  - [5. 1. Zero](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-1-zero)
+  - [5. 2. Mean](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-2-mean)
+  - [5. 3. Median](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-3-median)
+  - [5. 4. IterativeImputer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-4-iterativeimputer)
+  - [5. 5. KNNImputer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-5-knnimputer)
+  - [5. 6. None](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-6-none)
+  - [5. 7. Comparison](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-7-comparison)
   
