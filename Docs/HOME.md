@@ -1,4 +1,4 @@
-<p align="center"> <img src="https://raw.githubusercontent.com/OmicEra/proto_learn/master/utils/proto_learn.png?token=AL3BHZXN753BH5E77HEIXR27DLM5O" height="240" width="277" /> </p>
+<p align="center"> <img src="https://user-images.githubusercontent.com/49681382/88778270-f9859b00-d190-11ea-8c55-eaa2f683aa78.png" height="240" width="277" /> </p>
 <h2 align="center"> 📰 Welcome to Proto Learn Wiki Page </h2>
 
 ---
