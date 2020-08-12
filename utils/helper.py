@@ -460,7 +460,7 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     annotations = []
     for i, row in enumerate(cm[0]):
         for j, value in enumerate(row):
-            print("C:", labels[i], labels[j])
+            # print("C:", labels[i], labels[j])
             text = str(cm_results[0][1][i])
             annotations.append(
                 {
