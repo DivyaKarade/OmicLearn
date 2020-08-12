@@ -31,7 +31,10 @@ def main_components():
     main_external_css = """
         <style>
             #MainMenu, .reportview-container .main footer {display: none;}
-            .download_link {color: #f63366 !important; text-decoration: none !important;}
+            .download_link {color: #f63366 !important; text-decoration: none !important; z-index: 99999 !important; 
+                            cursor:pointer !important; margin: 15px 0px; border: 1px solid #f63366; 
+                            text-align:center; padding: 8px !important; width: 200px;}
+            .download_link:hover {background: #f63366 !important; color: #FFF !important;}
         </style>
     """
     st.markdown(main_external_css, unsafe_allow_html=True)
@@ -110,6 +113,8 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         class_1 = multiselect("Class 1", [_ for _ in unique_elements_lst if _ not in class_0], default=None)
         remainder = [_ for _ in not_proteins if _ is not option]
 
+        # Define `exclude_features` and `additional_features` as empty if the classes are not defined
+        exclude_features, additional_features = "", ""
         if class_0 and class_1:
             st.subheader("Additional features")
             st.text("Select additional Features. All non numerical values will be encoded (e.g. M/F -> 0,1)")
@@ -195,8 +200,9 @@ def feature_selection(df, option, class_0, class_1, df_sub, additional_features,
         features, feature_importance, p_values = select_features(feature_method, X, y, max_features, random_state)
         p, feature_df = plot_feature_importance(features, feature_importance, p_values)
         st.plotly_chart(p, use_container_width=True)
-        get_pdf_download_link(p, 'feature_simportance.pdf')
-        st.dataframe(feature_df)
+        if p:
+            get_pdf_download_link(p, 'feature_simportance.pdf')
+        # st.dataframe(feature_df)
     
     return class_names, subset, X, y, features
 
@@ -208,7 +214,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     st.subheader('Receiver operating characteristic')
     p = plot_roc_curve_cv(roc_curve_results)
     st.plotly_chart(p)
-    get_pdf_download_link(p, 'roc_curve.pdf')
+    if p:
+        get_pdf_download_link(p, 'roc_curve.pdf')
 
     st.subheader('Confusion matrix')
     #st.text('Performed on the last CV split')
@@ -233,7 +240,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
 
         p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
         st.plotly_chart(p)
-        get_pdf_download_link(p, 'roc_curve_cohort.pdf')
+        if p:
+            get_pdf_download_link(p, 'roc_curve_cohort.pdf')
 
         st.subheader('Confusion matrix')
         names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
