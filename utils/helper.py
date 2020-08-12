@@ -218,8 +218,6 @@ def impute_nan(X, missing_value, random_state):
     Missing value imputation
     """
 
-    #missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer','None']
-                #['SimpleImputer (Zero)', 'SimpleImputer (Mean)', 'SimpleImputer (Median)', 'IterativeImputer', 'KNNImputer', 'None']
     if missing_value == 'Zero':
         X = X.fillna(0)
     elif missing_value =='Mean':

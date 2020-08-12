@@ -133,7 +133,7 @@ def main():
     normalization = selectbox_("Normalization", normalizations)
 
     if n_missing > 0:
-        st.sidebar.markdown('## [Missing value imputation](https://scikit-learn.org/stable/modules/impute.html)')
+        st.sidebar.markdown('## [Missing value imputation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values)')
         missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer', 'None']
         missing_value = selectbox_("Missing value imputation", missing_values)
     else:
