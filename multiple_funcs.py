@@ -52,7 +52,7 @@ def main_components():
     return widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect
 
 def main_text_and_data_upload():
-    st.title("Clinical Proteomics Machine Learning Tool")
+    st.title("Proto Learn - Clinical Proteomics Machine Learning Tool")
     st.info(""" 
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature
@@ -201,7 +201,59 @@ def feature_selection(df, option, class_0, class_1, df_sub, additional_features,
     
     return class_names, subset, X, y, features
 
+def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, cv_splits, cv_repeats, class_0, class_1):
+    # Cross-Validation                
+    st.markdown("Running Cross-Validation")
+    _cv_results, roc_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, st.progress(0))
+    st.header('Cross-Validation')
+    st.subheader('Receiver operating characteristic')
+    p = plot_roc_curve_cv(roc_curve_results)
+    st.plotly_chart(p)
+    get_pdf_download_link(p, 'roc_curve.pdf')
+
+    st.subheader('Confusion matrix')
+    #st.text('Performed on the last CV split')
+    names = ['CV_split {}'.format(_+1) for _ in range(len(split_results))]
+    names.insert(0, 'Sum of all splits')
+    layout, p, fig  = plot_confusion_matrices(class_0, class_1, split_results, names)
+    st.bokeh_chart(layout)
+    # st.plotly_chart(fig)
+    # get_pdf_download_link(p, 'cm_cohorts.pdf')
+
+    st.subheader('Run Results for `{}`'.format(classifier))
+    summary = pd.DataFrame(_cv_results).describe()
+    st.write(pd.DataFrame(summary))
+
+    # Set these values as empty if cohort_column is `None`
+    _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = "", "", "", ""
+
+    if cohort_column != 'None':
+        st.header('Cohort comparison')
+        st.subheader('Receiver operating characteristic',)
+        _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, st.progress(0))
+
+        p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
+        st.plotly_chart(p)
+        get_pdf_download_link(p, 'roc_curve_cohort.pdf')
+
+        st.subheader('Confusion matrix')
+        names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
+        names.insert(0, 'Sum of cohort comparisons')
+        layout, p, fig = plot_confusion_matrices(class_0, class_1, cohort_results, names)
+        # st.plotly_chart(fig)
+        # get_pdf_download_link(p, 'cm.pdf')
+        st.bokeh_chart(layout)
+
+        st.subheader('Run Results for `{}`'.format(classifier))
+        summary = pd.DataFrame(_cohort_results).describe()
+        st.write(pd.DataFrame(summary))
+        return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
+
+    return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
+
 def generate_text(normalization, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
+    st.write("## Summary")
+    report = get_system_report()
     text ="```"
     # Packages
     text += "Machine learning was done in Python ({python_version}). Protein tables were imported via the pandas package ({pandas_version}). The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}). ".format(**report)
@@ -257,80 +309,26 @@ def main():
     n_estimators, cv_splits, cv_repeats, features_selected, classifier = generate_sidebar_elements(selectbox_, number_input_, n_missing, additional_features)
 
     # Analysis Part
-    if df is not None:
-        if class_0 and class_1:
-            if st.button('Run Analysis',key='run'):
-                proteins = [_ for _ in proteins if _ not in exclude_features]
+    if (df is not None) and (class_0 and class_1) and (st.button('Run Analysis', key='run')):
+        proteins = [_ for _ in proteins if _ not in exclude_features]
 
-                # Feature Selection
-                class_names, subset, X, y, features = feature_selection(df, option, class_0, class_1, df_sub, additional_features, proteins, normalization, feature_method, max_features, random_state)
+        # Feature Selection
+        class_names, subset, X, y, features = feature_selection(df, option, class_0, class_1, df_sub, additional_features, proteins, normalization, feature_method, max_features, random_state)
+        st.markdown('Using classifier `{}`.'.format(classifier))
+        st.markdown('Using features `{}`.'.format(features))
+        # result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
 
-                st.markdown('Using classifier `{}`.'.format(classifier))
-                #result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
-                st.markdown('Using features `{}`.'.format(features))
+        # Define X vector and impute the NaN values
+        X = X[features]
+        X = impute_nan(X, missing_value, random_state)
 
-                X = X[features]
-                X = impute_nan(X, missing_value, random_state)
+        # Plotting and Get the results
+        summary, _cohort_results, roc_curve_results_cohort, \
+        cohort_results, cohort_combos = all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, cv_splits, cv_repeats, class_0, class_1)
 
-                # Cross-Validation                
-                st.markdown("Running Cross-Validation")
-                _cv_results, roc_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, st.progress(0))
-                st.header('Cross-Validation')
-                st.subheader('Receiver operating characteristic')
+        # Generate summary text
+        generate_text(normalization, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
 
-                p = plot_roc_curve_cv(roc_curve_results)
-                st.plotly_chart(p)
-                get_pdf_download_link(p, 'roc_curve.pdf')
-
-
-                st.subheader('Confusion matrix')
-                #st.text('Performed on the last CV split')
-
-                names = ['CV_split {}'.format(_+1) for _ in range(len(split_results))]
-                names.insert(0, 'Sum of all splits')
-
-                layout, p, fig  = plot_confusion_matrices(class_0, class_1, split_results, names)
-                st.bokeh_chart(layout)
-                # st.plotly_chart(fig)
-                # get_pdf_download_link(p, 'cm_cohorts.pdf')
-
-                st.subheader('Run Results for `{}`'.format(classifier))
-
-                summary = pd.DataFrame(_cv_results).describe()
-                st.write(pd.DataFrame(summary))
-
-                if cohort_column != 'None':
-                    st.header('Cohort comparison')
-                    st.subheader('Receiver operating characteristic',)
-
-                    _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, st.progress(0))
-
-                    p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
-                    st.plotly_chart(p)
-                    get_pdf_download_link(p, 'roc_curve_cohort.pdf')
-
-                    st.subheader('Confusion matrix')
-
-                    names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
-                    names.insert(0, 'Sum of cohort comparisons')
-
-                    layout, p, fig = plot_confusion_matrices(class_0, class_1, cohort_results, names)
-                    st.bokeh_chart(layout)
-                    st.plotly_chart(fig)
-                    get_pdf_download_link(p, 'cm.pdf')
-
-                    st.subheader('Run Results for `{}`'.format(classifier))
-
-                    summary = pd.DataFrame(_cohort_results).describe()
-                    st.write(pd.DataFrame(summary))
-
-
-                st.write("## Summary")
-
-                report = get_system_report()
-
-                # Text
-                generate_text(normalization, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
-
+# Run the Proto Learn
 if __name__ == '__main__':
     main()
