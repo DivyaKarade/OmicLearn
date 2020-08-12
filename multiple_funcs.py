@@ -52,7 +52,7 @@ def main_components():
     return widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect
 
 def main_text_and_data_upload():
-    st.title("Proto Learn - Clinical Proteomics Machine Learning Tool")
+    st.title("Proto Learn — Clinical Proteomics Machine Learning Tool")
     st.info(""" 
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature
@@ -164,6 +164,9 @@ def generate_sidebar_elements(selectbox_, number_input_, n_missing, additional_f
 
     classifier = selectbox_("Classifier", classifiers)
 
+    # Define n_estimators as 0 if classifier not Adaboost
+    n_estimators = 0
+
     if classifier == 'AdaBoost':
         n_estimators = number_input_('number of estimators', value = 100, min_value = 1, max_value = 2000)
 
@@ -173,11 +176,14 @@ def generate_sidebar_elements(selectbox_, number_input_, n_missing, additional_f
 
     features_selected = False
 
+    # Define manual_features and features as empty if method is not Manual
+    manual_features, features = "", ""
+
     if feature_method == 'Manual':
         manual_features = st.multiselect("Manually select proteins", proteins, default=None)
         features = manual_features +  additional_features
         
-    return random_state, normalization, missing_value, feature_method, max_features, classifiers, n_estimators, cv_splits, cv_repeats, features_selected, classifier
+    return random_state, normalization, missing_value, feature_method, max_features, classifiers, n_estimators, cv_splits, cv_repeats, features_selected, classifier, manual_features, features
 
 def feature_selection(df, option, class_0, class_1, df_sub, additional_features, proteins, normalization, feature_method, max_features, random_state):
     st.subheader("Feature selection")
@@ -247,7 +253,6 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         st.subheader('Run Results for `{}`'.format(classifier))
         summary = pd.DataFrame(_cohort_results).describe()
         st.write(pd.DataFrame(summary))
-        return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
 
     return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
 
@@ -288,7 +293,7 @@ def generate_text(normalization, proteins, feature_method, classifier, cohort_co
     st.markdown(text)
 
 # Main Function
-def main():
+def ProtoLearn_Main():
 
     # Main components
     widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect = main_components()
@@ -303,7 +308,7 @@ def main():
 
     # Sidebar widgets
     random_state, normalization, missing_value, feature_method, max_features, classifiers, \
-    n_estimators, cv_splits, cv_repeats, features_selected, classifier = generate_sidebar_elements(selectbox_, number_input_, n_missing, additional_features)
+    n_estimators, cv_splits, cv_repeats, features_selected, classifier, manual_features, features = generate_sidebar_elements(selectbox_, number_input_, n_missing, additional_features)
 
     # Analysis Part
     if (df is not None) and (class_0 and class_1) and (st.button('Run Analysis', key='run')):
@@ -328,4 +333,4 @@ def main():
 
 # Run the Proto Learn
 if __name__ == '__main__':
-    main()
+    ProtoLearn_Main()
