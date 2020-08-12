@@ -101,27 +101,20 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         option = st.selectbox("Select target column", not_proteins)
         st.markdown("Unique elements in `{}` column.".format(option))
         unique_elements = df_sub[option].value_counts()
-
         st.write(unique_elements)
         unique_elements_lst = unique_elements.index.tolist()
 
-        st.subheader("Define classes".format(option))
-
         # Define classes
+        st.subheader("Define classes".format(option))
         class_0 = multiselect("Class 0", unique_elements_lst, default=None)
         class_1 = multiselect("Class 1", [_ for _ in unique_elements_lst if _ not in class_0], default=None)
-
         remainder = [_ for _ in not_proteins if _ is not option]
 
         if class_0 and class_1:
-
             st.subheader("Additional features")
             st.text("Select additional Features. All non numerical values will be encoded (e.g. M/F -> 0,1)")
-
             additional_features = st.multiselect("Additional features for trainig", remainder, default=None)
-
             #Todo: Check if we need additional features
-
             st.subheader("Exclude proteins")
             exclude_features = st.multiselect("Select proteins that should be excluded", proteins, default=None)
 
