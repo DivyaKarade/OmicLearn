@@ -255,14 +255,17 @@ def generate_text(normalization, proteins, feature_method, classifier, cohort_co
     st.write("## Summary")
     report = get_system_report()
     text ="```"
+    
     # Packages
     text += "Machine learning was done in Python ({python_version}). Protein tables were imported via the pandas package ({pandas_version}). The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}). ".format(**report)
 
+    # Normalization
     if normalization == 'None':
         text += 'After importing, no further normalization was performed. '
     else:
         text += 'After importing, features were normalized using a {} approach. '.format(normalization)
 
+    # Feature
     if feature_method == 'Manual':
         text += 'A total of {} proteins were manually selected. '.format(len(proteins))
     else:
@@ -275,19 +278,13 @@ def generate_text(normalization, proteins, feature_method, classifier, cohort_co
         text += 'For classification, we used a {}-Classifier ({}). '.format(classifier, xgboost.__version__ )
 
     # Cross-Validation
-
     text += 'When using a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std). '.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
-    #if len()
 
     if cohort_column is not 'None':
-
         text += 'When training on one cohort and predicting on another to classify {} vs. {}, we achieved the following AUCs: '.format(''.join(class_0), ''.join(class_1))
-
         for i, cohort_combo in enumerate(cohort_combos):
             text+= '{:.2f} when training on {} and predicting on {}. '.format(pd.DataFrame(_cohort_results).iloc[i]['roc_auc'], cohort_combo[0], cohort_combo[1])
-
     text +="```"
-
     st.markdown(text)
 
 # Main Function
@@ -296,7 +293,7 @@ def main():
     # Main components
     widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect = main_components()
 
-    # Main Page
+    # Welcome text and Data uploading 
     sample_file, df = main_text_and_data_upload()
 
     # Checkpoint for whether data uploaded/selected
