@@ -336,6 +336,8 @@ def ProtoLearn_Main():
 if __name__ == '__main__':
     try:
         ProtoLearn_Main()
+    except ValueError as val_error:
+        st.error("There is a problem with values setted due to {}.".format(val_error))
     except TypeError as e:
         # st.warning("TypeError exists in {}".format(e))
         pass
