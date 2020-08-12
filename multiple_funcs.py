@@ -326,4 +326,8 @@ def ProtoLearn_Main():
 
 # Run the Proto Learn
 if __name__ == '__main__':
-    ProtoLearn_Main()
+    try:
+        ProtoLearn_Main()
+    except TypeError as e:
+        # st.warning("TypeError exists in {}".format(e))
+        pass
