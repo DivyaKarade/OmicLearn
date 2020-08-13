@@ -117,7 +117,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         exclude_features, additional_features = "", ""
         if class_0 and class_1:
             st.subheader("Additional features")
-            st.text("Select additional Features. All non numerical values will be encoded (e.g. M/F -> 0,1)")
+            st.text("Select additional features. All non numerical values will be encoded (e.g. M/F -> 0,1)")
             additional_features = st.multiselect("Additional features for trainig", remainder, default=None)
             #Todo: Check if we need additional features
             st.subheader("Exclude proteins")
@@ -336,8 +336,8 @@ def ProtoLearn_Main():
 if __name__ == '__main__':
     try:
         ProtoLearn_Main()
-    except ValueError as val_error:
-        st.error("There is a problem with values setted due to {}.".format(val_error))
+    except (ValueError, IndexError) as val_ind_error:
+        st.error("There is a problem with values/parameters or dataset due to {}.".format(val_ind_error))
     except TypeError as e:
         # st.warning("TypeError exists in {}".format(e))
         pass
