@@ -194,7 +194,7 @@ def main():
                     features, feature_importance, p_values = select_features(feature_method, X, y, max_features, random_state)
                     p, feature_df = plot_feature_importance(features, feature_importance, p_values)
                     st.plotly_chart(p, use_container_width=True)
-                    get_pdf_download_link(p, 'feature_simportance.pdf')
+                    get_pdf_download_link(p, 'feature_importance.pdf')
                     st.dataframe(feature_df)
 
                 st.markdown('Using classifier `{}`.'.format(classifier))

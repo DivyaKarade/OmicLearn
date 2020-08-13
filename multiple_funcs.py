@@ -201,7 +201,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, additional_features,
         p, feature_df = plot_feature_importance(features, feature_importance, p_values)
         st.plotly_chart(p, use_container_width=True)
         if p:
-            get_pdf_download_link(p, 'feature_simportance.pdf')
+            get_pdf_download_link(p, 'feature_importance.pdf')
         # st.dataframe(feature_df)
     
     return class_names, subset, X, y, features
