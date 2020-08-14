@@ -75,7 +75,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         st.text("Here is your dataset:")
         st.write(df)
     else:
-        st.error('No dataset uploaded.')
+        st.error('No dataset uploaded or selected.')
 
     n_missing = df.isnull().sum().sum()
 
@@ -89,17 +89,17 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
 
         st.subheader("Subset")
         st.text('Create a subset based on values in the selected column')
-        subset_column = st.selectbox("Select subset column", ['None']+not_proteins)
+        subset_column = st.selectbox("Select subset column:", ['None']+not_proteins)
 
         if subset_column != 'None':
             subset_options = df[subset_column].value_counts().index.tolist()
-            subset_class = multiselect("Select values to keep", subset_options, default=subset_options)
+            subset_class = multiselect("Select values to keep:", subset_options, default=subset_options)
             df_sub = df[df[subset_column].isin(subset_class)].copy()
         else:
             df_sub = df.copy()
 
         st.subheader("Features")
-        option = st.selectbox("Select target column", not_proteins)
+        option = st.selectbox("Select target column:", not_proteins)
         st.markdown("Unique elements in `{}` column.".format(option))
         unique_elements = df_sub[option].value_counts()
         st.write(unique_elements)
@@ -107,8 +107,8 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
 
         # Define classes
         st.subheader("Define classes".format(option))
-        class_0 = multiselect("Class 0", unique_elements_lst, default=None)
-        class_1 = multiselect("Class 1", [_ for _ in unique_elements_lst if _ not in class_0], default=None)
+        class_0 = multiselect("Select Class 0:", unique_elements_lst, default=None)
+        class_1 = multiselect("Select Class 1:", [_ for _ in unique_elements_lst if _ not in class_0], default=None)
         remainder = [_ for _ in not_proteins if _ is not option]
 
         # Define `exclude_features` and `additional_features` as empty if the classes are not defined
@@ -116,24 +116,24 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         if class_0 and class_1:
             st.subheader("Additional features")
             st.text("Select additional features. All non numerical values will be encoded (e.g. M/F -> 0,1)")
-            additional_features = st.multiselect("Additional features for trainig", remainder, default=None)
+            additional_features = st.multiselect("Select additional features for trainig:", remainder, default=None)
             #Todo: Check if we need additional features
             st.subheader("Exclude proteins")
-            exclude_features = st.multiselect("Select proteins that should be excluded", proteins, default=None)
+            exclude_features = st.multiselect("Select proteins that should be excluded:", proteins, default=None)
 
         st.subheader("Cohort comparison")
-        st.text('Select cohort column to train on one and predict on another')
-        cohort_column = st.selectbox("Select cohort column", ['None']+not_proteins)
+        st.text('Select cohort column to train on one and predict on another:')
+        cohort_column = st.selectbox("Select cohort column:", ['None']+not_proteins)
 
         return class_0, class_1, df, unique_elements_lst, cohort_column, exclude_features, remainder, proteins, not_proteins, option, df_sub, additional_features, n_missing, subset_column
 
 def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, additional_features):
     st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
     st.sidebar.title("Options")
-    random_state = slider_("RandomState", min_value = 0, max_value = 99, value=23)
+    random_state = slider_("Random State:", min_value = 0, max_value = 99, value=23)
     st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing)')
     normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'MaxAbsScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer(Gaussian)','QuantileTransformer(uniform)','Normalizer']
-    normalization = selectbox_("Normalization", normalizations)
+    normalization = selectbox_("Normalization method:", normalizations)
 
     if n_missing > 0:
         st.sidebar.markdown('## [Missing value imputation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values)')
@@ -144,10 +144,10 @@ def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, add
 
     st.sidebar.markdown('## [Feature selection](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection)')
     feature_methods = ['DecisionTree', 'k-best (mutual_info)','k-best (f_classif)', 'Manual']
-    feature_method = selectbox_("Feature selection method", feature_methods)
+    feature_method = selectbox_("Feature selection method:", feature_methods)
 
     if feature_method != 'Manual':
-        max_features = number_input_('Maximum number of features', value = 20, min_value = 1, max_value = 2000)
+        max_features = number_input_('Maximum number of features:', value = 20, min_value = 1, max_value = 2000)
 
     st.sidebar.markdown('## [Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
 
@@ -166,11 +166,11 @@ def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, add
     n_estimators = 0
 
     if classifier == 'AdaBoost':
-        n_estimators = number_input_('number of estimators', value = 100, min_value = 1, max_value = 2000)
+        n_estimators = number_input_('Number of estimators:', value = 100, min_value = 1, max_value = 2000)
 
     st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Cross-Validation)')
-    cv_splits = number_input_('CV Splits', min_value = 2, max_value = 10, value=5)
-    cv_repeats = number_input_('CV Repeats', min_value = 1, max_value = 50, value=10)
+    cv_splits = number_input_('CV Splits:', min_value = 2, max_value = 10, value=5)
+    cv_repeats = number_input_('CV Repeats:', min_value = 1, max_value = 50, value=10)
 
     features_selected = False
 
@@ -178,7 +178,7 @@ def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, add
     manual_features, features = "", ""
 
     if feature_method == 'Manual':
-        manual_features = st.multiselect("Manually select proteins", proteins, default=None)
+        manual_features = st.multiselect("Manually select proteins:", proteins, default=None)
         features = manual_features +  additional_features
         
     return random_state, normalization, missing_value, feature_method, max_features, classifiers, n_estimators, cv_splits, cv_repeats, features_selected, classifier, manual_features, features
