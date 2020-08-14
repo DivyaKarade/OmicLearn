@@ -297,9 +297,26 @@ def generate_text(normalization, proteins, feature_method, classifier, cohort_co
     text +="```"
     st.markdown(text)
 
+
+# Saving session info
+@st.cache(allow_output_mutation=True)
+def get_sessions():
+    return [], {}
+
+def save_sessions(widget_values, user_name):
+    session_no, session_dict = get_sessions()
+    session_no.append(len(session_no) + 1)
+    # st.write(session_no)
+    session_dict[session_no[-1]] = widget_values
+    # st.write(session_dict)
+    sessions_df = pd.DataFrame(session_dict)
+    sessions_df = sessions_df.T
+    sessions_df = sessions_df[sessions_df["user"] == user_name]
+    st.write("## Session History")
+    st.dataframe(sessions_df)
+
 # Main Function
 def ProtoLearn_Main():
-
     # Main components
     widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect = main_components()
 
@@ -335,8 +352,17 @@ def ProtoLearn_Main():
 
         # Generate summary text
         generate_text(normalization, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
+        
+        # Session
+        import getpass, SessionState, random
+        user_name = str(random.randint(0,10000)) + "protoLearn"
+        session_state = SessionState.get(user_name=user_name)
+        widget_values["roc_auc_mean"] = summary.loc['mean']['roc_auc']
+        widget_values["roc_auc_std"] = summary.loc['std']['roc_auc']
+        # widget_values["linux_user"] = getpass.getuser()
+        widget_values["user"] = session_state.user_name
+        save_sessions(widget_values, session_state.user_name)
 
-    st.write(widget_values)
 # Run the Proto Learn
 if __name__ == '__main__':
     try:
