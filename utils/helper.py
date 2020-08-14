@@ -1,47 +1,32 @@
 import sys
+import base64
+import itertools
+import numpy as np
 import pandas as pd
 import streamlit as st
-from bokeh.plotting import figure
-
-import sklearn
-
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer, Normalizer
-
-from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
-
-import numpy as np
-
-from sklearn.feature_selection import mutual_info_classif, f_classif
-from sklearn.feature_selection import SelectKBest
-
-from sklearn.model_selection import RepeatedStratifiedKFold
-from sklearn.model_selection import StratifiedKFold
-
-from sklearn.metrics import roc_curve, plot_roc_curve, auc, plot_confusion_matrix
-
-import sklearn.metrics as metrics
-
-from bokeh.models.glyphs import Text
-
-from bokeh.plotting import ColumnDataSource
-from bokeh.models import CustomJS, Slider, Div
-from bokeh.layouts import column, row
-
-from bokeh.models import HoverTool
-import itertools
-from bokeh.palettes import Dark2_5 as palette
-
-from sklearn.impute import KNNImputer
-
+from io import BytesIO
 from itertools import chain
 
-from io import BytesIO
-import base64
+import sklearn
+import sklearn.metrics as metrics
+from sklearn.impute import KNNImputer
+from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold
+from sklearn.feature_selection import mutual_info_classif, f_classif, SelectKBest
+from sklearn.metrics import roc_curve, plot_roc_curve, auc, plot_confusion_matrix
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer, Normalizer
+from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
+
+from bokeh.plotting import figure
+from bokeh.models import HoverTool
+from bokeh.models.glyphs import Text
+from bokeh.layouts import column, row
+from bokeh.plotting import ColumnDataSource
+from bokeh.palettes import Dark2_5 as palette
+from bokeh.models import CustomJS, Slider, Div
 
 # Plotly Graphs
 import plotly.express as px
 import plotly.graph_objects as go
-
 
 blue_color = '#0068c9'
 red_color = '#f63366'
