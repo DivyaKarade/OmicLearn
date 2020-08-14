@@ -360,7 +360,6 @@ def ProtoLearn_Main():
         session_state = SessionState.get(user_name=user_name)
         widget_values["roc_auc_mean"] = summary.loc['mean']['roc_auc']
         widget_values["roc_auc_std"] = summary.loc['std']['roc_auc']
-        # widget_values["linux_user"] = getpass.getuser()
         widget_values["user"] = session_state.user_name
         save_sessions(widget_values, session_state.user_name)
 
