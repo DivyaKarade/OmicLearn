@@ -70,14 +70,18 @@ def main_text_and_data_upload():
     return sample_file, df
 
 def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, multiselect):
-    if len(df) == 0:
-        if sample_file != 'None':
-            df = pd.read_excel('data/sample_data.xlsx')
-            st.write(df)
-        else:
-            st.error('No dataset uploaded.')
+    if (sample_file != 'None') and (len(df) > 0):
+        st.warning("Please, either choose a sample file or set it as `None` to work on your file")
+        df = pd.DataFrame()
+    elif sample_file != 'None':
+        st.text("Here is the sample dataset:")
+        df = pd.read_excel('data/'+ sample_file + '.xlsx')
+        st.write(df)
+    elif len(df) > 0:
+        st.text("Here is your dataset:")
+        st.write(df)
     else:
-        st.dataframe(df)
+        st.error('No dataset uploaded.')
 
     n_missing = df.isnull().sum().sum()
 
