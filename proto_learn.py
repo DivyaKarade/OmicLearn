@@ -1,10 +1,12 @@
+import random
 import pandas as pd
+from PIL import Image
 import streamlit as st
+import utils.SessionState as SessionState 
 from utils.helper import get_svg_download_link, get_pdf_download_link
 from utils.helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
 from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
 from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, get_system_report
-from PIL import Image
 icon = Image.open('./utils/proto_learn.png')
 
 # Checkpoint for XGBoost
@@ -16,14 +18,8 @@ try:
 except ModuleNotFoundError:
     st.error('Xgboost not installed. To use xgboost install using `conda install py-xgboost`')
 
-# Get Version
-with open("./utils/__version__.py") as version_file:
-    version = version_file.read().strip()
-
-# Set color palette
-blue_color = '#0068c9'
-red_color = '#f63366'
-gray_color ='#f3f4f7'
+# Define version
+version = "v0.5.0-dev0"
 
 # Functions / Element Creations
 def main_components():
@@ -38,7 +34,7 @@ def main_components():
         </style>
     """
     st.markdown(main_external_css, unsafe_allow_html=True)
-    st.sidebar.image(icon, use_column_width=True, caption="Proto Learn v" + version,)
+    st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
 
     widget_values = {}
     n_missing = 0
@@ -312,7 +308,6 @@ def save_sessions(widget_values, user_name):
     sessions_df = pd.DataFrame(session_dict)
     sessions_df = sessions_df.T
     sessions_df = sessions_df.drop(sessions_df[sessions_df["user"] != user_name].index).reset_index(drop=True)
-    # sessions_df = sessions_df[sessions_df["user"] == user_name]
     st.write("## Session History")
     st.dataframe(sessions_df)
 
@@ -355,7 +350,6 @@ def ProtoLearn_Main():
         generate_text(normalization, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
         
         # Session
-        import getpass, SessionState, random
         user_name = str(random.randint(0,10000)) + "protoLearn"
         session_state = SessionState.get(user_name=user_name)
         widget_values["roc_auc_mean"] = summary.loc['mean']['roc_auc']
