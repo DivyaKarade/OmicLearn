@@ -34,7 +34,6 @@ def main_components():
         </style>
     """
     st.markdown(main_external_css, unsafe_allow_html=True)
-    st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
 
     widget_values = {}
     n_missing = 0
@@ -58,7 +57,6 @@ def main_text_and_data_upload():
         * Protein names should be uppercase
         * Additional features should be marked with a leading '_'
     """)
-    st.sidebar.title("Options")
     st.subheader("Dataset")
     file_buffer = st.file_uploader("Upload your dataset below", type=["csv", "xlsx"])
     sample_file = st.selectbox("Or select sample file here:", ["None", "Sample"])
@@ -130,6 +128,8 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         return class_0, class_1, df, unique_elements_lst, cohort_column, exclude_features, remainder, proteins, not_proteins, option, df_sub, additional_features, n_missing, subset_column
 
 def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, additional_features):
+    st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
+    st.sidebar.title("Options")
     random_state = slider_("RandomState", min_value = 0, max_value = 99, value=23)
     st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing)')
     normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'MaxAbsScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer(Gaussian)','QuantileTransformer(uniform)','Normalizer']
