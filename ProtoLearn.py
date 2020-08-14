@@ -302,12 +302,13 @@ def get_sessions():
 def save_sessions(widget_values, user_name):
     session_no, session_dict = get_sessions()
     session_no.append(len(session_no) + 1)
-    # st.write(session_no)
     session_dict[session_no[-1]] = widget_values
-    # st.write(session_dict)
     sessions_df = pd.DataFrame(session_dict)
     sessions_df = sessions_df.T
     sessions_df = sessions_df.drop(sessions_df[sessions_df["user"] != user_name].index).reset_index(drop=True)
+    new_column_names = {k:v.replace(":", "").replace("Select", "") for k,v in zip(sessions_df.columns,sessions_df.columns)}
+    sessions_df = sessions_df.rename(columns=new_column_names) 
+    sessions_df = sessions_df.drop("user", axis=1)
     st.write("## Session History")
     st.dataframe(sessions_df)
 
@@ -352,8 +353,8 @@ def ProtoLearn_Main():
         # Session
         user_name = str(random.randint(0,10000)) + "protoLearn"
         session_state = SessionState.get(user_name=user_name)
-        widget_values["roc_auc_mean"] = summary.loc['mean']['roc_auc']
-        widget_values["roc_auc_std"] = summary.loc['std']['roc_auc']
+        widget_values["ROC AUC Mean"] = summary.loc['mean']['roc_auc']
+        widget_values["ROC AUC Std"] = summary.loc['std']['roc_auc']
         widget_values["user"] = session_state.user_name
         save_sessions(widget_values, session_state.user_name)
 
