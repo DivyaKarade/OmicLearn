@@ -2,6 +2,7 @@ import random
 import pandas as pd
 from PIL import Image
 import streamlit as st
+from datetime import datetime
 import utils.SessionState as SessionState 
 from utils.helper import get_svg_download_link, get_pdf_download_link
 from utils.helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
@@ -350,11 +351,20 @@ def ProtoLearn_Main():
         # Generate summary text
         generate_text(normalization, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
         
-        # Session
-        user_name = str(random.randint(0,10000)) + "protoLearn"
-        session_state = SessionState.get(user_name=user_name)
+        # Session and Run info
+        widget_values["Date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " (UTC)"
         widget_values["ROC AUC Mean"] = summary.loc['mean']['roc_auc']
         widget_values["ROC AUC Std"] = summary.loc['std']['roc_auc']
+        widget_values["Precision Mean"] = summary.loc['mean']['precision']
+        widget_values["Precision Std"] = summary.loc['std']['precision']
+        widget_values["Recall Mean"] = summary.loc['mean']['recall']
+        widget_values["Recall Std"] = summary.loc['std']['recall']
+        widget_values["F1 Score Mean"] = summary.loc['mean']['f1']
+        widget_values["F1 Score Std"] = summary.loc['std']['f1']
+        widget_values["Balanced Accuracy Mean"] = summary.loc['mean']['balanced_accuracy']
+        widget_values["Balanced Accuracy Std"] = summary.loc['std']['balanced_accuracy']
+        user_name = str(random.randint(0,10000)) + "ProtoLearn"
+        session_state = SessionState.get(user_name=user_name)
         widget_values["user"] = session_state.user_name
         save_sessions(widget_values, session_state.user_name)
 
