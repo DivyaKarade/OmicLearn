@@ -311,7 +311,8 @@ def save_sessions(widget_values, user_name):
     # st.write(session_dict)
     sessions_df = pd.DataFrame(session_dict)
     sessions_df = sessions_df.T
-    sessions_df = sessions_df[sessions_df["user"] == user_name]
+    sessions_df = sessions_df.drop(sessions_df[sessions_df["user"] != user_name].index).reset_index(drop=True)
+    # sessions_df = sessions_df[sessions_df["user"] == user_name]
     st.write("## Session History")
     st.dataframe(sessions_df)
 
