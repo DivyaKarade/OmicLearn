@@ -133,8 +133,8 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
 
         return class_0, class_1, df, unique_elements_lst, cohort_column, exclude_features, remainder, proteins, not_proteins, option, df_sub, additional_features, n_missing, subset_column
 
-def generate_sidebar_elements(selectbox_, number_input_, n_missing, additional_features):
-    random_state = st.sidebar.slider("RandomState", min_value = 0, max_value = 99, value=23)
+def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, additional_features):
+    random_state = slider_("RandomState", min_value = 0, max_value = 99, value=23)
     st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing)')
     normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'MaxAbsScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer(Gaussian)','QuantileTransformer(uniform)','Normalizer']
     normalization = selectbox_("Normalization", normalizations)
@@ -313,7 +313,7 @@ def ProtoLearn_Main():
 
     # Sidebar widgets
     random_state, normalization, missing_value, feature_method, max_features, classifiers, \
-    n_estimators, cv_splits, cv_repeats, features_selected, classifier, manual_features, features = generate_sidebar_elements(selectbox_, number_input_, n_missing, additional_features)
+    n_estimators, cv_splits, cv_repeats, features_selected, classifier, manual_features, features = generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, additional_features)
 
     # Analysis Part
     if (df is not None) and (class_0 and class_1) and (st.button('Run Analysis', key='run')):
@@ -336,6 +336,7 @@ def ProtoLearn_Main():
         # Generate summary text
         generate_text(normalization, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
 
+    st.write(widget_values)
 # Run the Proto Learn
 if __name__ == '__main__':
     try:
