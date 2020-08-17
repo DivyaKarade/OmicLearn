@@ -11,4 +11,4 @@ RUN conda install py-xgboost
 
 COPY . .
 
-CMD streamlit run proto_learn.py --browser.gatherUsageStats False
+CMD streamlit run ProtoLearn.py --browser.gatherUsageStats False
