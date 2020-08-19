@@ -13,7 +13,7 @@ from sklearn.impute import KNNImputer
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold
 from sklearn.feature_selection import mutual_info_classif, f_classif, SelectKBest
 from sklearn.metrics import roc_curve, plot_roc_curve, auc, plot_confusion_matrix
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer, Normalizer
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
 
 from bokeh.plotting import figure
@@ -126,9 +126,6 @@ def normalize_dataset(X, normalization):
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'QuantileTransformer(uniform)':
         scaler = QuantileTransformer(output_distribution='uniform')
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
-    elif normalization == 'Normalizer':
-        scaler = Normalizer()
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     else:
         raise NotImplementedError('Normalization not implemented')
