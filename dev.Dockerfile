@@ -5,4 +5,4 @@ COPY . .
 RUN pip install -r requirements.txt
 RUN pip install xgboost
 
-CMD streamlit run ProtoLearn.py --browser.gatherUsageStats False
+CMD streamlit run proto_learn.py --browser.gatherUsageStats False
