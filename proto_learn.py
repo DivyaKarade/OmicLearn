@@ -133,7 +133,7 @@ def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, add
     st.sidebar.title("Options")
     random_state = slider_("Random State:", min_value = 0, max_value = 99, value=23)
     st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing)')
-    normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'MaxAbsScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer(Gaussian)','QuantileTransformer(uniform)','Normalizer']
+    normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer(Gaussian)','QuantileTransformer(uniform)','Normalizer']
     normalization = selectbox_("Normalization method:", normalizations)
 
     if n_missing > 0:

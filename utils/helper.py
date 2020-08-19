@@ -13,7 +13,7 @@ from sklearn.impute import KNNImputer
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold
 from sklearn.feature_selection import mutual_info_classif, f_classif, SelectKBest
 from sklearn.metrics import roc_curve, plot_roc_curve, auc, plot_confusion_matrix
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer, Normalizer
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer, Normalizer
 from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
 
 from bokeh.plotting import figure
@@ -101,7 +101,6 @@ def transform_dataset(subset, additional_features, proteins):
             pass
     return X
 
-#['None', 'StandardScaler', 'MinMaxScaler', 'MaxAbsScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer(Gaussian)','QuantileTransformer(uniform)','Normalizer']
 @st.cache(persist=True)
 def normalize_dataset(X, normalization):
     """
@@ -115,9 +114,6 @@ def normalize_dataset(X, normalization):
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'MinMaxScaler':
         scaler = MinMaxScaler()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
-    elif normalization == 'MaxAbsScaler':
-        scaler = MaxAbsScaler()
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'RobustScaler':
         scaler = RobustScaler()
