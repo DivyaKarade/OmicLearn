@@ -137,7 +137,7 @@ def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, add
     normalization = selectbox_("Normalization method:", normalizations)
 
     if n_missing > 0:
-        st.sidebar.markdown('## [Missing value imputation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values)')
+        st.sidebar.markdown('## [Missing value imputation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-imputation-of-missing-values)')
         missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer', 'None']
         missing_value = selectbox_("Missing value imputation", missing_values)
     else:
