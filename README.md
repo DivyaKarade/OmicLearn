@@ -22,7 +22,7 @@ Click on the sidebar on the right to get more information about individual proce
 
 ## Installation & Running
 
-> More details for `INSTALLATION & RUNNING` is available [on Wiki pages](https://github.com/OmicEra/proto_learn/wiki/INSTALLATION-%26-RUNNING/).
+> More details for [`INSTALLATION & RUNNING`](https://github.com/OmicEra/proto_learn/wiki/INSTALLATION-%26-RUNNING/) is available [on Wiki pages](https://github.com/OmicEra/proto_learn/wiki/INSTALLATION-%26-RUNNING/).
 
 - It is strongly recommended to install Proto Learn in its own environment using [Anaconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) Python distributions.
 
