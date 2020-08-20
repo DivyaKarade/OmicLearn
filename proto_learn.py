@@ -203,6 +203,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, additional_features,
         st.plotly_chart(p, use_container_width=True)
         if p:
             get_pdf_download_link(p, 'feature_importance.pdf')
+            get_svg_download_link(p, 'feature_importance.svg')
         # st.dataframe(feature_df)
     
     return class_names, subset, X, y, features
@@ -217,6 +218,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     st.plotly_chart(p)
     if p:
         get_pdf_download_link(p, 'roc_curve.pdf')
+        get_svg_download_link(p, 'roc_curve.svg')
 
     st.subheader('Confusion matrix')
     #st.text('Performed on the last CV split')
@@ -243,6 +245,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         st.plotly_chart(p)
         if p:
             get_pdf_download_link(p, 'roc_curve_cohort.pdf')
+            get_svg_download_link(p, 'roc_curve_cohort.svg')
 
         st.subheader('Confusion matrix')
         names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
