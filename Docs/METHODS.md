@@ -1,40 +1,46 @@
-**Proto Learn** offers several different choices for options such as `Preprocessing`, `Feature Selection` and `Classification`, and you are also able to config the parameters for the algorithms according to your research.
+**Proto Learn** aims to alleviate the access to the latest techniques in machine learning to be used for clinical proteomics datasets. Here, the tool heavily relies on [scikit-learn](https://scikit-learn.org/stable/) and aims to integrate state-of-the-art algorithms such as xgboost.
 
-With this documentation, you can look at the details of algorithms and methods or find the best use cases of the methods in the field of Proteomics. 
+A typical machine learning pipeline consists of `Preprocessing`, `Feature Selection`, `Classification` and `Validation` of your method. 
 
-For more information, we have prepared special pages for each algorithm and method separately. 
-Please visit the related pages from the list below:
+With Proto Learn, you have the possibility to choose from several different choices and explore their effect when analyzing your data. 
+
+This documentation aims to provide more detailed information about the individual algorithms so that the best parameters for the use case can be selected:
 
 - [1. Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-preprocessing)
-  * [1. 1. StandardScaler](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-1-standardscaler)
-  * [1. 2. MinMaxScaler](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-minmaxscaler)
-  * [1. 3. MaxAbsScaler](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-3-maxabsscaler)
-  * [1. 4. RobustScaler](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-4-robustscaler)
-  * [1. 5. PowerTransformer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-5-powertransformer)
-  * [1. 6. QuantileTransformer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-6-quantiletransformer)
-  * [1. 7. Normalizer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-7-normalizer)
-  * [1. 8. Comparison](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-8-Comparison)
+- [1. 1. Standardization](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-1-standardization)
+  * [1. 1. 1. StandardScaler](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-1-1-standardscaler)
+  * [1. 1. 2. MinMaxScaler](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-1-2-minmaxscaler)
+  * [1. 1. 3. RobustScaler](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-1-3-robustscaler)
+  * [1. 1. 4. PowerTransformer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-1-4-powertransformer)
+  * [1. 1. 5. QuantileTransformer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-1-5-quantiletransformer)
+  * [1. 1. 6. Additional Notes](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-1-6-additional-notes)
+- [1. 2. Imputation of missing values](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-imputation-of-missing-values)
+  * [1. 2. 1. Zero](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-1-zero)
+  * [1. 2. 2. Mean](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-2-mean)
+  * [1. 2. 3. Median](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-3-median)
+  * [1. 2. 4. IterativeImputer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-4-iterativeimputer)
+  * [1. 2. 5. KNNImputer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-5-knnimputer)
+  * [1. 2. 6. None](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-6-none)
+- [1. 3. Data encoding](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-3-data-encoding)
 
 - [2. Feature selection](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-feature-selection)
-	- [2. 1. Decision Tree](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-1-decision-tree)
-	- [2. k-best (mutual_info)](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-k-best--mutual-info-)
-	- [2. 3. k-best (f_classif)](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-3-k-best--f-classif-)
-	- [2. 4. Manual](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-4-manual)
+   * [2. 1. Tree-based](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-1-tree-based)
+   * [2. 2. k-best (chi2)](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-2-k-best-chi2)
+   * [2. 3. k-best (mutual_info_classif)](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-3-k-best-mutual_info_classif)
+   * [2. 4. k-best (f_classif)](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-4-k-best-f_classif)
 
 - [3. Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)
-	- [3. 1. AdaBoost](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-1-adaboost)
-	- [3. 2. LogisticRegression](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-2-logisticregression)
-	- [3. 3. RandomForest](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-3-randomforest)
-	- [3. 4. XGBoost](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-4-xgboost)
-	- [3. 5. DecisionTree](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-5-decisiontree)
+  * [3. 1. AdaBoost](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-1-adaboost)
+  * [3. 2. LogisticRegression](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-2-logisticregression)
+  * [3. 3. RandomForest](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-3-randomforest)
+  * [3. 4. XGBoost](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-4-xgboost)
+  * [3. 5. DecisionTree](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-5-decisiontree)
 
-- [4. Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Cross-Validation#4-cross-validation)
-- [5. Imputation of missing values](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-imputation-of-missing-values)
-  - [5. 1. Zero](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-1-zero)
-  - [5. 2. Mean](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-2-mean)
-  - [5. 3. Median](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-3-median)
-  - [5. 4. IterativeImputer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-4-iterativeimputer)
-  - [5. 5. KNNImputer](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-5-knnimputer)
-  - [5. 6. None](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-6-none)
-  - [5. 7. Comparison](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-5.-Imputation-of-missing-values#5-7-comparison)
+- [4. 1. Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)
+- [4. 2. Scores](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-scores)
+  * [4. 2. 1. ROC AUC Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-1-roc-auc-score)
+  * [4. 2. 2. Precision Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-2-precision-score)
+  * [4. 2. 3. Recall Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-3-recall-score)
+  * [4. 2. 4. F1 Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-4-f1-score)
+  * [4. 2. 5. Balanced Accuracy Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-5-balanced-accuracy-score)
   

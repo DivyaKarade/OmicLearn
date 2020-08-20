@@ -1,16 +1,11 @@
 <p align="center"> <img src="https://user-images.githubusercontent.com/49681382/88778270-f9859b00-d190-11ea-8c55-eaa2f683aa78.png" height="240" width="277" /> </p>
-<h2 align="center"> 📰 Welcome to Proto Learn Wiki Page </h2>
+<h2 align="center"> Welcome to the Proto Learn Wiki Page </h2>
 
 ---
 
-# 🧬 Proto Learn
-Machine learning for proteomics data
+#  Proto Learn
+Transparent exploration of machine learning approaches for clinical proteomics data sets.
 
-## Coming soon!
-New contents are upcoming.
+This Wiki aims to provide general background information for Machine Learning, and it's applicability for clinical proteomics. 
 
---- 
-
-# Roadmap for Wiki
-- Here, Proto Learn Wiki has been prepared for providing detailed information, manual, and use cases. 
-- So, to access them, please check the all pages in the Menu (sidebar) 👉
+Click on the sidebar on the right to get more information about individual processing steps.

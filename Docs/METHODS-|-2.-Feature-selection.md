@@ -1,77 +1,35 @@
 ## **Table of Contents**
 
 - [2. Feature selection](#2-feature-selection)
-  * [2. 1. Decision Tree](#2-1-decision-tree)
-  * [2. k-best (mutual_info_classif)](#2-2-k-best-mutual_info_classif)
-  * [2. 3. k-best (f_classif)](#2-3-k-best-f_classif)
-- [Source](#source)
+   * [2. 1. Tree-based](#2-1-tree-based)
+   * [2. 2. k-best (chi2)](#2-2-k-best-chi2)
+   * [2. 3. k-best (mutual_info_classif)](#2-3-k-best-mutual_info_classif)
+   * [2. 4. k-best (f_classif)](#2-4-k-best-f_classif)
+
 
 ---
 
 ## 2. Feature selection
-In Machine Learning (ML), feature selection is one of the most important issues. Since this step is important, the `scikit` library also offers a module namely `feature_selection` implementing algorithms for feature selection. 
 
-So, this module can be used for selecting the features, boosting the performance on very high-dimensional datasets, reducing the number of features (dimensionality) in given data, or improving accuracy scores of estimators.
+Feature selection is a crucial part when building a machine learning pipeline. This refers to making only a subset of data available for the machine learning classifier, i.e., only taking ten proteins. For training, we would like to select only features that contribute to our prediction so that the classifier does not try to learn from unrelated features and ultimately will generalize well. This is especially important for a clinical proteomics setup as we can choose for a large number of features (protein signals) while often having only small sample numbers. Reducing the number of proteins will also help us identify core players contributing to a classification model. Within Proto Learn, several algorithms are implemented that allow reducing the number of features.
 
-**So, there are lots of advantages of feature selection:**
+> **Note:** Proteomics features can be highly correlated (Multicollinear). This leads to the problem that features importance can be somewhat ambiguous, i.e., removing a protein with high feature importance does not necessarily decrease the overall accuracy if the machine learning classifier can extract the information from linearly correlated protein signals.
 
-- It enables researchers to remove irrelevant features that act as noise and to improve the performance of the model.
-- It enables researchers to avoid `overfitting`.
-- It enables researchers to debug it easily and to make it easier to understand.
+### [2. 1. Tree-based](https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html#sphx-glr-auto-examples-ensemble-plot-forest-importances-py)
 
-![feat_sel](https://user-images.githubusercontent.com/49681382/89779396-eae79e00-db17-11ea-88e5-b206436596d1.png)
-
-_Source: [An Introduction to Feature Selection](https://towardsdatascience.com/an-introduction-to-feature-selection-dd72535ecf2b)_
-
-Also, the `scikit-learn` library includes `Univariate feature selection` methods using univariate statistical tests and one of them is `SelectKBest` that will be explained on this page.
-
-Here is an example work for computing p-values when univariate feature selection is applied to the dataset after some noisy features are added.
-
-In this chart, the p-values are plotted for each feature together with the weights of SVMs.
-
-![UFS Plot](https://user-images.githubusercontent.com/49681382/89784248-060adb80-db21-11ea-87e8-5afee37dcdd3.png)
-
-_Source: [Univariate Feature Selection](https://scikit-learn.org/stable/auto_examples/feature_selection/plot_feature_selection.html#univariate-feature-selection)_
-
-
-### 2. 1. Decision Tree
-The `scikit-learn` library also offers a module called `tree` that includes decision tree-based models for both classification and regression tasks.
-
-So, `Decision Tree (DT)` is an example method for non-parametric supervised learning.  The main idea behind this `Decision Tree` is to build a model for calculating the value of a target variable.
-
-Here, in `sklearn.tree` module, there is a method called `DecisionTreeClassifier`.
-
-> For technical details of `DecisionTreeClassifier` class in `scikit-learn` , please visit [here](https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier).
+One way to reduce the number of features is by using a decision tree approach, where a classifier is trained to distinguish the classes, and the features with the highest importance are selected.  
 
 ---
 
-Besides `Decision Tree`, `SelectKBest` is able to select the features in the dataset based on the `k` highest scores.
+Another way for feature selection is by using the `SelectKBest` strategy. Here, features are selected based on the `k` highest scores. Here, we have the following options available: `chi2`, `f_classif`, `mutual_info_classif`.
 
-Also, `SelectKBest` is available for two categories:
+### [2. 2. k-best (chi2)](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.chi2.html)
+Here, the chi-squared stats between features and the class is used as the k-score.
 
-- **For regression** problems: `f_regression`, `mutual_info_regression`
-- **For classification** problems: `chi2`, `f_classif`, `mutual_info_classif`
+### [2. 3. k-best (mutual_info_classif)](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_classif.html#sklearn.feature_selection.mutual_info_classif)
 
-### 2. 2 k-best (mutual_info_classif)
-Here, with `feature_selection.mutual_info_classif`, mutual information for a discrete target variable is estimated. 
+Here, an estimate for the mutual information of variables is used as the k-score.
 
-Also, this function is based on nonparametric methods with k-nearest neighbors distances and this method also can be used for univariate features selection,
+### [2. 4. k-best (f_classif)](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_classif.html#sklearn.feature_selection.f_classif)
 
-> For technical details of `feature_selection.mutual_info_classif` class in `scikit-learn` , please visit [here](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_classif.html#sklearn.feature_selection.mutual_info_classif).
-
-### 2. 3. k-best (f_classif)
-For the given data, the method namely `feature_selection.f_classif` is able to calculate the ANOVA (ANalysis Of VAriance) F-value.
-
-In other words, for classification tasks, this method computes ANOVA F-value between label/feature.
-
-> **As an important note**, if the data is sparse in feature selection step, these 3 methods `chi2`, `mutual_info_regression`, `mutual_info_classif` will deal with the data without making it dense.
-
-> For technical details of `feature_selection.f_classif` class in `scikit-learn` , please visit [here](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_classif.html#sklearn.feature_selection.f_classif).
-
-## Source
-[https://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_selection](https://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_selection)
-
-[https://scikit-learn.org/stable/modules/feature_selection.html#feature-selection](https://scikit-learn.org/stable/modules/feature_selection.html#feature-selection)
-
-[https://towardsdatascience.com/an-introduction-to-feature-selection-dd72535ecf2b](https://towardsdatascience.com/an-introduction-to-feature-selection-dd72535ecf2b)
-
+Here,  an estimate for the ANOVA (ANalysis Of VAriance) F-value is as the k-score.

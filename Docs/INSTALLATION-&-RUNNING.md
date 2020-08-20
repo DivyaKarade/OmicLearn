@@ -1,43 +1,42 @@
 ## **Table of Contents**
-- [Installation](#installation)
+- [Installation instructions](#installation)
 - [Running](#running)
 - [Running with Docker](#running-with-docker)
 
-## Installation
+---
 
-> To be able to install Proto Learn and run it, you may prefer to install Anaconda if you did not already. 
-> 
-> For more details, please visit the [Installation Page of Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/).
+## Installation instructions
 
-- Here are the commands for creating an environment and install all of the requirements at once:
+> We highly recommend the [Anaconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) Python distribution which comes with a powerful package manager. 
+>
+> It is strongly recommended to install Proto Learn in its own environment.
 
-`conda create --name proto-learn python=3.7`
-
-`pip install -r requirements.txt`
-
-- To use Xgboost:
-
-`conda install py-xgboost`
-
-- To use SVG export:
-
-`conda install selenium geckodriver firefox -c conda-forge`
-
-- To use Bokeh plot without any problem:
-
-`conda install -c conda-forge phantomjs`
+1. Open the console and create a new conda environment: `conda create --name proto_learn python=3.7`
+2. Activate the environment: `source activate proto_learn` for Linux / Mac Os X or `activate proto_learn` for Windows
+3. Redirect to the folder of choice and clone the repository: `git clone https://github.com/OmicEra/proto_learn`
+4. Install the packages with `pip install -r requirements.txt`
+5. To be able to use Xgboost, install via conda: `conda install py-xgboost`
 
 ## Running
 
-- Now, time to run Proto Learn!
+- To run Proto Learn, type the following command:
 
 `streamlit run proto_learn.py --browser.gatherUsageStats False`
 
+Streamlit gathers usage statistics per default, which we disable with this command.
+
+> **Note:** A vanilla streamlit installation will show a menu bar in the upper left corner that offers additional functionality, such as recording screencasts. 
+>
+> For Proto Learn, this functionality is disabled. 
+
 ## Running with Docker
-> Need to rely on the relatively large conda environment
 
-`docker build -f Dockerfile -t proto_learn:latest .`
+A docker instance should have at least 4 GB of memory. 
+To build the docker, navigate to the Proto Learn directory: 
 
-`docker run -p 8501:8501 proto_learn:latest`
+* `docker build -f Dockerfile -t proto_learn:latest .`
 
-- Then, you can access Proto Learn from `http://localhost:8501`
+To run the docker container type:
+* `docker run -p 8501:8501 proto_learn:latest`
+
+* The Proto Learn page will be accessible via `http://localhost:8501`
