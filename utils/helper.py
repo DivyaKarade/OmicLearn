@@ -225,9 +225,9 @@ def return_classifier(classifier, random_state):
         from xgboost import XGBClassifier
         clf = XGBClassifier(random_state = random_state)
     elif classifier == 'LogisticRegression':
-        clf = linear_model.LogisticRegression(random_state = random_state)
+        clf = linear_model.LogisticRegression(random_state = random_state, n_jobs=-1)
     elif classifier == 'RandomForest':
-        clf = ensemble.RandomForestClassifier(random_state = random_state)
+        clf = ensemble.RandomForestClassifier(random_state = random_state, n_jobs=-1)
     elif classifier == 'DecisionTree':
         clf = tree.DecisionTreeClassifier(random_state = random_state)
     elif classifier == 'AdaBoost':
