@@ -492,7 +492,7 @@ def plot_roc_curve_cv(roc_curve_results):
     mean_rocauc = np.mean(roc_aucs).round(2)
     sd_rocauc = np.std(roc_aucs).round(2)
 
-    p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill = None, line_color='gray', opacity=0.2))
+    p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill = None, line_color='gray', opacity=0.2, showlegend=False))
     p.add_trace(go.Scatter(x=base_fpr, y=tprs_upper, fill='tonexty', line_color='gray', opacity=0.2, name='±1 std. dev'))
 
     hovertemplate = "Base FPR %{x:.2f} <br> %{text}"
