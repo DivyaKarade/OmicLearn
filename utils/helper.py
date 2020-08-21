@@ -341,7 +341,7 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
             if metric_name == 'roc_auc':
                 _cohort_results[metric_name].append(metric_fct(y_test, y_score[:,1]))
             elif metric_name in ['precision', 'recall', 'f1']:
-                _cv_results[metric_name].append(metric_fct(y_test, y_pred, zero_division=0))
+                _cohort_results[metric_name].append(metric_fct(y_test, y_pred, zero_division=0))
             else:
                 _cohort_results[metric_name].append(metric_fct(y_test, y_pred))
 
