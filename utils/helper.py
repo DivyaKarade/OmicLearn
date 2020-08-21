@@ -236,6 +236,9 @@ def return_classifier(classifier, random_state, n_estimators, n_neighbors):
         clf = tree.DecisionTreeClassifier(random_state = random_state)
     elif classifier == 'AdaBoost':
         clf = ensemble.AdaBoostClassifier(n_estimators = n_estimators, random_state = random_state)
+    elif classifier == 'LinearSVC':
+        # TODO: `penalty` and `C` parameter might be retrieved from user
+        clf = svm.LinearSVC(penalty='l2', C=2, random_state = random_state)
 
     return clf
 
@@ -265,6 +268,11 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
         y_train = y.iloc[train_index]
         y_test = y.iloc[test_index]
 
+        if classifier == "LinearSVC":
+            from sklearn.calibration import CalibratedClassifierCV
+            # TODO: `method` and `cv` parameter should be considered!
+            clf = CalibratedClassifierCV(clf, cv=2) 
+        
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
         y_score = clf.predict_proba(X_test)

@@ -156,9 +156,9 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     st.sidebar.markdown('## [Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
 
     if xgboost_installed:
-        classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','XGBoost','DecisionTree']
+        classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC','XGBoost']
     else:
-        classifiers = ['AdaBoost','LogisticRegression','RandomForest','DecisionTree']
+        classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC']
 
     if n_missing > 0:
         if missing_value == 'None':
