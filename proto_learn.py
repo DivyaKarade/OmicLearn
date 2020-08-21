@@ -156,7 +156,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     st.sidebar.markdown('## [Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
 
     if xgboost_installed:
-        classifiers = ['AdaBoost','LogisticRegression','RandomForest','XGBoost','DecisionTree']
+        classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','XGBoost','DecisionTree']
     else:
         classifiers = ['AdaBoost','LogisticRegression','RandomForest','DecisionTree']
 
@@ -166,11 +166,14 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
 
     classifier = selectbox_("Classifier", classifiers)
 
-    # Define n_estimators as 0 if classifier not Adaboost
-    n_estimators = 0
+    # Define n_estimators as 0 if classifier not Adaboost or NearestNeighbors
+    n_estimators, n_neighbors = 0, 0
 
     if classifier == 'AdaBoost':
         n_estimators = number_input_('Number of estimators:', value = 100, min_value = 1, max_value = 2000)
+
+    if classifier == 'KNeighborsClassifier':
+        n_neighbors = number_input_('Number of neighbors:', value = 100, min_value = 1, max_value = 2000)
 
     st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Cross-Validation)')
     cv_splits = number_input_('CV Splits:', min_value = 2, max_value = 10, value=5)
@@ -186,7 +189,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         manual_features = multiselect_("Select your proteins manually:", proteins, default=None)
         features = manual_features +  additional_features
         
-    return random_state, normalization, missing_value, feature_method, max_features, classifiers, n_estimators, cv_splits, cv_repeats, features_selected, classifier, manual_features, features
+    return random_state, normalization, missing_value, feature_method, max_features, classifiers, n_estimators, n_neighbors, cv_splits, cv_repeats, features_selected, classifier, manual_features, features
 
 def feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, feature_method, max_features, random_state):
     st.subheader("Feature selection")
@@ -213,10 +216,10 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     
     return class_names, subset, X, y, features
 
-def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, cv_splits, cv_repeats, class_0, class_1):
+def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, cv_splits, cv_repeats, class_0, class_1):
     # Cross-Validation                
     st.markdown("Running Cross-Validation")
-    _cv_results, roc_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, st.progress(0))
+    _cv_results, roc_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, n_neighbors, st.progress(0))
     st.header('Cross-Validation')
     st.subheader('Receiver operating characteristic')
     p = plot_roc_curve_cv(roc_curve_results)
@@ -238,13 +241,10 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     summary = pd.DataFrame(_cv_results).describe()
     st.write(pd.DataFrame(summary))
 
-    # Set these values as empty if cohort_column is `None`
-    _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = "", "", "", ""
-
     if cohort_column != 'None':
         st.header('Cohort comparison')
         st.subheader('Receiver operating characteristic',)
-        _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, st.progress(0))
+        _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, st.progress(0))
 
         p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
         st.plotly_chart(p)
@@ -263,6 +263,9 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         st.subheader('Run Results for `{}`'.format(classifier))
         summary = pd.DataFrame(_cohort_results).describe()
         st.write(pd.DataFrame(summary))
+    else:
+        # Set these values as empty if cohort_column is `None`
+        _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = "", "", "", ""
 
     return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
 
@@ -339,7 +342,7 @@ def ProtoLearn_Main():
 
     # Sidebar widgets
     random_state, normalization, missing_value, feature_method, max_features, classifiers, \
-    n_estimators, cv_splits, cv_repeats, features_selected, classifier, \
+    n_estimators, n_neighbors, cv_splits, cv_repeats, features_selected, classifier, \
     manual_features, features = generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins)
 
     # Analysis Part
@@ -357,7 +360,7 @@ def ProtoLearn_Main():
 
         # Plotting and Get the results
         summary, _cohort_results, roc_curve_results_cohort, \
-        cohort_results, cohort_combos = all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, cv_splits, cv_repeats, class_0, class_1)
+        cohort_results, cohort_combos = all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, cv_splits, cv_repeats, class_0, class_1)
 
         # Generate summary text
         generate_text(normalization, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
