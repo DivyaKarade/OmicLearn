@@ -144,7 +144,7 @@ def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, add
         missing_value = 'None'
 
     st.sidebar.markdown('## [Feature selection](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection)')
-    feature_methods = ['DecisionTree', 'k-best (mutual_info_classif)','k-best (f_classif)', 'k-best (chi2)', 'Manual']
+    feature_methods = ['ExtraTrees', 'k-best (mutual_info_classif)','k-best (f_classif)', 'k-best (chi2)', 'Manual']
     feature_method = selectbox_("Feature selection method:", feature_methods)
 
     if feature_method != 'Manual':
