@@ -11,7 +11,7 @@ import sklearn
 import sklearn.metrics as metrics
 from sklearn.impute import KNNImputer
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold
-from sklearn.feature_selection import mutual_info_classif, f_classif, SelectKBest
+from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, SelectKBest
 from sklearn.metrics import roc_curve, plot_roc_curve, auc, plot_confusion_matrix
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
@@ -144,10 +144,12 @@ def select_features(feature_method, X, y, max_features, random_state):
         p_values[:] = np.nan
 
     elif 'k-best' in feature_method:
-        if feature_method == 'k-best (mutual_info)':
+        if feature_method == 'k-best (mutual_info_classif)':
             clf = SelectKBest(mutual_info_classif, max_features)
         elif feature_method == 'k-best (f_classif)':
             clf = SelectKBest(f_classif, max_features)
+        elif feature_method == 'k-best (chi2)':
+            clf = SelectKBest(chi2, max_features)
         else:
             raise NotImplementedError('Feature method {} not implemented.'.format(feature_method))
         clf = clf.fit(X.fillna(0), y)
