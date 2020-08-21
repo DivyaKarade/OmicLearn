@@ -128,7 +128,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
 
         return class_0, class_1, df, unique_elements_lst, cohort_column, exclude_features, remainder, proteins, not_proteins, option, df_sub, additional_features, n_missing, subset_column
 
-def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, additional_features):
+def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins):
     st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
     st.sidebar.title("Options")
     random_state = slider_("Random State:", min_value = 0, max_value = 99, value=23)
@@ -149,6 +149,9 @@ def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, add
 
     if feature_method != 'Manual':
         max_features = number_input_('Maximum number of features:', value = 20, min_value = 1, max_value = 2000)
+    else:
+        # Define `max_features` as 0 if `feature_method` is `Manual` 
+        max_features = 0
 
     st.sidebar.markdown('## [Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
 
@@ -176,15 +179,16 @@ def generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, add
     features_selected = False
 
     # Define manual_features and features as empty if method is not Manual
-    manual_features, features = "", ""
+    manual_features, features = "", []
 
     if feature_method == 'Manual':
-        manual_features = st.multiselect("Manually select proteins:", proteins, default=None)
+        st.sidebar.subheader("Manually select proteins")
+        manual_features = multiselect_("Select your proteins manually:", proteins, default=None)
         features = manual_features +  additional_features
         
     return random_state, normalization, missing_value, feature_method, max_features, classifiers, n_estimators, cv_splits, cv_repeats, features_selected, classifier, manual_features, features
 
-def feature_selection(df, option, class_0, class_1, df_sub, additional_features, proteins, normalization, feature_method, max_features, random_state):
+def feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, feature_method, max_features, random_state):
     st.subheader("Feature selection")
     class_names = [df[option].value_counts().index[0], df_sub[option].value_counts().index[1]]
     st.markdown("Using the following identifiers: Class 0 `{}`, Class 1 `{}`".format(class_0, class_1))
@@ -196,6 +200,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, additional_features,
     X = normalize_dataset(X, normalization)
 
     if feature_method == 'Manual':
+        features = manual_features +  additional_features
         pass
     else:
         features, feature_importance, p_values = select_features(feature_method, X, y, max_features, random_state)
@@ -329,16 +334,19 @@ def ProtoLearn_Main():
     remainder, proteins, not_proteins, option, df_sub, additional_features, \
     n_missing, subset_column = checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, multiselect)
 
+    # Proteins selection
+    proteins = [_ for _ in proteins if _ not in exclude_features]
+
     # Sidebar widgets
     random_state, normalization, missing_value, feature_method, max_features, classifiers, \
-    n_estimators, cv_splits, cv_repeats, features_selected, classifier, manual_features, features = generate_sidebar_elements(slider_, selectbox_, number_input_, n_missing, additional_features)
+    n_estimators, cv_splits, cv_repeats, features_selected, classifier, \
+    manual_features, features = generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins)
 
     # Analysis Part
     if (df is not None) and (class_0 and class_1) and (st.button('Run Analysis', key='run')):
-        proteins = [_ for _ in proteins if _ not in exclude_features]
 
         # Feature Selection
-        class_names, subset, X, y, features = feature_selection(df, option, class_0, class_1, df_sub, additional_features, proteins, normalization, feature_method, max_features, random_state)
+        class_names, subset, X, y, features = feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, feature_method, max_features, random_state)
         st.markdown('Using classifier `{}`.'.format(classifier))
         st.markdown('Using features `{}`.'.format(features))
         # result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
