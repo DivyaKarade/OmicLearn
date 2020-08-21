@@ -270,6 +270,8 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
         for metric_name, metric_fct in scorer_dict.items():
             if metric_name == 'roc_auc':
                 _cv_results[metric_name].append(metric_fct(y_test, y_score[:,1]))
+            elif metric_name in ['precision', 'recall', 'f1']:
+                _cv_results[metric_name].append(metric_fct(y_test, y_pred, zero_division=0))
             else:
                 _cv_results[metric_name].append(metric_fct(y_test, y_pred))
 
@@ -334,6 +336,8 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
         for metric_name, metric_fct in scorer_dict.items():
             if metric_name == 'roc_auc':
                 _cohort_results[metric_name].append(metric_fct(y_test, y_score[:,1]))
+            elif metric_name in ['precision', 'recall', 'f1']:
+                _cv_results[metric_name].append(metric_fct(y_test, y_pred, zero_division=0))
             else:
                 _cohort_results[metric_name].append(metric_fct(y_test, y_pred))
 
