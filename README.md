@@ -50,3 +50,4 @@ To get started with Proto Learn, [a special page](https://github.com/OmicEra/pro
 
 On this page, you can click on the titles listed in *Table of Contents* for jumping into to the detailed documentation for each section explaning them and allowing you to give a try for the steps in the workflow using the example dataset. 
 
+## Contributing
