@@ -7,32 +7,47 @@ assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+> If you are using [`proto-learn.com`](http://proto-learn.com/), you can skip the following headline _`Describe your setup`_.
 
-**To Reproduce**
+**Describe your setup:**
+ - OS (Operating system) with version: `[e.g. Ubuntu 18.04 LTS]`
+ - Browser: `[e.g. Chrome, Safari]`
+ - Python Verson: `[e.g. 3.7]`
+ - List the versions of packages if you installed different versions specified in [requirements.txt](https://github.com/OmicEra/proto_learn/blob/master/requirements.txt):
+   ```
+   pandas==0.0.0.0
+   numpy==0.0.0.0
+   ```
+
+**Provide information for your dataset:**
+
+- Link for full or truncated version of the dataset OR name of the sample dataset: `[e.g. http://www.google.com]`
+- Any details for your dataset if applicable for you.
+
+  ```
+  ...
+  ```
+
+**Describe the bug/problem:**
+
+A clear and concise description of what the bug/problem is.
+
+**To Reproduce:**
+
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+**Expected behavior:**
+
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
+**Screenshots:**
+
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**Additional context:**
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
 Add any other context about the problem here.
