@@ -614,3 +614,12 @@ def get_pdf_download_link(p, name='file.pdf'):
     b64 = base64.encodebytes(pdf).decode()
     href = f'<a class="download_link" href="data:application/pdf;base64,%s" download="%s" >Download as *.pdf</a>' % (b64, name)
     st.markdown(href, unsafe_allow_html=True)
+
+def get_csv_download_link(dataframe, name='file.csv'):
+    """Generates a link for dataframes to be downloaded as CSV"""
+    dataframe.to_csv("downloads/"+ name, index=False)
+    with open("downloads/" + name, "rb") as f:
+        csv = f.read()
+    b64 = base64.b64encode(csv).decode()
+    href = f'<a class="download_link" href="data:file/csv;base64,%s" download="%s" >Download as *.csv</a>' % (b64, name)
+    st.markdown(href, unsafe_allow_html=True)

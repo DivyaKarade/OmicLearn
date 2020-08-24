@@ -4,7 +4,7 @@ from PIL import Image
 import streamlit as st
 from datetime import datetime
 import utils.SessionState as SessionState 
-from utils.helper import get_svg_download_link, get_pdf_download_link
+from utils.helper import get_svg_download_link, get_pdf_download_link, get_csv_download_link
 from utils.helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
 from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
 from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, get_system_report
@@ -239,7 +239,9 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
 
     st.subheader('Run Results for `{}`'.format(classifier))
     summary = pd.DataFrame(_cv_results).describe()
-    st.write(pd.DataFrame(summary))
+    summary_df = pd.DataFrame(summary)
+    st.write(summary_df)
+    get_csv_download_link(summary_df, "run_results.csv")
 
     if cohort_column != 'None':
         st.header('Cohort comparison')
@@ -323,6 +325,7 @@ def save_sessions(widget_values, user_name):
     sessions_df = sessions_df.drop("user", axis=1)
     st.write("## Session History")
     st.dataframe(sessions_df)
+    get_csv_download_link(sessions_df, "session_history.csv")
 
 # Main Function
 def ProtoLearn_Main():
