@@ -1,3 +1,4 @@
+# Main
 import sys
 import base64
 import itertools
@@ -7,6 +8,7 @@ import streamlit as st
 from io import BytesIO
 from itertools import chain
 
+# Sklearn
 import sklearn
 import sklearn.metrics as metrics
 from sklearn.impute import KNNImputer
@@ -16,6 +18,7 @@ from sklearn.metrics import roc_curve, plot_roc_curve, auc, plot_confusion_matri
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
 
+# Bokeh (all of them will be deleted once Confusion Matrix plot is migrated to plotly)
 from bokeh.plotting import figure
 from bokeh.models import HoverTool
 from bokeh.models.glyphs import Text
@@ -33,7 +36,6 @@ red_color = '#f63366'
 gray_color ='#f3f4f7'
 
 scores = ['roc_auc', 'precision', 'recall', 'f1', 'balanced_accuracy']
-#score = st.sidebar.selectbox("Optimiziation metric", scores)
 
 scorer_dict = {}
 scorer_dict = {metric:metric+'_score' for metric in scores}
@@ -597,20 +599,18 @@ def get_system_report():
 
 def get_svg_download_link(p, name='file.svg'):
     """Generates a link for a Plotly chart to be downloaded as SVG"""
-    st_button_class = "download_link"
     p.write_image("downloads/"+ name)
     with open("downloads/" + name) as f:
         svg = f.read()
     b64 = base64.b64encode(svg.encode()).decode()
-    href = f'<a class="%s" href="data:image/svg+xml;base64,%s" download="%s" >Download as *.svg</a>' % (st_button_class, b64, name)
+    href = f'<a class="download_link" href="data:image/svg+xml;base64,%s" download="%s" >Download as *.svg</a>' % (b64, name)
     st.markdown(href, unsafe_allow_html=True)
 
 def get_pdf_download_link(p, name='file.pdf'):
     """Generates a link for a Plotly chart to be downloaded as PDF"""
-    st_button_class = "download_link"
     p.write_image("downloads/"+ name)
     with open("downloads/" + name, "rb") as f:
         pdf = f.read()
     b64 = base64.encodebytes(pdf).decode()
-    href = f'<a class="%s" href="data:application/pdf;base64,%s" download="%s" >Download as *.pdf</a>' % (st_button_class, b64, name)
+    href = f'<a class="download_link" href="data:application/pdf;base64,%s" download="%s" >Download as *.pdf</a>' % (b64, name)
     st.markdown(href, unsafe_allow_html=True)
