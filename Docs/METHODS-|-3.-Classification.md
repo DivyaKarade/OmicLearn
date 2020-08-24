@@ -6,6 +6,8 @@
 	- [3. 3. RandomForest](#3-3-randomforest)
 	- [3. 4. XGBoost](#3-4-xgboost)
 	- [3. 5. DecisionTree](#3-5-decisiontree)
+	- [3. 6. KNeighborsClassifier](#3-6-kneighborsclassifier)
+	- [3. 7. LinearSVC](#3-7-linearsvc)
 
 ---
 
@@ -24,3 +26,7 @@ Within proto-learn, you can choose from a wide range of classifiers. Understandi
 ### [3. 4. XGBoost](https://xgboost.readthedocs.io/en/latest/)
 
 ### [3. 5. DecisionTree](https://scikit-learn.org/stable/modules/tree.html)
+
+### [3. 6. KNeighborsClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html)
+
+### [3. 7. LinearSVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html)

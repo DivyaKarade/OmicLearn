@@ -23,7 +23,7 @@
 
 `streamlit run proto_learn.py --browser.gatherUsageStats False`
 
-Streamlit gathers usage statistics per default, which we disable with this command.
+[Streamlit](https://www.streamlit.io/) gathers usage statistics per default, which we disable with this command.
 
 > **Note:** A vanilla streamlit installation will show a menu bar in the upper left corner that offers additional functionality, such as recording screencasts. 
 >
@@ -39,4 +39,4 @@ To build the docker, navigate to the Proto Learn directory:
 To run the docker container type:
 * `docker run -p 8501:8501 proto_learn:latest`
 
-* The Proto Learn page will be accessible via `http://localhost:8501`
+* The Proto Learn page will be accessible via [`http://localhost:8501`](http://localhost:8501)

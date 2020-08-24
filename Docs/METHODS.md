@@ -24,7 +24,7 @@ This documentation aims to provide more detailed information about the individua
 - [1. 3. Data encoding](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-3-data-encoding)
 
 - [2. Feature selection](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-feature-selection)
-   * [2. 1. Tree-based](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-1-tree-based)
+   * [2. 1. ExtraTrees](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-1-ExtraTrees)
    * [2. 2. k-best (chi2)](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-2-k-best-chi2)
    * [2. 3. k-best (mutual_info_classif)](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-3-k-best-mutual_info_classif)
    * [2. 4. k-best (f_classif)](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection#2-4-k-best-f_classif)
@@ -35,6 +35,9 @@ This documentation aims to provide more detailed information about the individua
   * [3. 3. RandomForest](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-3-randomforest)
   * [3. 4. XGBoost](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-4-xgboost)
   * [3. 5. DecisionTree](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-5-decisiontree)
+  * [3. 6. KNeighborsClassifier](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-6-kneighborsclassifier)
+  * [3. 7. LinearSVC](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-7-linearsvc)
+
 
 - [4. 1. Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)
 - [4. 2. Scores](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-scores)
