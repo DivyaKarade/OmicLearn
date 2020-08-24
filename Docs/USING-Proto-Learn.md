@@ -17,6 +17,8 @@ Here, in the figure below, the main steps for the workflow of Proto Learn are re
 
 ![Proto Learn Workflow](https://user-images.githubusercontent.com/49681382/90739663-62b38680-e2d7-11ea-83f0-3a9cf91e3374.png)
 
+_**Figure 1:** Main steps for the workflow of Proto Learn at a glance_
+
 On this page, you can click on the titles listed above to see the detailed documentation for the section that explains the details. 
 
 ### Video for Using Proto Learn with Sample Dataset
@@ -64,13 +66,13 @@ Here, for `.csv` file format, either `comma (,)` or `semicolon (;)` should be us
 
 ![DATA_UPLOAD/SELECTION](https://user-images.githubusercontent.com/49681382/90772677-8ee1fe00-e2fd-11ea-89c4-5200ae166439.png)
 
-_Figure 1: Uploading or Selecting Dataset_
+_**Figure 2:** Uploading or Selecting Dataset_
 
 Additionally, if your dataset contain missing values (`NaNs`), a warning will appear that you warn and want you to select a method for filling them.
 
 ![NAN_WARNING](https://user-images.githubusercontent.com/49681382/90772680-8ee1fe00-e2fd-11ea-8161-98630d750b31.png)
 
-_Figure 2: Missing value warning_
+_**Figure 3:** Missing value warning_
 
 
 ### Configuring the Options and Tuning the Parameters
@@ -86,20 +88,26 @@ As a note, once you make a change in any parameter or method, it asks you to re-
 
 ![Proto Learn SideBar](https://user-images.githubusercontent.com/49681382/90772676-8e496780-e2fd-11ea-8b61-9ac920959574.png)
 
-_Figure 3: Proto Learn Side Bar Options_
+_**Figure 4:** Proto Learn Side Bar Options_
+
+Also, Proto Learn provides `'Manual'` option within `Feature selection` process. So, with `'Manual'` option, you are able to select your proteins manually from the dropdown menu from the side bar.
+
+![image](https://user-images.githubusercontent.com/49681382/91023118-cfdc5a00-e5fe-11ea-8827-de6d3d157e5a.png)
+
+_**Figure 5:** Proto Learn Manual Option in Feature Selection_
 
 ### Making Selections on the Dataset
 
-Here, you can choose the Features you would like work on or adjust the dataset for your goal.
+Here, you can choose the Features you would like to work on or adjust the dataset for your goal.
 
 ![selections](https://user-images.githubusercontent.com/49681382/90772670-8d183a80-e2fd-11ea-81b9-ee72c3744e05.png)
 
-_Figure 4: Selections on the Dataset_
+_**Figure 6:** Selections on the Dataset_
 
 ### Running the Workflow
 After tuning your hyperparameters and selecting your methods/algorithms together with making selections on your dataset, you are able to execute the workflow by clicking the `Run Analysis` button.
 
-As a note, when you alter any parameter on the sidebar or change the selections on your dataset, it will ask you to re-run by clicking the same button.
+As a note, when you alter any parameter on the side bar or change the selections on your dataset, it will ask you to re-run by clicking the same button.
 
 ### Getting Results & Plots
 Once the analysis is completed, Proto Learn automatically generates the plots together with the result of analysis. 
@@ -108,13 +116,13 @@ For the plots, you are able to download them as `.pdf` and `.svg` format.
 
 ![plot](https://user-images.githubusercontent.com/49681382/90772681-8f7a9480-e2fd-11ea-878e-18848c85af15.png)
 
-_Figure 5: Example Plot (ROC Curve - AUC) and Download Options_
+_**Figure 7:** Example Plot (ROC Curve - AUC) and Download Options_
 
 Also, importantly, as seen in the figure below, Proto Learn generates a `Summary` text that can be used for `Methods` part in the papers.
 
 ![results](https://user-images.githubusercontent.com/49681382/90772684-8f7a9480-e2fd-11ea-8f5e-01fcf16b61e3.png)
 
-_Figure 6: Results of Analysis_
+_**Figure 8:** Results of Analysis_
 
 ### Checking the Session History
 When you run the workflow and get some results, you can focus on your hyperparameters again and change some features or excluding some columns from the selection part for your dataset. 
@@ -125,5 +133,7 @@ Hence, you have a chance to compare and contrast your previous runs with the cur
 
 ![session](https://user-images.githubusercontent.com/49681382/90772672-8e496780-e2fd-11ea-8515-2d3eace637d5.png)
 
-_Figure 7: Session History Table_
+_**Figure 9:** Session History Table_
+
+
 
