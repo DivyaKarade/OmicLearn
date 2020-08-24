@@ -234,8 +234,10 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     names.insert(0, 'Sum of all splits')
     layout, p, fig  = plot_confusion_matrices(class_0, class_1, split_results, names)
     st.bokeh_chart(layout)
-    # st.plotly_chart(fig)
-    # get_pdf_download_link(p, 'cm_cohorts.pdf')
+    st.plotly_chart(fig)
+    if fig:
+        get_pdf_download_link(fig, 'cm_cohorts.pdf')
+        get_svg_download_link(fig, 'cm_cohorts.svg')
 
     st.subheader('Run Results for `{}`'.format(classifier))
     summary = pd.DataFrame(_cv_results).describe()
@@ -258,8 +260,10 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
         names.insert(0, 'Sum of cohort comparisons')
         layout, p, fig = plot_confusion_matrices(class_0, class_1, cohort_results, names)
-        # st.plotly_chart(fig)
-        # get_pdf_download_link(p, 'cm.pdf')
+        st.plotly_chart(fig)
+        if fig:
+            get_pdf_download_link(fig, 'cm.pdf')
+            get_svg_download_link(fig, 'cm.svg')
         st.bokeh_chart(layout)
 
         st.subheader('Run Results for `{}`'.format(classifier))

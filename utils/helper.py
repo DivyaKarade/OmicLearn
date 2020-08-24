@@ -449,23 +449,21 @@ def plot_confusion_matrices(class_0, class_1, results, names):
 
 
     #  Plotly sample
-    cm = [x_, y_, cm_results[0][1], texts[0]]
-    labels = ["a", "b", "a", "b"]
-    # data = go.Heatmap(z=cm, y=labels, x=labels)
-    data= go.Heatmap(x=x_, y=y_, z=cm_results[0][1], colorscale = 'Blues')
+    custom_colorscale = [[0, '#e8f1f7'], [1, "#3886bc"]]
+    data= go.Heatmap(x=x_, y=y_, z=cm_results[0][1], colorscale = custom_colorscale)
     annotations = []
-    for i, row in enumerate(cm[0]):
+    for i, row in enumerate(x_):
         for j, value in enumerate(row):
-            # print("C:", labels[i], labels[j])
             text = str(cm_results[0][1][i])
             annotations.append(
                 {
-                    "x": labels[i],
-                    "y": labels[j],
-                    "text": text,
+                    "x": x_[i],
+                    "y": y_[i],
+                    "text": texts[0][i].replace("\n", "<br>"),
                     "xref": "x1",
                     "yref": "y1",
-                    "showarrow": False
+                    "showarrow": False,
+                    "font": dict(size=16, color="black")
                 }
             )
     layout_plotly = {
@@ -474,7 +472,7 @@ def plot_confusion_matrices(class_0, class_1, results, names):
         "annotations": annotations
     }
     fig = go.Figure(data=data, layout=layout_plotly)
-
+    fig.show()
 
     return layout, p, fig
 
