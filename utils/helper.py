@@ -449,50 +449,51 @@ def plot_confusion_matrices(class_0, class_1, results, names):
 
 
     # PLOTLY CASE
-    # Slider steps
-    steps = []
-    for i in range(len(names)):
-        step = dict(
-        method = "restyle",
-        args = ["visible", [False] * len(names)],
-        label = names[i] 
-        )
-        step["args"][1][i] = True # Toggle i'th trace to "visible"
-        steps.append(step)
-        
     #  Heatmap
     custom_colorscale = [[0, '#e8f1f7'], [1, "#3886bc"]]
     data= [go.Heatmap(x=x_, y=y_, z=cm_results[step][1], visible=False, colorscale = custom_colorscale) for step in range(len(cm_results))]
     data[0]['visible'] = True
 
-    annotations = []
-    for i, row in enumerate(x_):
-        for j, value in enumerate(row):
-    #         print(i, j)
-            annotations.append(
-                {
-                    "x": x_[i],
-                    "y": y_[i],
-                    # FIXME: There is problem with changing the text on the boxes:
-                    "text": texts[0][i].replace("\n", "<br>"),
-                    "xref": "x1",
-                    "yref": "y1",
-                    "showarrow": False,
-                    "font": dict(size=16, color="black")
+    # Build slider steps
+    steps = []
+    for i in range(len(data)):
+        step = dict(
+            method = 'update', 
+            args = [
+                # Make the i'th trace visible
+                {'visible': [t == i for t in range(len(data))]},
+
+                {'annotations' : [
+                                dict(
+                                    x = x_[k],
+                                    y = y_[k],
+                                    xref= "x1",
+                                    yref= "y1",
+                                    showarrow = False,
+                                    text = texts[i][k].replace("\n", "<br>"),
+                                    font= dict(size=16, color="black")
+                                )
+                                for k in range(len(x_))
+                                ]
                 }
-            )
+
+            ],
+        label = names[i]
+        )
+        steps.append(step)
 
     layout_plotly = {
         "xaxis": {"title": "Predicted value"},
         "yaxis": {"title": "True value"},
-        "annotations": annotations
+        "annotations": steps[0]['args'][1]['annotations']
     }
-
     fig = go.Figure(data=data, layout=layout_plotly)
 
     # Add slider
     sliders = [dict(currentvalue={"prefix": "CV Split: "}, pad = {"t": 72}, active = 0, steps = steps)]
     fig.layout.update(sliders=sliders)
+    fig.update_layout(autosize=False,width=700,height=700)
+    fig.show()
 
     return layout, p, fig
 
