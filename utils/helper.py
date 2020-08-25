@@ -18,15 +18,6 @@ from sklearn.metrics import roc_curve, plot_roc_curve, auc, plot_confusion_matri
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
 
-# Bokeh (all of them will be deleted once Confusion Matrix plot is migrated to plotly)
-from bokeh.plotting import figure
-from bokeh.models import HoverTool
-from bokeh.models.glyphs import Text
-from bokeh.layouts import column, row
-from bokeh.plotting import ColumnDataSource
-from bokeh.palettes import Dark2_5 as palette
-from bokeh.models import CustomJS, Slider, Div
-
 # Plotly Graphs
 import plotly.express as px
 import plotly.graph_objects as go
@@ -398,8 +389,8 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     #also include a summary confusion_matrix
     y_test_ = np.array(list(chain.from_iterable([_[0] for _ in results])))
     y_pred_ = np.array(list(chain.from_iterable([_[1] for _ in results])))
-    cm_results.insert(0, calculate_cm(y_test_, y_pred_))
 
+    cm_results.insert(0, calculate_cm(y_test_, y_pred_))
     texts = []
     for j in cm_results:
         texts.append(['{}\n{:.0f} %'.format(_[0], _[1]*100) for _ in zip(*j)])
@@ -408,50 +399,9 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     x_ = [cats[0], cats[0], cats[1], cats[1]]
     y_ = [cats[0], cats[1], cats[1], cats[0]]
 
-    slider = Slider(start=0, end=len(cm_results)-1, value=0, step=1, title='')
-    p = figure(x_range=cats, y_range=cats[::-1])
-
-    div = Div(text= names[0], style={'font-size': '100%', 'color': 'black'})
-
-    source = ColumnDataSource(data=dict(x=x_, y=y_, alpha = cm_results[0][1], text = texts[0]))
-
-    callback = CustomJS(args=dict(source=source, div=div, slider=slider, cm_results = cm_results, texts=texts, names=names),
-                    code="""
-
-    var data = source.data;
-    var x = data['x'];
-    var y = data['y'];
-    var text = data['text'];
-    var alpha = data['alpha'];
-    div.text = names[slider.value]
-
-    for (var i = 0; i < x.length; i++) {
-        text[i] = texts[slider.value][i];
-        alpha[i] = cm_results[slider.value][1][i];
-    };
-
-    source.change.emit();
-""")
-
-    p.rect(x='x', y='y', alpha = 'alpha', source=source, width=1, height=1, line_color=None)
-
-    p.xgrid.visible = False
-    p.ygrid.visible = False
-
-    p.xaxis.axis_label = 'Predicted label'
-    p.yaxis.axis_label = 'True label'
-
-    glyph = Text(x="x", y="y", text="text", text_color="black", text_align='center', text_baseline='middle')
-    p.add_glyph(source, glyph)
-
-    slider.js_on_change('value', callback)
-    layout = column(div, slider, p)
-
-
-    # PLOTLY CASE
     #  Heatmap
     custom_colorscale = [[0, '#e8f1f7'], [1, "#3886bc"]]
-    data= [go.Heatmap(x=x_, y=y_, z=cm_results[step][1], visible=False, colorscale = custom_colorscale) for step in range(len(cm_results))]
+    data = [go.Heatmap(x=x_, y=y_, z=cm_results[step][1], visible=False, hoverinfo='none', colorscale = custom_colorscale) for step in range(len(cm_results))]
     data[0]['visible'] = True
 
     # Build slider steps
@@ -487,15 +437,14 @@ def plot_confusion_matrices(class_0, class_1, results, names):
         "yaxis": {"title": "True value"},
         "annotations": steps[0]['args'][1]['annotations']
     }
-    fig = go.Figure(data=data, layout=layout_plotly)
+    p = go.Figure(data=data, layout=layout_plotly)
 
     # Add slider
     sliders = [dict(currentvalue={"prefix": "CV Split: "}, pad = {"t": 72}, active = 0, steps = steps)]
-    fig.layout.update(sliders=sliders)
-    fig.update_layout(autosize=False,width=700,height=700)
-    fig.show()
+    p.layout.update(sliders=sliders)
+    p.update_layout(autosize=False,width=700,height=700)
 
-    return layout, p, fig
+    return p
 
 def plot_roc_curve_cv(roc_curve_results):
     """Plotly chart for roc curve for cross validation"""
