@@ -448,13 +448,27 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     layout = column(div, slider, p)
 
 
-    #  Plotly sample
+    # PLOTLY CASE
+    # Slider steps
+    steps = []
+    for i in range(len(names)):
+        step = dict(
+        method = "restyle",
+        args = ["visible", [False] * len(names)],
+        label = names[i] 
+        )
+        step["args"][1][i] = True # Toggle i'th trace to "visible"
+        steps.append(step)
+        
+    #  Heatmap
     custom_colorscale = [[0, '#e8f1f7'], [1, "#3886bc"]]
-    data= go.Heatmap(x=x_, y=y_, z=cm_results[0][1], colorscale = custom_colorscale)
+    data= [go.Heatmap(x=x_, y=y_, z=cm_results[step][1], visible=False, colorscale = custom_colorscale) for step in range(len(cm_results))]
+    data[0]['visible'] = True
+
     annotations = []
     for i, row in enumerate(x_):
         for j, value in enumerate(row):
-            text = str(cm_results[0][1][i])
+    #         print(i, j)
             annotations.append(
                 {
                     "x": x_[i],
@@ -466,13 +480,18 @@ def plot_confusion_matrices(class_0, class_1, results, names):
                     "font": dict(size=16, color="black")
                 }
             )
+
     layout_plotly = {
         "xaxis": {"title": "Predicted value"},
         "yaxis": {"title": "True value"},
         "annotations": annotations
     }
+
     fig = go.Figure(data=data, layout=layout_plotly)
-    fig.show()
+
+    # Add slider
+    sliders = [dict(currentvalue={"prefix": "CV Split: "}, pad = {"t": 72}, active = 0, steps = steps)]
+    fig.layout.update(sliders=sliders)
 
     return layout, p, fig
 
