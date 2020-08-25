@@ -473,6 +473,7 @@ def plot_confusion_matrices(class_0, class_1, results, names):
                 {
                     "x": x_[i],
                     "y": y_[i],
+                    # FIXME: There is problem with changing the text on the boxes:
                     "text": texts[0][i].replace("\n", "<br>"),
                     "xref": "x1",
                     "yref": "y1",
