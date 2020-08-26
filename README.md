@@ -18,7 +18,7 @@ Transparent exploration of machine learning approaches for clinical proteomics d
 
 This Wiki aims to provide general background information for Machine Learning, and it's applicability for clinical proteomics.
 
-Click on the sidebar on the right to get more information about individual processing steps.
+On Wiki page, click on the sidebar on the right to get more information about individual processing steps.
 
 ## Installation & Running
 
@@ -38,7 +38,7 @@ Click on the sidebar on the right to get more information about individual proce
   
   > `Running with Docker` option is also available. Please, check it out from [the Wiki pages](https://github.com/OmicEra/proto_learn/wiki/INSTALLATION-%26-RUNNING/).
   
- - Then, the Proto Learn page will be accessible via `http://localhost:8501`.
+ - Then, the Proto Learn page will be accessible via [`http://localhost:8501`](http://localhost:8501).
 
 ## Getting Started with Proto Learn
 
