@@ -57,8 +57,6 @@ def load_data(file_buffer, delimiter):
             df = pd.read_csv(file_buffer, sep=',')
         elif delimiter == "Semicolon (;)":
             df = pd.read_csv(file_buffer, sep=';')
-        else:
-            df = None
     return df
 
 @st.cache(persist=True)
