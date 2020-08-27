@@ -45,16 +45,20 @@ def make_recording_widget(f, widget_values):
     return wrapper
 
 @st.cache(persist=True)
-def load_data(file_buffer):
+def load_data(file_buffer, delimiter):
     """
     Load data to pandas dataframe
     """
     df = pd.DataFrame()
     if file_buffer is not None:
-        try:
+        if delimiter == "Excel":
             df = pd.read_excel(file_buffer)
-        except:
+        elif delimiter == "Comma (,)":
+            df = pd.read_csv(file_buffer, sep=',')
+        elif delimiter == "Semicolon (;)":
             df = pd.read_csv(file_buffer, sep=';')
+        else:
+            df = None
     return df
 
 @st.cache(persist=True)

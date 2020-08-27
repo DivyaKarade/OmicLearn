@@ -60,8 +60,9 @@ def main_text_and_data_upload():
     """)
     st.subheader("Dataset")
     file_buffer = st.file_uploader("Upload your dataset below", type=["csv", "xlsx"])
+    delimiter = st.selectbox("Determine the delimiter in your dataset", ["Excel File", "Comma (,)", "Semicolon (;)"])
     sample_file = st.selectbox("Or select sample file here:", ["None", "Sample"])
-    df = load_data(file_buffer)
+    df = load_data(file_buffer, delimiter)
     return sample_file, df
 
 def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, multiselect):
