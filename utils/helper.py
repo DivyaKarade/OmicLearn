@@ -513,7 +513,6 @@ def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
     base_fpr = np.linspace(0, 1, 101)
     roc_aucs = []
     p = go.Figure()
-    colors = itertools.cycle(palette)
     for idx, res in enumerate(roc_curve_results_cohort):
         fpr, tpr, threshold = res
         roc_auc = auc(fpr, tpr)
