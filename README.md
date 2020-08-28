@@ -51,3 +51,8 @@ To get started with Proto Learn, [a special page](https://github.com/OmicEra/pro
 On this page, you can click on the titles listed in *Table of Contents* for jumping into to the detailed documentation for each section explaning them and allowing you to give a try for the steps in the workflow using the example dataset. 
 
 ## Contributing
+Firstly, thank you very much for taking your time and we appreciate all contributions. 👍
+
+When contributing to **Proto Learn**, please [open a new issue](https://github.com/OmicEra/proto_learn/issues/new/choose) to report the bug or discuss the changes you plan before sending a PR (pull request).
+
+Also, be aware that you agree to the `OmicEra Individual Contributor License Agreement` by submitting your code. 🤝
