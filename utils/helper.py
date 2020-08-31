@@ -19,6 +19,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, La
 from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
 
 # Plotly Graphs
+import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -560,9 +561,12 @@ def get_system_report():
     """
 
     report = {}
+    report['proto_learn_version'] = "v0.1.0-dev"
     report['python_version'] = sys.version[:5]
     report['pandas_version'] = pd.__version__
+    report['numpy_version'] = np.version.version
     report['sklearn_version'] = sklearn.__version__
+    report['plotly_version'] = plotly.__version__
 
     return report
 

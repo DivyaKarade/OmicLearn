@@ -19,8 +19,9 @@ try:
 except ModuleNotFoundError:
     st.error('Xgboost not installed. To use xgboost install using `conda install py-xgboost`')
 
-# Define version
-version = "v0.5.0-dev0"
+# Define versions
+report = get_system_report()
+version = report['proto_learn_version']
 
 # Functions / Element Creations
 def main_components():
@@ -276,12 +277,11 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
 
 def generate_text(normalization, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
     st.write("## Summary")
-    report = get_system_report()
     text ="```"
     
     # Packages
-    text += "Machine learning was done in Python ({python_version}). Protein tables were imported via the pandas package ({pandas_version}). The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}). ".format(**report)
-
+    text += "Proto Learn ({proto_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts. Machine learning was done in Python ({python_version}). Protein tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}). The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}). For generating the plots and charts, 'Plotly' ({plotly_version}) library was used. ".format(**report)
+    
     # Normalization
     if normalization == 'None':
         text += 'After importing, no further normalization was performed. '
