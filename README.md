@@ -27,7 +27,15 @@ On Wiki page, click on the sidebar on the right to get more information about in
 - It is strongly recommended to install Proto Learn in its own environment using [Anaconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) Python distributions.
 
   1. Open the console and create a new conda environment: `conda create --name proto_learn python=3.7`
-  2. Activate the environment: `conda activate proto_learn` for Linux / Mac Os X or `activate proto_learn` for Windows
+  2. Activate the environment: `conda activate proto_learn` for Linux / Mac Os X / Windows
+  
+  
+  > **Note:** Type following command for conda versions prior to `4.6`:
+  >
+  > `source activate proto_learn` for macOS and Linux
+  >
+  > `activate proto_learn` for Windows
+
   3. Redirect to the folder of choice and clone the repository: `git clone https://github.com/OmicEra/proto_learn`
   4. Install the packages with `pip install -r requirements.txt`
   5. To be able to use Xgboost, install via conda: `conda install py-xgboost`
