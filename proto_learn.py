@@ -35,9 +35,11 @@ def main_components():
             .download_link:hover {background: #f63366 !important; color: #FFF !important;}
             h1, h2, h3, h4, h5, h6, a, a:visited {color: #f84f57 !important}
             label, stText, p, .caption {color: #035672 !important}
-
         </style>
     """
+        # TODO: CHANGE DROPDOWN BG COLOR to #dedede.
+        # TODO: CHANGE SIDEBAR BG COLOR to #035672.
+
     st.markdown(main_external_css, unsafe_allow_html=True)
 
     widget_values = {}
@@ -283,7 +285,7 @@ def generate_text(normalization, proteins, feature_method, classifier, cohort_co
     text ="```"
     
     # Packages
-    text += "Proto Learn ({proto_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts. Machine learning was done in Python ({python_version}). Protein tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}). The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}). For generating the plots and charts, 'Plotly' ({plotly_version}) library was used. ".format(**report)
+    text += "Proto Learn ({proto_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts. Machine learning was done in Python ({python_version}). Protein tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}). The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}). For generating the plots and charts, Plotly ({plotly_version}) library was used. ".format(**report)
     
     # Normalization
     if normalization == 'None':
