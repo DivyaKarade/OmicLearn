@@ -50,7 +50,7 @@ On Wiki page, click on the sidebar on the right to get more information about in
 
 ## Getting Started with Proto Learn
 
-![Proto Learn Workflow](https://user-images.githubusercontent.com/49681382/90739663-62b38680-e2d7-11ea-83f0-3a9cf91e3374.png)
+![Proto Learn Workflow](https://user-images.githubusercontent.com/49681382/91734594-cb421380-ebb3-11ea-91fa-8acc8826ae7b.png)
 
 Above, you can see the main steps for workflow of Proto Learn at a glance. 
 
