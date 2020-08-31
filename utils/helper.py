@@ -51,7 +51,7 @@ def load_data(file_buffer, delimiter):
     """
     df = pd.DataFrame()
     if file_buffer is not None:
-        if delimiter == "Excel":
+        if delimiter == "Excel File":
             df = pd.read_excel(file_buffer)
         elif delimiter == "Comma (,)":
             df = pd.read_csv(file_buffer, sep=',')
