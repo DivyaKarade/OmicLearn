@@ -1,5 +1,5 @@
 # Main
-import sys
+import os, sys
 import base64
 import itertools
 import numpy as np
@@ -568,6 +568,7 @@ def get_system_report():
 
 def get_svg_download_link(p, name='file.svg'):
     """Generates a link for a Plotly chart to be downloaded as SVG"""
+    os.makedirs("downloads/", exist_ok=True)
     p.write_image("downloads/"+ name)
     with open("downloads/" + name) as f:
         svg = f.read()
@@ -576,6 +577,7 @@ def get_svg_download_link(p, name='file.svg'):
     st.markdown(href, unsafe_allow_html=True)
 
 def get_pdf_download_link(p, name='file.pdf'):
+    os.makedirs("downloads/", exist_ok=True)
     """Generates a link for a Plotly chart to be downloaded as PDF"""
     p.write_image("downloads/"+ name)
     with open("downloads/" + name, "rb") as f:
@@ -585,6 +587,7 @@ def get_pdf_download_link(p, name='file.pdf'):
     st.markdown(href, unsafe_allow_html=True)
 
 def get_csv_download_link(dataframe, name='file.csv'):
+    os.makedirs("downloads/", exist_ok=True)
     """Generates a link for dataframes to be downloaded as CSV"""
     dataframe.to_csv("downloads/"+ name, index=False)
     with open("downloads/" + name, "rb") as f:
