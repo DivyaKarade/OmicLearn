@@ -3,7 +3,7 @@ import pandas as pd
 from PIL import Image
 import streamlit as st
 from datetime import datetime
-import utils.SessionState as SessionState 
+import utils.session_states as session_states
 from utils.helper import get_svg_download_link, get_pdf_download_link, get_csv_download_link
 from utils.helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
 from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
@@ -387,7 +387,7 @@ def ProtoLearn_Main():
         widget_values["Balanced Accuracy Mean"] = summary.loc['mean']['balanced_accuracy']
         widget_values["Balanced Accuracy Std"] = summary.loc['std']['balanced_accuracy']
         user_name = str(random.randint(0,10000)) + "ProtoLearn"
-        session_state = SessionState.get(user_name=user_name)
+        session_state = session_states.get(user_name=user_name)
         widget_values["user"] = session_state.user_name
         save_sessions(widget_values, session_state.user_name)
 
