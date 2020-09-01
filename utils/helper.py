@@ -301,6 +301,7 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
     clf = return_classifier(classifier, random_state, n_estimators, n_neighbors)
 
     roc_curve_results_cohort = []
+    pr_curve_results_cohort = []
     cohort_results = []
 
     _cohort_results = {}
@@ -338,7 +339,10 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
         y_pred = clf.predict(X_test)
         y_score = clf.predict_proba(X_test)
 
+        # ROC Curve
         fpr, tpr, cutoffs = roc_curve(y_test, y_score[:, 1])
+        # PR CURVE
+        precision, recall, _ = precision_recall_curve(y_test, y_score[:, 1])
 
         for metric_name, metric_fct in scorer_dict.items():
             if metric_name == 'roc_auc':
@@ -354,11 +358,12 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
         _cohort_results['class_ratio'].append(np.sum(y)/len(y))
 
         roc_curve_results_cohort.append((fpr, tpr, cutoffs))
+        pr_curve_results_cohort.append((precision, recall, _ ))
         cohort_results.append((y_test.values, y_pred))
 
         bar.progress((i+1)/len(cohort_combos))
 
-    return _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
+    return _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos
 
 def calculate_cm(y_test, y_pred):
     """
@@ -594,6 +599,53 @@ def plot_pr_curve_cv(pr_curve_results):
                         scaleratio = 1,
                         zeroline=True,
                         ),
+                    )
+    return p
+
+def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos):
+    """Plotly chart for PR curve for cohort comparison"""
+
+    precisions = []
+    base_recall = np.linspace(0, 1, 101)
+    pr_aucs = []
+    p = go.Figure()
+    for idx, res in enumerate(pr_curve_results_cohort):
+        recall, precision, _ = res
+        pr_auc = auc(recall, precision)
+        pr_aucs.append(pr_auc)
+        roc_df = pd.DataFrame({'recall':recall,'precision':precision, 'train':cohort_combos[idx][0], 'test':cohort_combos[idx][1]})
+        text= "Train: {} <br>Test: {}".format(cohort_combos[idx][0], cohort_combos[idx][1])
+        hovertemplate = "Recall: %{x:.2f} <br>Precision: %{y:.2f}" + "<br>" + text
+        p.add_trace(go.Scatter(x=recall, y=precision, hovertemplate=hovertemplate, hoverinfo='all', mode='lines', name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], pr_auc)))
+        precision = np.interp(base_recall, recall, precision)
+        precision[0]=0.0
+        precisions.append(precision)
+
+    precisions = np.array(precisions)
+    mean_precisions = precisions.mean(axis=0)
+    std = precisions.std(axis=0)
+    precisions_upper = mean_precisions + std
+    precisions_lower = mean_precisions - std
+    mean_rocauc = np.mean(pr_aucs).round(2)
+    sd_rocauc = np.std(pr_aucs).round(2)
+    roc_df = pd.DataFrame({'base_recall':base_recall,'mean_precisions':mean_precisions,'lower':precisions_lower,'upper':precisions_upper})
+
+    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color='black', dash='dash'), showlegend=False))
+    p.update_xaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_yaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_layout(autosize=True,
+                    width=800,
+                    height=700,
+                    xaxis_title='Recall',
+                    yaxis_title='Precision',
+                    xaxis_showgrid=False,
+                    yaxis_showgrid=False,
+                    plot_bgcolor= 'rgba(0, 0, 0, 0)',
+                    yaxis = dict(
+                        scaleanchor = "x",
+                        scaleratio = 1,
+                        zeroline=True,
+                        )
                     )
     return p
 

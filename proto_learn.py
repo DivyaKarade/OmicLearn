@@ -7,7 +7,7 @@ import utils.session_states as session_states
 from utils.helper import get_svg_download_link, get_pdf_download_link, get_csv_download_link
 from utils.helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
 from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
-from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, plot_pr_curve_cv, get_system_report
+from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, plot_pr_curve_cv, plot_pr_curve_cohort, get_system_report
 icon = Image.open('./utils/proto_learn.png')
 
 # Checkpoint for XGBoost
@@ -269,7 +269,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         st.header('Cohort comparison')
         
         st.subheader('Receiver operating characteristic',)
-        _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, st.progress(0))
+        _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, st.progress(0))
 
         # ROC-AUC for Cohorts
         p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
@@ -277,6 +277,15 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         if p:
             get_pdf_download_link(p, 'roc_curve_cohort.pdf')
             get_svg_download_link(p, 'roc_curve_cohort.svg')
+
+        # PR Curve for Cohorts
+        st.subheader('Precision-Recall Curve')
+        st.text("Precision-Recall (PR) Curve might be used for imbalanced datasets.")
+        p = plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos)
+        st.plotly_chart(p)
+        if p:
+            get_pdf_download_link(p, 'pr_curve_cohort.pdf')
+            get_svg_download_link(p, 'pr_curve_cohort.svg')
 
         st.subheader('Confusion matrix')
         names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
