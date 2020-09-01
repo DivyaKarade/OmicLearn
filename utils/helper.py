@@ -581,7 +581,7 @@ def plot_pr_curve_cv(pr_curve_results):
     hovertemplate = "Base Recall %{x:.2f} <br>%{text}"
     text = ["Upper Precision {:.2f} <br>Mean Precision {:.2f} <br>Lower Precision {:.2f}".format(u, m, l) for u, m, l in zip(precisions_upper, mean_precisions, precisions_lower)]
 
-    p.add_trace(go.Scatter(x=base_recall, y=mean_precisions, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_prauc, sd_prauc)))
+    p.add_trace(go.Scatter(x=base_recall, y=mean_precisions, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', line=dict(color='black', width=2), name='Mean PR\n(AUC = {:.2f}±{:.2f})'.format(mean_prauc, sd_prauc)))
     p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), showlegend=False))
 
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
@@ -613,7 +613,7 @@ def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos):
         recall, precision, _ = res
         pr_auc = auc(recall, precision)
         pr_aucs.append(pr_auc)
-        roc_df = pd.DataFrame({'recall':recall,'precision':precision, 'train':cohort_combos[idx][0], 'test':cohort_combos[idx][1]})
+        pr_df = pd.DataFrame({'recall':recall,'precision':precision, 'train':cohort_combos[idx][0], 'test':cohort_combos[idx][1]})
         text= "Train: {} <br>Test: {}".format(cohort_combos[idx][0], cohort_combos[idx][1])
         hovertemplate = "Recall: %{x:.2f} <br>Precision: %{y:.2f}" + "<br>" + text
         p.add_trace(go.Scatter(x=recall, y=precision, hovertemplate=hovertemplate, hoverinfo='all', mode='lines', name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], pr_auc)))
@@ -626,9 +626,9 @@ def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos):
     std = precisions.std(axis=0)
     precisions_upper = mean_precisions + std
     precisions_lower = mean_precisions - std
-    mean_rocauc = np.mean(pr_aucs).round(2)
-    sd_rocauc = np.std(pr_aucs).round(2)
-    roc_df = pd.DataFrame({'base_recall':base_recall,'mean_precisions':mean_precisions,'lower':precisions_lower,'upper':precisions_upper})
+    mean_prauc = np.mean(pr_aucs).round(2)
+    sd_prauc = np.std(pr_aucs).round(2)
+    pr_df = pd.DataFrame({'base_recall':base_recall,'mean_precisions':mean_precisions,'lower':precisions_lower,'upper':precisions_upper})
 
     p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color='black', dash='dash'), showlegend=False))
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
