@@ -126,7 +126,6 @@ def normalize_dataset(X, normalization):
 
     return X
 
-
 def select_features(feature_method, X, y, max_features, random_state):
 
     if feature_method == 'ExtraTrees':
@@ -186,7 +185,6 @@ def plot_feature_importance(features, feature_importance, pvalues):
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     return p, feature_df
 
-
 def impute_nan(X, missing_value, random_state):
     """
     Missing value imputation
@@ -235,7 +233,6 @@ def return_classifier(classifier, random_state, n_estimators, n_neighbors):
         clf = svm.LinearSVC(penalty='l2', C=2, random_state = random_state)
 
     return clf
-
 
 def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, n_neighbors, bar):
 
@@ -298,7 +295,6 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
         bar.progress((i+1)/(cv_splits*cv_repeats))
 
     return _cv_results, roc_curve_results, pr_curve_results, split_results
-
 
 def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, bar):
 
@@ -503,7 +499,6 @@ def plot_roc_curve_cv(roc_curve_results):
                     )
     return p
 
-
 def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
     """Plotly chart for roc curve for cohort comparison"""
 
@@ -550,7 +545,6 @@ def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
                         )
                     )
     return p
-
 
 def plot_pr_curve_cv(pr_curve_results):
     """Plotly chart for Precision-Recall PR curve"""
