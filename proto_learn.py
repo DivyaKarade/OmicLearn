@@ -34,12 +34,13 @@ def main_components():
                             text-align:center; padding: 8px !important; width: 200px;}
             .download_link:hover {background: #f63366 !important; color: #FFF !important;}
             h1, h2, h3, h4, h5, h6, a, a:visited {color: #f84f57 !important}
-            label, stText, p, .caption {color: #035672 !important}
+            label, stText, p, .caption {color: #035672 }
+            .sidebar .sidebar-content {background: #035672 !important;}
+            .sidebar-content label, stText, p, .caption {color: #FFF !important}
+            .tickBarMin, .tickBarMax {color: #f84f57 !important}
+            .markdown-text-container p {color: #035672 !important}
         </style>
     """
-        # TODO: CHANGE DROPDOWN BG COLOR to #dedede.
-        # TODO: CHANGE SIDEBAR BG COLOR to #035672.
-
     st.markdown(main_external_css, unsafe_allow_html=True)
 
     widget_values = {}
