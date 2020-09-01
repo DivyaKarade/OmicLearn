@@ -14,7 +14,7 @@ import sklearn.metrics as metrics
 from sklearn.impute import KNNImputer
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold
 from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, SelectKBest
-from sklearn.metrics import roc_curve, plot_roc_curve, auc, plot_confusion_matrix
+from sklearn.metrics import roc_curve, plot_roc_curve, precision_recall_curve, auc, plot_confusion_matrix
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
 
@@ -243,6 +243,7 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
     rskf = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
 
     roc_curve_results = []
+    pr_curve_results = []
     split_results = []
 
     _cv_results = {}
@@ -271,7 +272,10 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
         y_pred = clf.predict(X_test)
         y_score = clf.predict_proba(X_test)
 
+        # ROC CURVE
         fpr, tpr, cutoffs = roc_curve(y_test, y_score[:, 1])
+        # PR CURVE
+        precision, recall, _ = precision_recall_curve(y_test, y_score[:, 1])
 
         for metric_name, metric_fct in scorer_dict.items():
             if metric_name == 'roc_auc':
@@ -288,11 +292,12 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
         _cv_results['class_ratio'].append(np.sum(y)/len(y))
 
         roc_curve_results.append((fpr, tpr, cutoffs))
+        pr_curve_results.append((precision, recall, _))
         split_results.append((y_test.values, y_pred))
 
         bar.progress((i+1)/(cv_splits*cv_repeats))
 
-    return _cv_results, roc_curve_results, split_results
+    return _cv_results, roc_curve_results, pr_curve_results, split_results
 
 
 def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, bar):
@@ -546,6 +551,57 @@ def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
                     )
     return p
 
+
+def plot_pr_curve_cv(pr_curve_results):
+    """Plotly chart for Precision-Recall PR curve"""
+
+    precisions = []
+    base_recall = np.linspace(0, 1, 101)
+    pr_aucs = []
+    p = go.Figure()
+
+    for precision, recall, _ in pr_curve_results:
+        pr_auc = auc(recall, precision)
+        pr_aucs.append(pr_auc)
+        p.add_trace(go.Scatter(x=recall, y=precision, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.2))
+        precision = np.interp(base_recall, precision, recall)
+        precision[0]=0.0
+        precisions.append(precision)
+
+    precisions = np.array(precisions)
+    mean_precisions = precisions.mean(axis=0)
+    std = precisions.std(axis=0)
+    precisions_upper = mean_precisions + std
+    precisions_lower = mean_precisions - std
+    mean_prauc = np.mean(pr_aucs).round(2)
+    sd_prauc = np.std(pr_aucs).round(2)
+
+    p.add_trace(go.Scatter(x=base_recall, y=precisions_lower, fill = None, line_color='gray', opacity=0.2, showlegend=False))
+    p.add_trace(go.Scatter(x=base_recall, y=precisions_upper, fill='tonexty', line_color='gray', opacity=0.2, name='±1 std. dev'))
+
+    hovertemplate = "Base Recall %{x:.2f} <br>%{text}"
+    text = ["Upper Precision {:.2f} <br>Mean Precision {:.2f} <br>Lower Precision {:.2f}".format(u, m, l) for u, m, l in zip(precisions_upper, mean_precisions, precisions_lower)]
+
+    p.add_trace(go.Scatter(x=base_recall, y=mean_precisions, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_prauc, sd_prauc)))
+    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), showlegend=False))
+
+    p.update_xaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_yaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_layout(autosize=True,
+                    width=800,
+                    height=700,
+                    xaxis_title='Recall',
+                    yaxis_title='Precision',
+                    xaxis_showgrid=False,
+                    yaxis_showgrid=False,
+                    plot_bgcolor= 'rgba(0, 0, 0, 0)',
+                    yaxis = dict(
+                        scaleanchor = "x",
+                        scaleratio = 1,
+                        zeroline=True,
+                        ),
+                    )
+    return p
 
 def get_system_report():
     """

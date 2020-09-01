@@ -7,7 +7,7 @@ import utils.session_states as session_states
 from utils.helper import get_svg_download_link, get_pdf_download_link, get_csv_download_link
 from utils.helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
 from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
-from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, get_system_report
+from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, plot_pr_curve_cv, get_system_report
 icon = Image.open('./utils/proto_learn.png')
 
 # Checkpoint for XGBoost
@@ -228,7 +228,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     
     # Cross-Validation                
     st.markdown("Running Cross-Validation")
-    _cv_results, roc_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, n_neighbors, st.progress(0))
+    _cv_results, roc_curve_results, pr_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, n_neighbors, st.progress(0))
     st.header('Cross-Validation')
 
     # ROC-AUC
@@ -238,6 +238,15 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     if p:
         get_pdf_download_link(p, 'roc_curve.pdf')
         get_svg_download_link(p, 'roc_curve.svg')
+
+    # Precision-Recall Curve
+    st.subheader('Precision-Recall Curve')
+    st.text("Precision-Recall (PR) Curve might be used for imbalanced datasets.")
+    p = plot_pr_curve_cv(roc_curve_results)
+    st.plotly_chart(p)
+    if p:
+        get_pdf_download_link(p, 'pr_curve.pdf')
+        get_svg_download_link(p, 'pr_curve.svg')
 
     # Confusion Matrix (CM)
     st.subheader('Confusion matrix')
