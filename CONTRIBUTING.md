@@ -45,9 +45,7 @@ Ready to contribute? Here's how to set up `proto_learn` for local development.
 
     `git clone https://github.com/OmicEra/proto_learn.git`
 
-3.  Follow the installation instructions in the [Installation & Running](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Installation-&-Running ) page for installing
-    
-    `proto_learn` own environment.
+3.  Follow the installation instructions in the [Installation & Running](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Installation-&-Running ) page for installing `proto_learn` own environment.
 
 4.  Create a branch for local development:
 
