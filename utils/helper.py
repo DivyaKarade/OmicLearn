@@ -28,11 +28,9 @@ red_color = '#f63366'
 gray_color ='#f3f4f7'
 
 scores = ['roc_auc', 'precision', 'recall', 'f1', 'balanced_accuracy']
-
 scorer_dict = {}
 scorer_dict = {metric:metric+'_score' for metric in scores}
 scorer_dict = {key: getattr(metrics, metric) for key, metric in scorer_dict.items()}
-
 
 def make_recording_widget(f, widget_values):
     """Return a function that wraps a streamlit widget and records the
@@ -497,11 +495,6 @@ def plot_roc_curve_cv(roc_curve_results):
                         scaleratio = 1,
                         zeroline=True,
                         ),
-                    # legend=dict(
-                    #         yanchor="bottom",
-                    #         y=0.01,
-                    #         xanchor="right",
-                    #         x=0.99)
                     )
     return p
 
@@ -510,7 +503,6 @@ def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
     """Plotly chart for roc curve for cohort comparison"""
 
     tprs = []
-    #base_fpr = np.linspace(0, 1, 101)
     base_fpr = np.linspace(0, 1, 101)
     roc_aucs = []
     p = go.Figure()
