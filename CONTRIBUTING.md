@@ -2,10 +2,9 @@
 
 Firstly, contributions are welcome and we appreciate all of them!. 
 
-You can contribute in many ways:
+You can contribute **Proto Learn** in many ways:
 
 ## Types of Contributions
-----------------------
 
 ### 1. Report Bugs
 
@@ -35,9 +34,9 @@ You might have a look at our `Feature request` template on [`GitHub issues`](htt
 
 Implementing our [Proto Learn Wiki](https://github.com/OmicEra/proto_learn/wiki) page would be great idea! You might add articles, detailed explanations or blog posts into the our pages.
 
+--- 
 
 ## 👇 Get Started!
-----------------------
 
 Ready to contribute? Here's how to set up `proto_learn` for local development.
 
