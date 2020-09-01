@@ -22,7 +22,7 @@ On Wiki page, click on the sidebar on the right to get more information about in
 
 ## Installation & Running
 
-> More details for [`INSTALLATION & RUNNING`](https://github.com/OmicEra/proto_learn/wiki/INSTALLATION-%26-RUNNING/) is available [on Wiki pages](https://github.com/OmicEra/proto_learn/wiki/INSTALLATION-%26-RUNNING/).
+> More details for [`Installation & Running`](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Installation-&-Running) is available [on Wiki pages](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Installation-&-Running).
 
 - It is strongly recommended to install Proto Learn in its own environment using [Anaconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) Python distributions.
 
@@ -54,7 +54,7 @@ On Wiki page, click on the sidebar on the right to get more information about in
 
 Above, you can see the main steps for workflow of Proto Learn at a glance. 
 
-To get started with Proto Learn, [a special page](https://github.com/OmicEra/proto_learn/wiki/USING-Proto-Learn) is prepared for [`Using Proto Learn`](https://github.com/OmicEra/proto_learn/wiki/USING-Proto-Learn). 
+To get started with Proto Learn, [a special page](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Using) is prepared for [`Using Proto Learn`](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Using). 
 
 On this page, you can click on the titles listed in *Table of Contents* for jumping into to the detailed documentation for each section explaning them and allowing you to give a try for the steps in the workflow using the example dataset. 
 
