@@ -225,10 +225,13 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     return class_names, subset, X, y, features
 
 def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, cv_splits, cv_repeats, class_0, class_1):
+    
     # Cross-Validation                
     st.markdown("Running Cross-Validation")
     _cv_results, roc_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, n_neighbors, st.progress(0))
     st.header('Cross-Validation')
+
+    # ROC-AUC
     st.subheader('Receiver operating characteristic')
     p = plot_roc_curve_cv(roc_curve_results)
     st.plotly_chart(p)
@@ -236,8 +239,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         get_pdf_download_link(p, 'roc_curve.pdf')
         get_svg_download_link(p, 'roc_curve.svg')
 
+    # Confusion Matrix (CM)
     st.subheader('Confusion matrix')
-    #st.text('Performed on the last CV split')
     names = ['CV_split {}'.format(_+1) for _ in range(len(split_results))]
     names.insert(0, 'Sum of all splits')
     p  = plot_confusion_matrices(class_0, class_1, split_results, names)
@@ -246,6 +249,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         get_pdf_download_link(p, 'cm_cohorts.pdf')
         get_svg_download_link(p, 'cm_cohorts.svg')
 
+    # Results
     st.subheader('Run Results for `{}`'.format(classifier))
     summary = pd.DataFrame(_cv_results).describe()
     summary_df = pd.DataFrame(summary)
@@ -254,9 +258,11 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
 
     if cohort_column != 'None':
         st.header('Cohort comparison')
+        
         st.subheader('Receiver operating characteristic',)
         _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, st.progress(0))
 
+        # ROC-AUC for Cohorts
         p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
         st.plotly_chart(p)
         if p:
@@ -266,6 +272,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         st.subheader('Confusion matrix')
         names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
         names.insert(0, 'Sum of cohort comparisons')
+        
+        # Confusion Matrix (CM) for Cohorts
         p = plot_confusion_matrices(class_0, class_1, cohort_results, names)
         st.plotly_chart(p)
         if p:
