@@ -61,6 +61,8 @@ On this page, you can click on the titles listed in *Table of Contents* for jump
 ## Contributing
 Firstly, thank you very much for taking your time and we appreciate all contributions. 👍
 
+📰 For the details, please check our [`CONTRIBUTING`](https://github.com/OmicEra/proto_learn/blob/master/CONTRIBUTING.md) guideline out. 
+
 When contributing to **Proto Learn**, please [open a new issue](https://github.com/OmicEra/proto_learn/issues/new/choose) to report the bug or discuss the changes you plan before sending a PR (pull request).
 
 Also, be aware that you agree to the `OmicEra Individual Contributor License Agreement` by submitting your code. 🤝
