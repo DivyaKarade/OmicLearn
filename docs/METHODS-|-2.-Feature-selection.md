@@ -32,4 +32,4 @@ Here, an estimate for the mutual information of variables is used as the k-score
 
 ### [2. 4. k-best (f_classif)](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_classif.html#sklearn.feature_selection.f_classif)
 
-Here,  an estimate for the ANOVA (ANalysis Of VAriance) F-value is as the k-score.
+Here,  an estimate for the ANOVA (ANalysis Of VAriance) F-value is used as the k-score.

@@ -15,7 +15,7 @@
 
 Classification refers to the task of correctly classifying the label of given data points. In the context of clinical proteomics, this refers to predicting a disease state based on protein signals. The core task of a classifier is to define a decision boundary in an n-dimensional space. Depending on the underlying mechanism of the classifier, different decision boundaries can be achieved. An excellent overview of the performance of different classifiers and their decision boundary can be found [here](https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html).
 
-Within proto-learn, you can choose from a wide range of classifiers. Understanding why a classifier performs better or worse on a dataset requires in-depth knowledge of the underlying mechanisms. Within proto-learn, you can try different optimizers. Follow the links below to learn more about each option:
+Within proto-learn, you can choose from a wide range of classifiers. Understanding why a classifier performs better or worse on a dataset requires in-depth knowledge of the underlying mechanisms and careful tuning of their hyperparameters. Within proto-learn, you can try different optimizers. Follow the links below to learn more about each option:
 
 ### [3. 1. AdaBoost](https://scikit-learn.org/stable/modules/ensemble.html#adaboost)
 

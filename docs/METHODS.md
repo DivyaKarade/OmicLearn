@@ -1,10 +1,10 @@
-**Proto Learn** aims to alleviate the access to the latest techniques in machine learning to be used for clinical proteomics datasets. Here, the tool heavily relies on [scikit-learn](https://scikit-learn.org/stable/) and aims to integrate state-of-the-art algorithms such as xgboost.
+**Proto Learn** aims to alleviate access to the latest techniques in machine learning to be used for clinical proteomics datasets. Here, the tool heavily relies on [scikit-learn](https://scikit-learn.org/stable/) and additionally integrates state-of-the-art algorithms such as xgboost.
 
 A typical machine learning pipeline consists of `Preprocessing`, `Feature Selection`, `Classification` and `Validation` of your method. 
 
 With Proto Learn, you have the possibility to choose from several different choices and explore their effect when analyzing your data. 
 
-This documentation aims to provide more detailed information about the individual algorithms so that the best parameters for the use case can be selected:
+Additional information about the individual processing steps can be found here:
 
 - [1. Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-preprocessing)
 - [1. 1. Standardization](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-1-standardization)
