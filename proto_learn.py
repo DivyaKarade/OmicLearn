@@ -132,7 +132,9 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
 
         st.subheader("Cohort comparison")
         st.text('Select cohort column to train on one and predict on another:')
-        cohort_column = st.selectbox("Select cohort column:", ['None']+not_proteins)
+        not_proteins_excluded_target_option = not_proteins
+        not_proteins_excluded_target_option.remove(option)
+        cohort_column = st.selectbox("Select cohort column:", ['None'] + not_proteins_excluded_target_option)
 
         return class_0, class_1, df, unique_elements_lst, cohort_column, exclude_features, remainder, proteins, not_proteins, option, df_sub, additional_features, n_missing, subset_column
 
