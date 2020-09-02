@@ -173,9 +173,16 @@ def plot_feature_importance(features, feature_importance, pvalues):
     feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance','P_value'])
     feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
 
+    # Hide pvalue if it does not exist
+    if np.isnan(pvalues).all(): 
+        hover_data = ["Name", "Feature_importance"]
+    else:
+        hover_data = ["Name", "Feature_importance", "P_value"]
+
+
     p = px.bar(feature_df, x="Feature_importance", y="Name", color='Name',
             orientation='h',
-            hover_data=["Name", "Feature_importance", "P_value"],
+            hover_data=hover_data,
             labels={
                     "Feature_importance": "Feature importance",
             },
