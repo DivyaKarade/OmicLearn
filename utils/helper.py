@@ -171,6 +171,7 @@ def plot_feature_importance(features, feature_importance, pvalues):
 
     n_features = len(features)
     feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance','P_value'])
+    feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
 
     p = px.bar(feature_df, x="Feature_importance", y="Name", color='Name',
             orientation='h',
