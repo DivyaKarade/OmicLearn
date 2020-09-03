@@ -1,12 +1,14 @@
 ## **Table of Contents**
 
+- [**Table of Contents**](#table-of-contents)
 - [4. 1. Cross Validation](#4-1-cross-validation)
 - [4. 2. Scores](#4-2-scores)
-  * [4. 2. 1. ROC AUC Score](#4-2-1-roc-auc-score)
-  * [4. 2. 2. Precision Score](#4-2-2-precision-score)
-  * [4. 2. 3. Recall Score](#4-2-3-recall-score)
-  * [4. 2. 4. F1 Score](#4-2-4-f1-score)
-  * [4. 2. 5. Balanced Accuracy Score](#4-2-5-balanced-accuracy-score)
+  - [4. 2. 1. ROC AUC Score](#4-2-1-roc-auc-score)
+  - [4. 2. 2. PR AUC Score](#4-2-2-pr-auc-score)
+  - [4. 2. 3. Precision Score](#4-2-3-precision-score)
+  - [4. 2. 4. Recall Score](#4-2-4-recall-score)
+  - [4. 2. 5. F1 Score](#4-2-5-f1-score)
+  - [4. 2. 6. Balanced Accuracy Score](#4-2-6-balanced-accuracy-score)
 
 ---
 
@@ -29,16 +31,25 @@ This score reflects the computation of Area Under the Curve (`AUC`) of Receiver 
 
 A good brief introduction for understanding the `ROC` can be found [here](https://www.datasciencecentral.com/profiles/blogs/roc-curve-explained-in-one-picture). 
 
-### [4. 2. 2. Precision Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html#sklearn.metrics.precision_score)
+### [4. 2. 2. PR AUC Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_curve.html)
+This `Precision-Recall Curve` (or `PR Curve`) is a plot of the `precision` on y-axis and the `recall` on x-axis at different thresholds.
+
+Also, `PR AUC Score` is calculation of Area Under the Curve (`AUC`) of `Precision-Recall Curve` (`PR Curve`).
+
+> For imbalanced datasets, `PR Curve` might be a better choice.
+
+A detailed explanation for `PR Curve` can be found [here](https://acutecaretesting.org/en/articles/precision-recall-curves-what-are-they-and-how-are-they-used).
+
+### [4. 2. 3. Precision Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html#sklearn.metrics.precision_score)
 
 Precision refers to a ratio of correctly classified positive samples to the total classified positive samples. 
 
-### [4. 2. 3. Recall Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html#sklearn.metrics.recall_score)
+### [4. 2. 4. Recall Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html#sklearn.metrics.recall_score)
 `Recall` score is also known as `Sensitivity`.  This metric computes the fraction of true positive results out of all positively predicted results.
 
-### [4. 2. 4. F1 Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html#sklearn.metrics.f1_score)
+### [4. 2. 5. F1 Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html#sklearn.metrics.f1_score)
 `F1 Score` is the weighted average of both `Precision` and `Recall`.
 
-### [4. 2. 5. Balanced Accuracy Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score)
+### [4. 2. 6. Balanced Accuracy Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score)
 
 The balanced accuracy calculates the average `Recall` for each class.
