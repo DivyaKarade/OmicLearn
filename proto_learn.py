@@ -244,7 +244,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     # Precision-Recall Curve
     st.subheader('Precision-Recall Curve')
     st.text("Precision-Recall (PR) Curve might be used for imbalanced datasets.")
-    p = plot_pr_curve_cv(roc_curve_results)
+    p = plot_pr_curve_cv(pr_curve_results)
     st.plotly_chart(p)
     if p:
         get_pdf_download_link(p, 'pr_curve.pdf')
