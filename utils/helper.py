@@ -572,7 +572,7 @@ def plot_pr_curve_cv(pr_curve_results):
         pr_aucs.append(pr_auc)
         p.add_trace(go.Scatter(x=recall, y=precision, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.2))
         precision = np.interp(base_recall, precision, recall)
-        precision[0]=0.0
+        precision[0]=1.0
         precisions.append(precision)
 
     precisions = np.array(precisions)
@@ -626,7 +626,7 @@ def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos):
         hovertemplate = "Recall: %{x:.2f} <br>Precision: %{y:.2f}" + "<br>" + text
         p.add_trace(go.Scatter(x=recall, y=precision, hovertemplate=hovertemplate, hoverinfo='all', mode='lines', name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], pr_auc)))
         precision = np.interp(base_recall, recall, precision)
-        precision[0]=0.0
+        precision[0]=1.0
         precisions.append(precision)
 
     precisions = np.array(precisions)
