@@ -42,8 +42,9 @@ Additional information about the individual processing steps can be found here:
 - [4. 1. Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)
 - [4. 2. Scores](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-scores)
   * [4. 2. 1. ROC AUC Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-1-roc-auc-score)
-  * [4. 2. 2. Precision Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-2-precision-score)
-  * [4. 2. 3. Recall Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-3-recall-score)
-  * [4. 2. 4. F1 Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-4-f1-score)
-  * [4. 2. 5. Balanced Accuracy Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-5-balanced-accuracy-score)
+  * [4. 2. 2. PR AUC Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-2-pr-auc-score)
+  * [4. 2. 3. Precision Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-3-precision-score)
+  * [4. 2. 4. Recall Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-4-recall-score)
+  * [4. 2. 5. F1 Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-5-f1-score)
+  * [4. 2. 6. Balanced Accuracy Score](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-2-6-balanced-accuracy-score)
   
