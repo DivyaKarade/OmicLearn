@@ -302,7 +302,7 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
 
         bar.progress((i+1)/(cv_splits*cv_repeats))
 
-    return _cv_results, roc_curve_results, pr_curve_results, split_results
+    return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test
 
 def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, bar):
 
@@ -371,7 +371,7 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
 
         bar.progress((i+1)/len(cohort_combos))
 
-    return _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos
+    return _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos, y_test
 
 def calculate_cm(y_test, y_pred):
     """
@@ -492,7 +492,7 @@ def plot_roc_curve_cv(roc_curve_results):
     text = ["Upper TPR {:.2f} <br> Mean TPR {:.2f} <br> Lower TPR {:.2f}".format(u, m, l) for u, m, l in zip(tprs_upper, mean_tprs, tprs_lower)]
 
     p.add_trace(go.Scatter(x=base_fpr, y=mean_tprs, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc)))
-    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), showlegend=False))
+    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), name="Chance"))
 
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
@@ -540,7 +540,7 @@ def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
     sd_rocauc = np.std(roc_aucs).round(2)
     roc_df = pd.DataFrame({'base_fpr':base_fpr,'mean_tprs':mean_tprs,'lower':tprs_lower,'upper':tprs_upper})
 
-    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color='black', dash='dash'), showlegend=False))
+    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color='black', dash='dash'), name="Chance"))
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     p.update_layout(autosize=True,
@@ -559,7 +559,7 @@ def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
                     )
     return p
 
-def plot_pr_curve_cv(pr_curve_results):
+def plot_pr_curve_cv(pr_curve_results, y_test):
     """Plotly chart for Precision-Recall PR curve"""
 
     precisions = []
@@ -590,7 +590,8 @@ def plot_pr_curve_cv(pr_curve_results):
     text = ["Upper Precision {:.2f} <br>Mean Precision {:.2f} <br>Lower Precision {:.2f}".format(u, m, l) for u, m, l in zip(precisions_upper, mean_precisions, precisions_lower)]
 
     p.add_trace(go.Scatter(x=base_recall, y=mean_precisions, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', line=dict(color='black', width=2), name='Mean PR\n(AUC = {:.2f}±{:.2f})'.format(mean_prauc, sd_prauc)))
-    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), showlegend=False))
+    no_skill = len(y_test[y_test==1]) / len(y_test)
+    p.add_trace(go.Scatter(x=[0, 1], y=[no_skill, no_skill], line=dict(color=red_color, dash='dash'), name="Chance"))
 
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
@@ -610,7 +611,7 @@ def plot_pr_curve_cv(pr_curve_results):
                     )
     return p
 
-def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos):
+def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos, y_test):
     """Plotly chart for PR curve for cohort comparison"""
 
     precisions = []
@@ -637,8 +638,9 @@ def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos):
     mean_prauc = np.mean(pr_aucs).round(2)
     sd_prauc = np.std(pr_aucs).round(2)
     pr_df = pd.DataFrame({'base_recall':base_recall,'mean_precisions':mean_precisions,'lower':precisions_lower,'upper':precisions_upper})
-
-    p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color='black', dash='dash'), showlegend=False))
+    
+    no_skill = len(y_test[y_test==1]) / len(y_test)
+    p.add_trace(go.Scatter(x=[0, 1], y=[no_skill, no_skill], line=dict(color='black', dash='dash'), name="Chance"))
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     p.update_layout(autosize=True,

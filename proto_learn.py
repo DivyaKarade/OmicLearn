@@ -230,7 +230,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     
     # Cross-Validation                
     st.markdown("Running Cross-Validation")
-    _cv_results, roc_curve_results, pr_curve_results, split_results = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, n_neighbors, st.progress(0))
+    _cv_results, roc_curve_results, pr_curve_results, split_results, y_test = perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, n_neighbors, st.progress(0))
     st.header('Cross-Validation')
 
     # ROC-AUC
@@ -244,7 +244,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     # Precision-Recall Curve
     st.subheader('Precision-Recall Curve')
     st.text("Precision-Recall (PR) Curve might be used for imbalanced datasets.")
-    p = plot_pr_curve_cv(pr_curve_results)
+    p = plot_pr_curve_cv(pr_curve_results, y_test)
     st.plotly_chart(p)
     if p:
         get_pdf_download_link(p, 'pr_curve.pdf')
@@ -269,11 +269,10 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
 
     if cohort_column != 'None':
         st.header('Cohort comparison')
-        
-        st.subheader('Receiver operating characteristic',)
-        _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, st.progress(0))
+        _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos, y_test = perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, st.progress(0))
 
         # ROC-AUC for Cohorts
+        st.subheader('Receiver operating characteristic')
         p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
         st.plotly_chart(p)
         if p:
@@ -283,7 +282,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         # PR Curve for Cohorts
         st.subheader('Precision-Recall Curve')
         st.text("Precision-Recall (PR) Curve might be used for imbalanced datasets.")
-        p = plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos)
+        p = plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos, y_test)
         st.plotly_chart(p)
         if p:
             get_pdf_download_link(p, 'pr_curve_cohort.pdf')
