@@ -1,4 +1,4 @@
-<p align="center"> <img src="https://user-images.githubusercontent.com/49681382/88778270-f9859b00-d190-11ea-8c55-eaa2f683aa78.png" height="240" width="277" /> </p>
+<p align="center"> <img src="https://user-images.githubusercontent.com/49681382/92229419-1f9a0b80-eeb2-11ea-87d9-3a2b505397bd.png" height="240" width="277" /> </p>
 <h2 align="center"> 📰 Manual and Documentation is available at: <a href="https://github.com/OmicEra/proto_learn/wiki" target="_blank">Proto Learn Wiki Page </a> </h2>
 <h2 align="center"> 🟢 Proto Learn is now accessible through the website: <a href="http://proto-learn.com/" target="_blank">proto-learn.com</a> </h2>
 
