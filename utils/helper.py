@@ -96,10 +96,11 @@ def transform_dataset(subset, additional_features, proteins):
     return X
 
 @st.cache(persist=True)
-def normalize_dataset(X, normalization):
+def normalize_dataset(X, normalization, normalization_detail, n_quantiles, random_state):
     """
     Normalize data with normalizer
     """
+    normalization_detail = normalization_detail.lower()
 
     if normalization == 'None':
         pass
@@ -113,13 +114,10 @@ def normalize_dataset(X, normalization):
         scaler = RobustScaler()
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     elif normalization == 'PowerTransformer':
-        scaler = PowerTransformer()
+        scaler = PowerTransformer(method=normalization_detail)
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
-    elif normalization == 'QuantileTransformer(Gaussian)':
-        scaler = QuantileTransformer(output_distribution='normal')
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
-    elif normalization == 'QuantileTransformer(uniform)':
-        scaler = QuantileTransformer(output_distribution='uniform')
+    elif normalization == 'QuantileTransformer':
+        scaler = QuantileTransformer(output_distribution=normalization_detail, n_quantiles=n_quantiles, random_state=random_state)
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
     else:
         raise NotImplementedError('Normalization not implemented')
