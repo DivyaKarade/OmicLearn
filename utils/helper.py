@@ -217,7 +217,7 @@ def impute_nan(X, missing_value, random_state):
 
     return X
 
-def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors):
+def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, penalty, solver, max_iter, c_val):
     """
     Returns classifier object based on name
     """
@@ -225,7 +225,7 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
         from xgboost import XGBClassifier
         clf = XGBClassifier(random_state = random_state)
     elif classifier == 'LogisticRegression':
-        clf = linear_model.LogisticRegression(random_state = random_state, n_jobs=-1)
+        clf = linear_model.LogisticRegression(penalty=penalty, solver=solver, max_iter=max_iter, C=c_val, random_state = random_state, n_jobs=-1)
     elif classifier == 'KNeighborsClassifier':
         clf = neighbors.KNeighborsClassifier(n_neighbors = n_neighbors, algorithm = 'auto', n_jobs=-1)
     elif classifier == 'RandomForest':
@@ -240,9 +240,9 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
     return clf
 
-def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, bar):
+def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, penalty, solver, max_iter, c_val,  bar):
 
-    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, penalty, solver, max_iter, c_val)
     rskf = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
 
     roc_curve_results = []
@@ -302,9 +302,9 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
 
     return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test
 
-def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, bar):
+def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, penalty, solver, max_iter, c_val,  bar):
 
-    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, penalty, solver, max_iter, c_val)
 
     roc_curve_results_cohort = []
     pr_curve_results_cohort = []
