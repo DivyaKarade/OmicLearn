@@ -58,7 +58,7 @@ def main_components():
     return widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect
 
 def main_text_and_data_upload():
-    st.title("Proto Learn — Clinical Proteomics Machine Learning Tool")
+    st.title("DEV | Proto Learn — Clinical Proteomics Machine Learning Tool")
     st.info(""" 
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature
@@ -172,6 +172,11 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         # Define `max_features` as 0 if `feature_method` is `Manual` 
         max_features = 0
 
+    if feature_method == "ExtraTrees":
+        n_trees = number_input_('Number of trees in the forest:', value = 100, min_value = 1, max_value = 2000)
+    else:
+        n_trees = 0
+
     st.sidebar.markdown('## [Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
 
     if xgboost_installed:
@@ -208,9 +213,9 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         manual_features = multiselect_("Select your proteins manually:", proteins, default=None)
         features = manual_features +  additional_features
         
-    return random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, classifiers, n_estimators, n_neighbors, cv_splits, cv_repeats, features_selected, classifier, manual_features, features
+    return random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, n_trees, classifiers, n_estimators, n_neighbors, cv_splits, cv_repeats, features_selected, classifier, manual_features, features
 
-def feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, normalization_detail, n_quantiles, feature_method, max_features, random_state):
+def feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, normalization_detail, n_quantiles, feature_method, max_features, n_trees, random_state):
     st.subheader("Feature selection")
     class_names = [df[option].value_counts().index[0], df_sub[option].value_counts().index[1]]
     st.markdown("Using the following identifiers: Class 0 `{}`, Class 1 `{}`".format(class_0, class_1))
@@ -225,7 +230,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
         features = manual_features +  additional_features
         pass
     else:
-        features, feature_importance, p_values = select_features(feature_method, X, y, max_features, random_state)
+        features, feature_importance, p_values = select_features(feature_method, X, y, max_features, n_trees, random_state)
         p, feature_df = plot_feature_importance(features, feature_importance, p_values)
         st.plotly_chart(p, use_container_width=True)
         if p:
@@ -317,7 +322,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
 
     return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
 
-def generate_text(normalization, normalization_detail, n_quantiles, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
+def generate_text(normalization, normalization_detail, n_quantiles, proteins, feature_method, n_trees, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
     st.write("## Summary")
     text ="```"
     
@@ -338,6 +343,8 @@ def generate_text(normalization, normalization_detail, n_quantiles, proteins, fe
     # Feature
     if feature_method == 'Manual':
         text += 'A total of {} proteins were manually selected. '.format(len(proteins))
+    elif feature_method == 'ExtraTrees':
+        text += 'Proteins were selected using a {} (n_trees={}) strategy. '.format(feature_method, n_trees)
     else:
         text += 'Proteins were selected using a {} strategy. '.format(feature_method)
 
@@ -394,7 +401,7 @@ def ProtoLearn_Main():
     proteins = [_ for _ in proteins if _ not in exclude_features]
 
     # Sidebar widgets
-    random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, classifiers, \
+    random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, n_trees, classifiers, \
     n_estimators, n_neighbors, cv_splits, cv_repeats, features_selected, classifier, \
     manual_features, features = generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins)
 
@@ -402,7 +409,7 @@ def ProtoLearn_Main():
     if (df is not None) and (class_0 and class_1) and (st.button('Run Analysis', key='run')):
 
         # Feature Selection
-        class_names, subset, X, y, features = feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, normalization_detail, n_quantiles, feature_method, max_features, random_state)
+        class_names, subset, X, y, features = feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, normalization_detail, n_quantiles, feature_method, max_features, n_trees, random_state)
         st.markdown('Using classifier `{}`.'.format(classifier))
         st.markdown('Using features `{}`.'.format(features))
         # result = cross_validate(model, X=_X, y=_y, groups=_y, cv=RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=0) , scoring=metrics, n_jobs=-1)
@@ -416,7 +423,7 @@ def ProtoLearn_Main():
         cohort_results, cohort_combos = all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, n_neighbors, cv_splits, cv_repeats, class_0, class_1)
 
         # Generate summary text
-        generate_text(normalization, normalization_detail, n_quantiles, proteins, feature_method, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
+        generate_text(normalization, normalization_detail, n_quantiles, proteins, feature_method, n_trees, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
         
         # Session and Run info
         widget_values["Date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " (UTC)"
