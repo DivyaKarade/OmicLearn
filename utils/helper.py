@@ -12,7 +12,7 @@ from itertools import chain
 import sklearn
 import sklearn.metrics as metrics
 from sklearn.impute import KNNImputer
-from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold
+from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, SelectKBest
 from sklearn.metrics import roc_curve, plot_roc_curve, precision_recall_curve, auc, plot_confusion_matrix
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
@@ -243,10 +243,18 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
     return clf
 
-def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, bar):
+def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, bar):
 
     clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
-    rskf = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
+    
+    if cv_method == 'RepeatedStratifiedKFold':
+        cv_alg = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
+    elif cv_method == 'StratifiedKFold':
+        cv_alg = StratifiedKFold(n_splits=cv_splits, shuffle=True, random_state=random_state)
+    elif cv_method == 'StratifiedShuffleSplit':
+        cv_alg = StratifiedShuffleSplit(n_splits=cv_splits, random_state=random_state)
+    else:
+        raise NotImplementedError('This CV method is not implemented')
 
     roc_curve_results = []
     pr_curve_results = []
@@ -262,7 +270,7 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
     for metric_name, metric_fct in scorer_dict.items():
         _cv_results[metric_name] = []
 
-    for i, (train_index, test_index) in enumerate(rskf.split(X,y)):
+    for i, (train_index, test_index) in enumerate(cv_alg.split(X,y)):
 
         X_train = X.iloc[train_index]
         X_test = X.iloc[test_index]
