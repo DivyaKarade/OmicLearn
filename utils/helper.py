@@ -217,7 +217,7 @@ def impute_nan(X, missing_value, random_state):
 
     return X
 
-def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val):
+def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, rf_max_features, rf_max_feature_int):
     """
     Returns classifier object based on name
     """
@@ -225,11 +225,13 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
         from xgboost import XGBClassifier
         clf = XGBClassifier(random_state = random_state)
     elif classifier == 'LogisticRegression':
-        clf = linear_model.LogisticRegression(penalty=penalty, solver=solver, max_iter=max_iter, C=c_val, random_state = random_state, n_jobs=-1)
+        clf = linear_model.LogisticRegression(penalty=penalty.lower(), solver=solver, max_iter=max_iter, C=c_val, random_state = random_state, n_jobs=-1)
     elif classifier == 'KNeighborsClassifier':
         clf = neighbors.KNeighborsClassifier(n_neighbors = n_neighbors, weights = knn_weights, algorithm = knn_algorithm, n_jobs=-1)
     elif classifier == 'RandomForest':
-        clf = ensemble.RandomForestClassifier(random_state = random_state, n_jobs=-1)
+        if rf_max_features == "int":
+            rf_max_features = rf_max_feature_int
+        clf = ensemble.RandomForestClassifier(n_estimators = n_estimators, criterion = criterion, max_features = rf_max_features, random_state = random_state, n_jobs=-1)
     elif classifier == 'DecisionTree':
         clf = tree.DecisionTreeClassifier(random_state = random_state)
     elif classifier == 'AdaBoost':
@@ -240,9 +242,9 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
     return clf
 
-def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val,  bar):
+def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, rf_max_features, rf_max_feature_int, bar):
 
-    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, rf_max_features, rf_max_feature_int)
     rskf = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
 
     roc_curve_results = []
@@ -302,9 +304,9 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
 
     return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test
 
-def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val,  bar):
+def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, rf_max_features, rf_max_feature_int, bar):
 
-    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, rf_max_features, rf_max_feature_int)
 
     roc_curve_results_cohort = []
     pr_curve_results_cohort = []
