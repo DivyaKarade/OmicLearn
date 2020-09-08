@@ -217,7 +217,7 @@ def impute_nan(X, missing_value, random_state):
 
     return X
 
-def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int):
+def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss):
     """
     Returns classifier object based on name
     """
@@ -239,14 +239,13 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
     elif classifier == 'AdaBoost':
         clf = ensemble.AdaBoostClassifier(n_estimators = n_estimators, random_state = random_state, learning_rate=learning_rate)
     elif classifier == 'LinearSVC':
-        # TODO: `penalty` and `C` parameter might be retrieved from user
-        clf = svm.LinearSVC(penalty='l2', C=2, random_state = random_state)
+        clf = svm.LinearSVC(penalty = penalty, C = c_val, loss = loss, random_state = random_state)
 
     return clf
 
-def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, bar):
+def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, bar):
 
-    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss)
     rskf = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
 
     roc_curve_results = []
@@ -306,9 +305,9 @@ def perform_cross_validation(X, y, classifier, cv_splits, cv_repeats, random_sta
 
     return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test
 
-def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, bar):
+def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, bar):
 
-    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss)
 
     roc_curve_results_cohort = []
     pr_curve_results_cohort = []
