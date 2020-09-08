@@ -308,7 +308,10 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         pr_curve_results.append((precision, recall, _))
         split_results.append((y_test.values, y_pred))
 
-        bar.progress((i+1)/(cv_splits*cv_repeats))
+        if cv_method == 'RepeatedStratifiedKFold':
+            bar.progress((i+1)/(cv_splits*cv_repeats))
+        else:
+            bar.progress((i+1)/(cv_splits))
 
     return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test
 
