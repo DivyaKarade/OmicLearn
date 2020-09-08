@@ -188,7 +188,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         if missing_value == 'None':
             classifiers = ['XGBoost']
 
-    classifier = selectbox_("Classifier", classifiers)
+    classifier = selectbox_("Select the classifier:", classifiers)
 
     # CLASSIFICATION METHODS -- EXTRA PARAMETERS
     # Define variables as 0 if classifier not of those:
