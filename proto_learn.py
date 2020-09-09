@@ -425,7 +425,7 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
         text += 'For classification, we used a {}-Classifier ({}). '.format(classifier, xgboost.__version__ )
 
     # Cross-Validation
-    if cv_method == '':
+    if cv_method == 'RepeatedStratifiedKFold':
         text += 'When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std). '.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
     else:
         text += 'When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std). '.format(cv_method, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
