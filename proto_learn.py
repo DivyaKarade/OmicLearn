@@ -419,6 +419,7 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
         text += 'Proteins were selected using a {} strategy with the maximum number of {} features. '.format(feature_method, max_features)
 
     # Classifier
+    # TODO: Elaborate this part according user selections
     if classifier is not 'XGBoost':
         text += 'For classification, we used a {}-Classifier. '.format(classifier)
     else:
