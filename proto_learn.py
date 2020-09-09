@@ -445,7 +445,7 @@ def save_sessions(widget_values, user_name):
     sessions_df = sessions_df.rename(columns=new_column_names) 
     sessions_df = sessions_df.drop("user", axis=1)
     st.write("## Session History")
-    st.dataframe(sessions_df)
+    st.dataframe(sessions_df.T)
     get_csv_download_link(sessions_df, "session_history.csv")
 
 # Main Function
