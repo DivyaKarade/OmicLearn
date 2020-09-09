@@ -19,12 +19,13 @@ try:
 except ModuleNotFoundError:
     st.error('Xgboost not installed. To use xgboost install using `conda install py-xgboost`')
 
-# Define versions
+# Define all versions
 report = get_system_report()
 version = report['proto_learn_version']
 
 # Functions / Element Creations
 def main_components():
+    
     # External CSS
     main_external_css = """
         <style>
@@ -43,6 +44,7 @@ def main_components():
     """
     st.markdown(main_external_css, unsafe_allow_html=True)
 
+    # Fundemental elements
     widget_values = {}
     n_missing = 0
     class_0, class_1 = None, None
@@ -57,6 +59,7 @@ def main_components():
 
     return widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect
 
+# Show main text and data upload section 
 def main_text_and_data_upload():
     st.title("👨‍💻 DEV | Proto Learn — Clinical Proteomics Machine Learning Tool")
     st.info(""" 
@@ -70,9 +73,13 @@ def main_text_and_data_upload():
     delimiter = st.selectbox("Determine the delimiter in your dataset", ["Excel File", "Comma (,)", "Semicolon (;)"])
     sample_file = st.selectbox("Or select sample file here:", ["None", "Sample"])
     df = load_data(file_buffer, delimiter)
+
     return sample_file, df
 
+# Choosing sample dataset and data parameter selections
 def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, multiselect):
+    
+    # Sample dataset / uploaded file selection 
     if (sample_file != 'None') and (len(df) > 0):
         st.warning("Please, either choose a sample file or set it as `None` to work on your file")
         df = pd.DataFrame()
@@ -96,6 +103,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         proteins = [_ for _ in df.columns.to_list() if _[0] != '_']
         not_proteins = [_ for _ in df.columns.to_list() if _[0] == '_']
 
+        # Dataset -- Subset
         st.subheader("Subset")
         st.text('Create a subset based on values in the selected column')
         subset_column = st.selectbox("Select subset column:", ['None']+not_proteins)
@@ -107,6 +115,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         else:
             df_sub = df.copy()
 
+        # Dataset -- Feature selections
         st.subheader("Features")
         option = st.selectbox("Select target column:", not_proteins)
         st.markdown("Unique elements in `{}` column.".format(option))
@@ -114,7 +123,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         st.write(unique_elements)
         unique_elements_lst = unique_elements.index.tolist()
 
-        # Define classes
+        # # Dataset -- Define the classes
         st.subheader("Define classes".format(option))
         class_0 = multiselect("Select Class 0:", unique_elements_lst, default=None)
         class_1 = multiselect("Select Class 1:", [_ for _ in unique_elements_lst if _ not in class_0], default=None)
@@ -130,6 +139,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
             st.subheader("Exclude proteins")
             exclude_features = st.multiselect("Select proteins that should be excluded:", proteins, default=None)
 
+        # Dataset -- Cohort selections
         st.subheader("Cohort comparison")
         st.text('Select cohort column to train on one and predict on another:')
         not_proteins_excluded_target_option = not_proteins
@@ -138,10 +148,17 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
 
         return class_0, class_1, df, unique_elements_lst, cohort_column, exclude_features, remainder, proteins, not_proteins, option, df_sub, additional_features, n_missing, subset_column
 
+# Generate sidebar elements
 def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins):
+    
+    # Sidebar -- Image/Title
     st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
     st.sidebar.title("Options")
+    
+    # Sidebar -- Random State
     random_state = slider_("Random State:", min_value = 0, max_value = 99, value=23)
+    
+    # Sidebar -- Preprocessing
     st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing)')
     normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer']
     normalization = selectbox_("Normalization method:", normalizations)
@@ -162,6 +179,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     else:
         missing_value = 'None'
 
+    # Sidebar -- Feature Selection
     st.sidebar.markdown('## [Feature selection](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection)')
     feature_methods = ['ExtraTrees', 'k-best (mutual_info_classif)','k-best (f_classif)', 'k-best (chi2)', 'Manual']
     feature_method = selectbox_("Feature selection method:", feature_methods)
@@ -177,20 +195,20 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     else:
         n_trees = 0
 
+    # Sidebar -- Classification method selection
     st.sidebar.markdown('## [Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
-
     if xgboost_installed:
         classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC','XGBoost']
     else:
         classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC']
-
-    if n_missing > 0:
-        if missing_value == 'None':
-            classifiers = ['XGBoost']
+    
+    # Disable all other classification methods
+    if (n_missing > 0) and (missing_value == 'None'):
+        classifiers = ['XGBoost']
 
     classifier = selectbox_("Select the classifier:", classifiers)
 
-    # CLASSIFICATION METHODS -- EXTRA PARAMETERS
+    # Classification Methods -- Extra Parameters
     # Define variables as 0 if classifier not of those:
     n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, \
     solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, \
@@ -230,7 +248,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         c_val = number_input_('C parameter:', value = 1, min_value = 1, max_value = 100)
         cv_generator = number_input_('Cross-validation generator:', value = 2, min_value = 2, max_value = 100)
 
-    # CROSS-VALIDATION
+    # Sidebar -- Cross-Validation
     st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Cross-Validation)')
     cv_method = selectbox_("Specify CV method:", ["RepeatedStratifiedKFold", "StratifiedKFold", "StratifiedShuffleSplit"])
     cv_splits = number_input_('CV Splits:', min_value = 2, max_value = 10, value=5)
@@ -250,9 +268,14 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         manual_features = multiselect_("Select your proteins manually:", proteins, default=None)
         features = manual_features +  additional_features
         
-    return random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, n_trees, classifiers, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, cv_method, cv_splits, cv_repeats, features_selected, classifier, manual_features, features
+    return random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, \
+        n_trees, classifiers, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, \
+        max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, cv_method, cv_splits, cv_repeats, \
+        features_selected, classifier, manual_features, features
 
+# Feature selection
 def feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, normalization_detail, n_quantiles, feature_method, max_features, n_trees, random_state):
+    
     st.subheader("Feature selection")
     class_names = [df[option].value_counts().index[0], df_sub[option].value_counts().index[1]]
     st.markdown("Using the following identifiers: Class 0 `{}`, Class 1 `{}`".format(class_0, class_1))
@@ -277,6 +300,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     
     return class_names, subset, X, y, features
 
+# Display results and plots
 def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, cv_method, cv_splits, cv_repeats, class_0, class_1):
     
     # Cross-Validation                
@@ -359,7 +383,9 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
 
     return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
 
+# Generate summary text
 def generate_text(normalization, normalization_detail, n_quantiles, proteins, feature_method, n_trees, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
+    
     st.write("## Summary")
     text ="```"
     
@@ -377,7 +403,7 @@ def generate_text(normalization, normalization_detail, n_quantiles, proteins, fe
         else:
             text += 'After importing, features were normalized using a {} approach. '.format(normalization)
 
-    # Feature
+    # Features
     if feature_method == 'Manual':
         text += 'A total of {} proteins were manually selected. '.format(len(proteins))
     elif feature_method == 'ExtraTrees':
@@ -401,13 +427,14 @@ def generate_text(normalization, normalization_detail, n_quantiles, proteins, fe
     text +="```"
     st.markdown(text)
 
-
-# Saving session info
+# Create new list and dict for sessions
 @st.cache(allow_output_mutation=True)
 def get_sessions():
     return [], {}
 
+# Saving session info
 def save_sessions(widget_values, user_name):
+    
     session_no, session_dict = get_sessions()
     session_no.append(len(session_no) + 1)
     session_dict[session_no[-1]] = widget_values
@@ -423,6 +450,7 @@ def save_sessions(widget_values, user_name):
 
 # Main Function
 def ProtoLearn_Main():
+    
     # Main components
     widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect = main_components()
 
