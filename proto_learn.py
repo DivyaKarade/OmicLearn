@@ -146,7 +146,8 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         not_proteins_excluded_target_option.remove(option)
         cohort_column = st.selectbox("Select cohort column:", ['None'] + not_proteins_excluded_target_option)
 
-        return class_0, class_1, df, unique_elements_lst, cohort_column, exclude_features, remainder, proteins, not_proteins, option, df_sub, additional_features, n_missing, subset_column
+        return class_0, class_1, df, unique_elements_lst, cohort_column, exclude_features, remainder, proteins, not_proteins, \
+            option, df_sub, additional_features, n_missing, subset_column
 
 # Generate sidebar elements
 def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins):
@@ -384,7 +385,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
 
 # Generate summary text
-def generate_text(normalization, normalization_detail, n_quantiles, proteins, feature_method, n_trees, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
+def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, n_trees, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
     
     st.write("## Summary")
     text ="```"
@@ -402,6 +403,12 @@ def generate_text(normalization, normalization_detail, n_quantiles, proteins, fe
             text += 'After importing, features were normalized using a {} ({}) approach. '.format(normalization, normalization_detail)
         else:
             text += 'After importing, features were normalized using a {} approach. '.format(normalization)
+
+    # Missing value impt.
+    if missing_value != "None":
+        text += 'For imputation of missing values, {} strategy is used to replace the missing values.'.format(missing_value)
+    else:
+        text += 'Moreover, no strategy was used for imputation since there is no missing data.'
 
     # Features
     if feature_method == 'Manual':
@@ -488,7 +495,7 @@ def ProtoLearn_Main():
         cohort_results, cohort_combos = all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, cv_method, cv_splits, cv_repeats, class_0, class_1)
 
         # Generate summary text
-        generate_text(normalization, normalization_detail, n_quantiles, proteins, feature_method, n_trees, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
+        generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, n_trees, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
         
         # Session and Run info
         widget_values["Date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " (UTC)"
