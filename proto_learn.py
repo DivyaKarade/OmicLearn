@@ -385,7 +385,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
 
 # Generate summary text
-def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, n_trees, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
+def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
     
     st.write("## Summary")
     text ="```"
@@ -414,9 +414,9 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
     if feature_method == 'Manual':
         text += 'A total of {} proteins were manually selected. '.format(len(proteins))
     elif feature_method == 'ExtraTrees':
-        text += 'Proteins were selected using a {} (n_trees={}) strategy. '.format(feature_method, n_trees)
+        text += 'Proteins were selected using a {} (n_trees={}) strategy with the maximum number of {} features. '.format(feature_method, n_trees, max_features)
     else:
-        text += 'Proteins were selected using a {} strategy. '.format(feature_method)
+        text += 'Proteins were selected using a {} strategy with the maximum number of {} features. '.format(feature_method, max_features)
 
     # Classifier
     if classifier is not 'XGBoost':
@@ -425,7 +425,10 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
         text += 'For classification, we used a {}-Classifier ({}). '.format(classifier, xgboost.__version__ )
 
     # Cross-Validation
-    text += 'When using a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std). '.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
+    if cv_method == '':
+        text += 'When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std). '.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
+    else:
+        text += 'When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std). '.format(cv_method, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
 
     if cohort_column is not 'None':
         text += 'When training on one cohort and predicting on another to classify {} vs. {}, we achieved the following AUCs: '.format(''.join(class_0), ''.join(class_1))
@@ -495,7 +498,7 @@ def ProtoLearn_Main():
         cohort_results, cohort_combos = all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, cv_method, cv_splits, cv_repeats, class_0, class_1)
 
         # Generate summary text
-        generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, n_trees, classifier, cohort_column, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
+        generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
         
         # Session and Run info
         widget_values["Date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " (UTC)"
