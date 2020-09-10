@@ -64,7 +64,7 @@ To achieve a more robust scaling, we can employ the `RobustScaler`. Here, the da
 `PowerTransformer`, can apply a power transformation for each feature in the dataset to make it more Gaussian-like and is useful when dealing with skewed datasets. Here, two options are available: `Yeo-Johnson`, which can work with negative data, and `Box-Cox`, that is limited to positive data.
 
 ### [1. 1. 5. QuantileTransformer](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html)
-`QuantileTransformer` provided by `scikit-learn` uses quantile information to transform features to follow a gaussian distribution (Option 'Gaussian output` or a uniform output (Option 'Uniform output`).
+`QuantileTransformer` provided by `scikit-learn` uses quantile information to transform features to follow a gaussian distribution (Option `Gaussian output` or a uniform output (Option 'Uniform output`).
 
 ### 1. 1. 6. Additional Notes
 

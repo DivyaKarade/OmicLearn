@@ -23,6 +23,8 @@ One way to get an estimate on how a model would generalize while still trying to
 Proto-learn is using a stratified-k-fold split, meaning that the original class ratio will be preserved for the splits. 
 Also, it is possible to shuffle the data and repeatedly shuffle the data and splitting it. The average of multiple splits gives a more robust estimate of the model performance.  The number of splits and the number of repeats can be changed with `cv_splits` and `cv_repeats`.
 
+Also, within Proto Learn, [StratifiedKFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html) and [StratifiedShuffleSplit](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedShuffleSplit.html) methods might be used in addition to [RepeatedStratifiedKFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedStratifiedKFold.html).
+
 ## [4. 2. Scores](https://scikit-learn.org/stable/modules/model_evaluation.html)
 In ML, there are several metrics to be employed for measuring the performance of the model, and for evaluating the quality of predictions.
 
@@ -32,9 +34,9 @@ This score reflects the computation of Area Under the Curve (`AUC`) of Receiver 
 A good brief introduction for understanding the `ROC` can be found [here](https://www.datasciencecentral.com/profiles/blogs/roc-curve-explained-in-one-picture). 
 
 ### [4. 2. 2. PR AUC Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_curve.html)
-This `Precision-Recall Curve` (or `PR Curve`) is a plot of the `precision` on y-axis and the `recall` on x-axis at different thresholds.
+This `Precision-Recall Curve` (or `PR Curve`) is a plot of the `precision` on the y-axis and the `recall` on the x-axis at different thresholds.
 
-Also, `PR AUC Score` is calculation of Area Under the Curve (`AUC`) of `Precision-Recall Curve` (`PR Curve`).
+Also, the `PR AUC Score` is the calculation of Area Under the Curve (`AUC`) of `Precision-Recall Curve` (`PR Curve`).
 
 > For imbalanced datasets, `PR Curve` might be a better choice.
 
