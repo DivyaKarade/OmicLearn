@@ -154,7 +154,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     
     # Sidebar -- Image/Title
     st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
-    st.sidebar.title("Options")
+    st.sidebar.markdown("# [Options](https://github.com/OmicEra/proto_learn/wiki/METHODS)")
     
     # Sidebar -- Random State
     random_state = slider_("Random State:", min_value = 0, max_value = 99, value=23)
@@ -250,7 +250,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         cv_generator = number_input_('Cross-validation generator:', value = 2, min_value = 2, max_value = 100)
 
     # Sidebar -- Cross-Validation
-    st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Cross-Validation)')
+    st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
     cv_method = selectbox_("Specify CV method:", ["RepeatedStratifiedKFold", "StratifiedKFold", "StratifiedShuffleSplit"])
     cv_splits = number_input_('CV Splits:', min_value = 2, max_value = 10, value=5)
     
