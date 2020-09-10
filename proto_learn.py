@@ -398,17 +398,25 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
             clf_max_features, clf_max_features_int, loss, cv_generator):
     
     st.write("## Summary")
-    text ="```"
+    # text ="```"
+    text = ""
     
     # Packages
-    text += "Proto Learn ({proto_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts. Machine learning was done in Python ({python_version}). Protein tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}). The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}). For generating the plots and charts, Plotly ({plotly_version}) library was used. ".format(**report)
+    packages_plain_text = """
+        Proto Learn ({proto_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts. 
+        Machine learning was done in Python ({python_version}). Protein tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}). 
+        The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}). 
+        For generating the plots and charts, Plotly ({plotly_version}) library was used. 
+    """
+    text += packages_plain_text.format(**report)
     
     # Normalization
     if normalization == 'None':
         text += 'After importing, no further normalization was performed. '
     else:
         if n_quantiles != "":
-            text += 'After importing, features were normalized using a {} ({} as output distribution method and n_quantiles={}) approach. '.format(normalization, normalization_detail, n_quantiles)
+            text += 'After importing, features were normalized using a {} ({} as output distribution method and n_quantiles={}) approach. \n'\
+                .format(normalization, normalization_detail, n_quantiles)
         elif normalization_detail != "":
             text += 'After importing, features were normalized using a {} ({}) approach. '.format(normalization, normalization_detail)
         else:
@@ -416,9 +424,9 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
 
     # Missing value impt.
     if missing_value != "None":
-        text += 'For imputation of missing values, {} strategy is used to replace the missing values.'.format(missing_value)
+        text += 'For imputation of missing values, {} strategy is used to replace the missing values. '.format(missing_value)
     else:
-        text += 'Moreover, no strategy was used for imputation since there is no missing data.'
+        text += 'Moreover, no strategy was used for imputation since there is no missing data. '
 
     # Features
     if feature_method == 'Manual':
@@ -452,16 +460,25 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
 
     # Cross-Validation
     if cv_method == 'RepeatedStratifiedKFold':
-        text += 'When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std). '.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
+        cv_plain_text = """
+            When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {}, 
+            we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std).
+        """
+        text += cv_plain_text.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
     else:
-        text += 'When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std). '.format(cv_method, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
+        cv_plain_text = """
+            When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) 
+            with an average AUC (area under the curve) of {:.2f} ({:.2f} std). 
+        """
+        text += cv_plain_text.format(cv_method, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
 
     if cohort_column is not 'None':
         text += 'When training on one cohort and predicting on another to classify {} vs. {}, we achieved the following AUCs: '.format(''.join(class_0), ''.join(class_1))
         for i, cohort_combo in enumerate(cohort_combos):
             text+= '{:.2f} when training on {} and predicting on {}. '.format(pd.DataFrame(_cohort_results).iloc[i]['roc_auc'], cohort_combo[0], cohort_combo[1])
-    text +="```"
-    st.markdown(text)
+    
+    # Print the all text
+    st.info(text)
 
 # Create new list and dict for sessions
 @st.cache(allow_output_mutation=True)
@@ -511,7 +528,9 @@ def ProtoLearn_Main():
     if (df is not None) and (class_0 and class_1) and (st.button('Run Analysis', key='run')):
 
         # Feature Selection
-        class_names, subset, X, y, features = feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, normalization_detail, n_quantiles, feature_method, max_features, n_trees, random_state)
+        class_names, subset, X, y, features = \
+        feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, 
+            normalization, normalization_detail, n_quantiles, feature_method, max_features, n_trees, random_state)
         st.markdown('Using classifier `{}`.'.format(classifier))
         st.markdown('Using features `{}`.'.format(features))
 
