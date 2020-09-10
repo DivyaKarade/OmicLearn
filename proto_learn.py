@@ -462,20 +462,24 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
     if cv_method == 'RepeatedStratifiedKFold':
         cv_plain_text = """
             When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {}, 
-            we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std).
+            we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std) 
+            and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std). 
         """
-        text += cv_plain_text.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
+        text += cv_plain_text.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1), 
+            summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'], summary.loc['mean']['pr_auc'], summary.loc['std']['pr_auc'])
     else:
         cv_plain_text = """
             When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) 
-            with an average AUC (area under the curve) of {:.2f} ({:.2f} std). 
+            with an average AUC (area under the curve) of {:.2f} ({:.2f} std) and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std). 
         """
-        text += cv_plain_text.format(cv_method, cv_splits, ''.join(class_0), ''.join(class_1), summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'])
+        text += cv_plain_text.format(cv_method, cv_splits, ''.join(class_0), ''.join(class_1), 
+            summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'], summary.loc['mean']['pr_auc'], summary.loc['std']['pr_auc'])
 
     if cohort_column is not 'None':
         text += 'When training on one cohort and predicting on another to classify {} vs. {}, we achieved the following AUCs: '.format(''.join(class_0), ''.join(class_1))
         for i, cohort_combo in enumerate(cohort_combos):
-            text+= '{:.2f} when training on {} and predicting on {}. '.format(pd.DataFrame(_cohort_results).iloc[i]['roc_auc'], cohort_combo[0], cohort_combo[1])
+            text+= '{:.2f} when training on {} and predicting on {} '.format(pd.DataFrame(_cohort_results).iloc[i]['roc_auc'], cohort_combo[0], cohort_combo[1])
+            text+= ', and {:.2f} for PR Curve when training on {} and predicting on {}. '.format(pd.DataFrame(_cohort_results).iloc[i]['pr_auc'], cohort_combo[0], cohort_combo[1])
     
     # Print the all text
     st.info(text)

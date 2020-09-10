@@ -298,6 +298,8 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
             else:
                 _cv_results[metric_name].append(metric_fct(y_test, y_pred))
 
+        # ADD PR Curve AUC Score
+        _cv_results['pr_auc'] = float(auc(recall, precision))
         _cv_results['num_feat'].append(X.shape[-1])
         _cv_results['n_obs'].append(len(y))
         _cv_results['n_class_0'].append(np.sum(y))
@@ -371,6 +373,8 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
             else:
                 _cohort_results[metric_name].append(metric_fct(y_test, y_pred))
 
+        # ADD PR Curve AUC Score
+        _cohort_results['pr_auc'] = float(auc(recall, precision))
         _cohort_results['num_feat'].append(X.shape[-1])
         _cohort_results['n_obs'].append(len(y))
         _cohort_results['n_class_0'].append(np.sum(y))
