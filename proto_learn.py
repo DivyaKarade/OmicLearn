@@ -385,7 +385,9 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
 
 # Generate summary text
-def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos):
+def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, 
+            classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos,
+            n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator):
     
     st.write("## Summary")
     text ="```"
@@ -419,10 +421,25 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
         text += 'Proteins were selected using a {} strategy with the maximum number of {} features. '.format(feature_method, max_features)
 
     # Classifier
-    # TODO: Elaborate this part according user selections
-    if classifier is not 'XGBoost':
-        text += 'For classification, we used a {}-Classifier. '.format(classifier)
-    else:
+    if classifier == 'AdaBoost':
+        text += 'For classification, we used a {}-Classifier (n_estimators={} and learning_rate={}). '.format(classifier, n_estimators, learning_rate)
+    elif classifier == 'LogisticRegression':
+        text += 'For classification, we used a {}-Classifier (penalty={}, solver={}, max_iter={} and C={}). '.format(classifier, penalty, solver, max_iter, c_val)
+    elif classifier == 'KNeighborsClassifier':
+        text += 'For classification, we used a {}-Classifier (n_neighbors={}, knn_weights={} and knn_algorithm={}). '.format(classifier, n_neighbors, knn_weights, knn_algorithm)
+    elif classifier == 'RandomForest':
+        if clf_max_features == "int":
+            text += 'For classification, we used a {}-Classifier (n_estimators={}, clf_max_features={} and criterion={}). '.format(classifier, n_estimators, clf_max_features_int, criterion)
+        else:
+            text += 'For classification, we used a {}-Classifier (n_estimators={}, clf_max_features={} and criterion={}). '.format(classifier, n_estimators, clf_max_features, criterion)
+    elif classifier == 'DecisionTree':
+        if clf_max_features == "int":
+            text += 'For classification, we used a {}-Classifier (criterion={} and clf_max_features={}). '.format(classifier, criterion, clf_max_features_int)
+        else:
+            text += 'For classification, we used a {}-Classifier (criterion={} and clf_max_features={}). '.format(classifier, criterion, clf_max_features)
+    elif classifier == 'LinearSVC':
+        text += 'For classification, we used a {}-Classifier (penalty={}, loss={}, C={} and CV={}). '.format(classifier, penalty, loss, c_val, cv_generator)
+    elif classifier == 'XGBoost':
         text += 'For classification, we used a {}-Classifier ({}). '.format(classifier, xgboost.__version__ )
 
     # Cross-Validation
@@ -499,7 +516,7 @@ def ProtoLearn_Main():
         cohort_results, cohort_combos = all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, cv_method, cv_splits, cv_repeats, class_0, class_1)
 
         # Generate summary text
-        generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos)
+        generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
         
         # Session and Run info
         widget_values["Date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " (UTC)"
