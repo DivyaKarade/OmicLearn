@@ -1,7 +1,6 @@
-FROM ubuntu:18.04
-EXPOSE 8503
+FROM selenium/standalone-chrome
 
 COPY . .
-RUN chmod +x ./tests/installing.sh
+RUN sudo chmod +x ./tests/installing.sh
 RUN ./tests/installing.sh
-CMD python3 tests/tests.py
+CMD python3 ./tests/tests.py
