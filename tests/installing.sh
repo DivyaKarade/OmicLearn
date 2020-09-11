@@ -2,6 +2,7 @@
 # Basics
 apt update
 apt install -y curl wget python3-pip virtualenv unzip
+apt install firefox
 
 # Install driver
 cd /home
