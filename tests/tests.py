@@ -7,7 +7,7 @@ opts = Options()
 opts.set_headless()
 assert opts.headless  # Operating in headless mode
 
-binary = FirefoxBinary('/opt/firefox/firefox')
+binary = FirefoxBinary('/usr/lib/firefox/firefox')
 cap = DesiredCapabilities().FIREFOX
 cap["marionette"] = False
 browser = Firefox(firefox_binary=binary, capabilities=cap, executable_path = "/home/geckodriver", options=opts)

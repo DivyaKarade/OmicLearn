@@ -5,10 +5,9 @@ apt install -y curl wget python3-pip virtualenv unzip
 
 #
 echo "install firefox"
+cd /usr/lib/
 wget -O ~/FirefoxSetup.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64"
-tar xjf ~/FirefoxSetup.tar.bz2 -C /opt/
-mv /usr/lib/firefox/firefox /usr/lib/firefox/firefox_backup
-ln -s /opt/firefox/firefox /usr/lib/firefox/firefox
+tar xjf ~/FirefoxSetup.tar.bz2
 
 # Install driver
 cd /home
