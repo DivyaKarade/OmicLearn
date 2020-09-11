@@ -178,15 +178,11 @@ def plot_feature_importance(features, feature_importance, pvalues):
         hover_data = ["Name", "Feature_importance", "P_value"]
 
 
-    p = px.bar(feature_df, x="Feature_importance", y="Name", color='Name',
-            orientation='h',
-            hover_data=hover_data,
-            labels={
-                    "Feature_importance": "Feature importance",
-            },
-            height=600,
+    p = px.bar(feature_df, x="Feature_importance", y="Name", orientation='h', hover_data=hover_data,
+            labels={ "Feature_importance": "Feature importance", }, height=600,
             title='Top {} features'.format(n_features))
-    p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)')
+    p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)', showlegend=False)
+    p.update_traces(marker_color='#f84f57')
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     return p, feature_df
