@@ -1,16 +1,19 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-# from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
 
-chrome_options = Options()
-chrome_options.add_argument('--headless')
-chrome_options.add_argument('--no-sandbox')
-chrome_options.add_argument('--disable-dev-shm-usage')
-chrome_options.binary_location = '/usr/bin/google-chrome-stable'
-chrome_driver = '/usr/bin/chromedriver'
+opts = Options()
+opts.set_headless()
+assert opts.headless  # Operating in headless mode
 
-driver = webdriver.Chrome(executable_path=chrome_driver, chrome_options=chrome_options)
-driver.get('https://box.attie.co.uk/')
+browser = Firefox(executable_path = "~/.local/bin/geckodriver", options=opts)
+browser.get('https://duckduckgo.com')
 
-assert "my box..." in driver.page_source
-driver.close()
+search_form = browser.find_element_by_id('search_form_input_homepage')
+search_form.send_keys('OmicEra')
+search_form.submit()
+
+results = browser.find_elements_by_class_name('result')
+print(results[0].text)
+
+browser.close()
+quit()

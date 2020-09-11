@@ -1,28 +1,20 @@
-# apt update && apt upgrade -y
+
+# Basics
 apt update
+apt install -y curl wget python3-pip virtualenv unzip
 
-# install dependencies
-apt install -y curl gpg wget python3-pip virtualenv unzip
+# Install driver
+cd ~
+mkdir .local
+cd .local
+mkdir bin
+cd bin
+wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
+tar xvfz geckodriver-v0.19.1-linux64.tar.gz
+# mv geckodriver ~/.local/bin
 
-# install chrome
-# curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
-# echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-# apt update
-# apt install -y google-chrome-stable
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt install ./google-chrome-stable_current_amd64.deb
-apt-get install -y chromium-browsera
-
-# install chromedriver
-# see: https://sites.google.com/a/chromium.org/chromedriver/downloads
-cd /tmp
-wget https://chromedriver.storage.googleapis.com/76.0.3809.68/chromedriver_linux64.zip
-unzip /tmp/chromedriver_linux64.zip
-mv chromedriver /usr/bin/chromedriver
-chown root: /usr/bin/chromedriver
-chmod 777 /usr/bin/chromedriver
-
-# install selenium client (python)
-# virtualenv -p python3.6 venv
-# source venv/bin/activate
+# Install selenium
+pip install selenium
 pip3 install selenium
+
+
