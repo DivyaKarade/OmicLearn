@@ -8,7 +8,7 @@ echo "install firefox"
 wget -O ~/FirefoxSetup.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64"
 tar xjf ~/FirefoxSetup.tar.bz2 -C /opt/
 mv /usr/lib/firefox/firefox /usr/lib/firefox/firefox_backup
-sudo ln -s /opt/firefox/firefox /usr/lib/firefox/firefox
+ln -s /opt/firefox/firefox /usr/lib/firefox/firefox
 
 # Install driver
 cd /home
