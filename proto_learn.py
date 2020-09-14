@@ -557,6 +557,8 @@ def ProtoLearn_Main():
         widget_values["Date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " (UTC)"
         widget_values["ROC AUC Mean"] = summary.loc['mean']['roc_auc']
         widget_values["ROC AUC Std"] = summary.loc['std']['roc_auc']
+        widget_values["PR AUC Mean"] = summary.loc['mean']['pr_auc']
+        widget_values["PR AUC Std"] = summary.loc['std']['pr_auc']
         widget_values["Precision Mean"] = summary.loc['mean']['precision']
         widget_values["Precision Std"] = summary.loc['std']['precision']
         widget_values["Recall Mean"] = summary.loc['mean']['recall']
