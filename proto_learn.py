@@ -30,6 +30,7 @@ def main_components():
     main_external_css = """
         <style>
             #MainMenu, .reportview-container .main footer {display: none;}
+            .btn-outline-secondary {background: #FFF !important}
             .download_link {color: #f63366 !important; text-decoration: none !important; z-index: 99999 !important; 
                             cursor:pointer !important; margin: 15px 0px; border: 1px solid #f63366; 
                             text-align:center; padding: 8px !important; width: 200px;}
