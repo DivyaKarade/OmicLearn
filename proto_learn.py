@@ -29,7 +29,6 @@ def main_components():
     # External CSS
     main_external_css = """
         <style>
-            .footer {position: absolute; height: 50px; bottom: -150px; width:100%; padding:10px; text-align:center; }
             #MainMenu, .reportview-container .main footer {display: none;}
             .download_link {color: #f63366 !important; text-decoration: none !important; z-index: 99999 !important; 
                             cursor:pointer !important; margin: 15px 0px; border: 1px solid #f63366; 
@@ -506,17 +505,6 @@ def save_sessions(widget_values, user_name):
     st.dataframe(sessions_df.T)
     get_csv_download_link(sessions_df, "session_history.csv")
 
-# Generate footer
-def generate_footer():
-    # Put the footer
-    footer_html = """
-        <div class="footer">
-            <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH"> 
-            <a href="https://omicera.com" target="_blank">OmicEra</a> • Proto Learn {}
-        </div>
-    """.format(version)
-    st.markdown(footer_html, unsafe_allow_html=True)
-
 # Main Function
 def ProtoLearn_Main():
     
@@ -581,9 +569,6 @@ def ProtoLearn_Main():
         session_state = session_states.get(user_name=user_name)
         widget_values["user"] = session_state.user_name
         save_sessions(widget_values, session_state.user_name)
-
-        # Generate footer
-        generate_footer()
 
 # Run the Proto Learn
 if __name__ == '__main__':
