@@ -10,7 +10,8 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 chrome = webdriver.Chrome(desired_capabilities=DesiredCapabilities.CHROME, chrome_options=chrome_options)
 
 # Start Testing
-chrome.get('https://www.google.com')
+endpoint = "http://ec2-3-121-216-179.eu-central-1.compute.amazonaws.com:8501/"
+chrome.get(endpoint)
 print(chrome.title)
 
 # Quit Driver
