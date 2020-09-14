@@ -567,6 +567,7 @@ def ProtoLearn_Main():
         widget_values["F1 Score Std"] = summary.loc['std']['f1']
         widget_values["Balanced Accuracy Mean"] = summary.loc['mean']['balanced_accuracy']
         widget_values["Balanced Accuracy Std"] = summary.loc['std']['balanced_accuracy']
+        widget_values["Class Ratio"] = summary.loc['mean']['class_ratio']
         user_name = str(random.randint(0,10000)) + "ProtoLearn"
         session_state = session_states.get(user_name=user_name)
         widget_values["user"] = session_state.user_name
