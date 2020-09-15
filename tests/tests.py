@@ -28,15 +28,17 @@ print(chrome.title)
 
 # Moving by keyboard keys
 
-N = 3
 actions = ActionChains(chrome) 
-actions.send_keys(Keys.TAB * N)
-actions.send_keys(Keys.ARROW_DOWN)
+actions.send_keys(Keys.TAB * 4)
+actions.send_keys(Keys.ARROW_DOWN * 2)
 actions.send_keys(Keys.RETURN)
 actions.perform()
 
-caption = chrome.find_element_by_class_name('caption')
-print(caption)
+try:
+    caption = chrome.find_element_by_class_name('caption')
+    print(caption)
+except:
+    print("not found")
 
 # Quit Driver
 chrome.quit()
