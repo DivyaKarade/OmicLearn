@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 # Set Chrome WebDriver and Configurate It  
 chrome_options = Options()
@@ -14,15 +16,27 @@ endpoint = "http://ec2-3-121-216-179.eu-central-1.compute.amazonaws.com:8501/"
 chrome.get(endpoint)
 print(chrome.title)
 
-# Define
-sample_df = chrome.find_element_by_class_name('block-container')
-print(sample_df)
+# # Define
+# sample_df = chrome.find_element_by_class_name('block-container')
+# print(sample_df)
 
-sample = chrome.find_element_by_xpath("//div[@class='st-cn st-dh st-dd st-cg st-bo st-bp st-bq st-br st-bt st-ax st-b0 st-c4 st-c6 st-db st-c5 st-cb st-cc st-di st-d9 st-dj st-dk']")
-print(sample)
+# sample = chrome.find_element_by_xpath("//div[@class='st-cn st-dh st-dd st-cg st-bo st-bp st-bq st-br st-bt st-ax st-b0 st-c4 st-c6 st-db st-c5 st-cb st-cc st-di st-d9 st-dj st-dk']")
+# print(sample)
 
-trial = chrome.find_element_by_xpath("//div[@class='Widget row-widget stSelectbox']")
-print(trial)
+# trial = chrome.find_element_by_xpath("//div[@class='Widget row-widget stSelectbox']")
+# print(trial)
+
+# Moving by keyboard keys
+
+N = 3
+actions = ActionChains(chrome) 
+actions.send_keys(Keys.TAB * N)
+actions.send_keys(Keys.ARROW_DOWN)
+actions.send_keys(Keys.RETURN)
+actions.perform()
+
+caption = chrome.find_element_by_class_name('caption')
+print(caption)
 
 # Quit Driver
 chrome.quit()
