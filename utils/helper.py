@@ -12,11 +12,11 @@ from itertools import chain
 import sklearn
 import sklearn.metrics as metrics
 from sklearn.impute import KNNImputer
-from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, SelectKBest
+from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.metrics import roc_curve, plot_roc_curve, precision_recall_curve, auc, plot_confusion_matrix
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 
 # Plotly Graphs
 import plotly
@@ -158,8 +158,6 @@ def select_features(feature_method, X, y, max_features, n_trees, random_state):
     top_features_importance = feature_importance[top_sortindex][:max_features][::-1]
     top_features_pvalues = p_values[top_sortindex][:max_features][::-1]
 
-    #Some but not all return p-values
-
     return top_features, top_features_importance, top_features_pvalues
 
 def plot_feature_importance(features, feature_importance, pvalues):
@@ -213,7 +211,8 @@ def impute_nan(X, missing_value, random_state):
 
     return X
 
-def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator):
+def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, 
+            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator):
     """
     Returns classifier object based on name
     """
@@ -229,7 +228,8 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
     elif classifier == 'KNeighborsClassifier':
         clf = neighbors.KNeighborsClassifier(n_neighbors = n_neighbors, weights = knn_weights, algorithm = knn_algorithm, n_jobs=-1)
     elif classifier == 'RandomForest':
-        clf = ensemble.RandomForestClassifier(n_estimators = n_estimators, criterion = criterion, max_features = clf_max_features, random_state = random_state, n_jobs=-1)
+        clf = ensemble.RandomForestClassifier(n_estimators = n_estimators, criterion = criterion, max_features = clf_max_features, 
+                                                random_state = random_state, n_jobs=-1)
     elif classifier == 'DecisionTree':
         clf = tree.DecisionTreeClassifier(criterion = criterion, max_features = clf_max_features, random_state = random_state)
     elif classifier == 'AdaBoost':
@@ -239,9 +239,12 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
     return clf
 
-def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, bar):
+def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
+                            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
+                            clf_max_features, clf_max_features_int, loss, cv_generator, bar):
 
-    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, 
+                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
     
     if cv_method == 'RepeatedStratifiedKFold':
         cv_alg = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
@@ -273,6 +276,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         y_train = y.iloc[train_index]
         y_test = y.iloc[test_index]
 
+        # Since LinearSVC does not have `predict_proba()`
         if classifier == "LinearSVC":
             from sklearn.calibration import CalibratedClassifierCV
             clf = CalibratedClassifierCV(clf, cv=cv_generator) 
@@ -283,6 +287,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
 
         # ROC CURVE
         fpr, tpr, cutoffs = roc_curve(y_test, y_score[:, 1])
+
         # PR CURVE
         precision, recall, _ = precision_recall_curve(y_test, y_score[:, 1])
 
@@ -294,8 +299,8 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
             else:
                 _cv_results[metric_name].append(metric_fct(y_test, y_pred))
 
-        # ADD PR Curve AUC Score
-        _cv_results['pr_auc'] = float(auc(recall, precision))
+        # CV Results DF
+        _cv_results['pr_auc'] = float(auc(recall, precision)) # ADD PR Curve AUC Score
         _cv_results['num_feat'].append(X.shape[-1])
         _cv_results['n_obs'].append(len(y))
         _cv_results['n_class_0'].append(np.sum(y))
@@ -313,9 +318,12 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
 
     return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test
 
-def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, bar):
+def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
+                            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
+                            clf_max_features, clf_max_features_int, loss, cv_generator, bar):
 
-    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, 
+                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
 
     roc_curve_results_cohort = []
     pr_curve_results_cohort = []
@@ -358,6 +366,7 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
 
         # ROC Curve
         fpr, tpr, cutoffs = roc_curve(y_test, y_score[:, 1])
+
         # PR CURVE
         precision, recall, _ = precision_recall_curve(y_test, y_score[:, 1])
 
@@ -369,8 +378,8 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
             else:
                 _cohort_results[metric_name].append(metric_fct(y_test, y_pred))
 
-        # ADD PR Curve AUC Score
-        _cohort_results['pr_auc'] = float(auc(recall, precision))
+        # Cohort Results DF
+        _cohort_results['pr_auc'] = float(auc(recall, precision)) # ADD PR Curve AUC Score
         _cohort_results['num_feat'].append(X.shape[-1])
         _cohort_results['n_obs'].append(len(y))
         _cohort_results['n_class_0'].append(np.sum(y))
