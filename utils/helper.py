@@ -699,6 +699,7 @@ def get_system_report():
 
     return report
 
+# TODO: Combine these download functs in one called `get_download_link(exported_object, name='')` 
 def get_svg_download_link(p, name='file.svg'):
     """Generates a link for a Plotly chart to be downloaded as SVG"""
     os.makedirs("downloads/", exist_ok=True)

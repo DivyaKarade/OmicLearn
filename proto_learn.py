@@ -399,7 +399,6 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
             clf_max_features, clf_max_features_int, loss, cv_generator):
     
     st.write("## Summary")
-    # text ="```"
     text = ""
     
     # Packages
