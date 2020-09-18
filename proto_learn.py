@@ -4,8 +4,7 @@ from PIL import Image
 import streamlit as st
 from datetime import datetime
 import utils.session_states as session_states
-from utils.helper import get_svg_download_link, get_pdf_download_link, get_csv_download_link
-from utils.helper import make_recording_widget, load_data, transform_dataset, normalize_dataset
+from utils.helper import get_download_link, make_recording_widget, load_data, transform_dataset, normalize_dataset
 from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
 from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, plot_pr_curve_cv, plot_pr_curve_cohort, get_system_report
 icon = Image.open('./utils/proto_learn.png')
@@ -297,8 +296,8 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
         p, feature_df = plot_feature_importance(features, feature_importance, p_values)
         st.plotly_chart(p, use_container_width=True)
         if p:
-            get_pdf_download_link(p, 'feature_importance.pdf')
-            get_svg_download_link(p, 'feature_importance.svg')
+            get_download_link(p, 'feature_importance.pdf')
+            get_download_link(p, 'feature_importance.svg')
         # st.dataframe(feature_df)
     
     return class_names, subset, X, y, features
@@ -320,8 +319,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     p = plot_roc_curve_cv(roc_curve_results)
     st.plotly_chart(p)
     if p:
-        get_pdf_download_link(p, 'roc_curve.pdf')
-        get_svg_download_link(p, 'roc_curve.svg')
+        get_download_link(p, 'roc_curve.pdf')
+        get_download_link(p, 'roc_curve.svg')
 
     # Precision-Recall Curve
     st.subheader('Precision-Recall Curve')
@@ -329,8 +328,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     p = plot_pr_curve_cv(pr_curve_results, y_test)
     st.plotly_chart(p)
     if p:
-        get_pdf_download_link(p, 'pr_curve.pdf')
-        get_svg_download_link(p, 'pr_curve.svg')
+        get_download_link(p, 'pr_curve.pdf')
+        get_download_link(p, 'pr_curve.svg')
 
     # Confusion Matrix (CM)
     st.subheader('Confusion matrix')
@@ -339,15 +338,15 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     p  = plot_confusion_matrices(class_0, class_1, split_results, names)
     st.plotly_chart(p)
     if p:
-        get_pdf_download_link(p, 'cm_cohorts.pdf')
-        get_svg_download_link(p, 'cm_cohorts.svg')
+        get_download_link(p, 'cm_cohorts.pdf')
+        get_download_link(p, 'cm_cohorts.svg')
 
     # Results
     st.subheader('Run Results for `{}`'.format(classifier))
     summary = pd.DataFrame(_cv_results).describe()
     summary_df = pd.DataFrame(summary)
     st.write(summary_df)
-    get_csv_download_link(summary_df, "run_results.csv")
+    get_download_link(summary_df, "run_results.csv")
 
     if cohort_column != 'None':
         st.header('Cohort comparison')
@@ -360,8 +359,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         p = plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos)
         st.plotly_chart(p)
         if p:
-            get_pdf_download_link(p, 'roc_curve_cohort.pdf')
-            get_svg_download_link(p, 'roc_curve_cohort.svg')
+            get_download_link(p, 'roc_curve_cohort.pdf')
+            get_download_link(p, 'roc_curve_cohort.svg')
 
         # PR Curve for Cohorts
         st.subheader('Precision-Recall Curve')
@@ -369,8 +368,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         p = plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos, y_test)
         st.plotly_chart(p)
         if p:
-            get_pdf_download_link(p, 'pr_curve_cohort.pdf')
-            get_svg_download_link(p, 'pr_curve_cohort.svg')
+            get_download_link(p, 'pr_curve_cohort.pdf')
+            get_download_link(p, 'pr_curve_cohort.svg')
 
         st.subheader('Confusion matrix')
         names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
@@ -380,8 +379,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         p = plot_confusion_matrices(class_0, class_1, cohort_results, names)
         st.plotly_chart(p)
         if p:
-            get_pdf_download_link(p, 'cm.pdf')
-            get_svg_download_link(p, 'cm.svg')
+            get_download_link(p, 'cm.pdf')
+            get_download_link(p, 'cm.svg')
 
         st.subheader('Run Results for `{}`'.format(classifier))
         summary = pd.DataFrame(_cohort_results).describe()
@@ -503,7 +502,7 @@ def save_sessions(widget_values, user_name):
     sessions_df = sessions_df.drop("user", axis=1)
     st.write("## Session History")
     st.dataframe(sessions_df.T)
-    get_csv_download_link(sessions_df, "session_history.csv")
+    get_download_link(sessions_df, "session_history.csv")
 
 # Main Function
 def ProtoLearn_Main():
