@@ -360,6 +360,11 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
         y_train = y[train_index]
         y_test = y[test_index]
 
+        # Since LinearSVC does not have `predict_proba()`
+        if classifier == "LinearSVC":
+            from sklearn.calibration import CalibratedClassifierCV
+            clf = CalibratedClassifierCV(clf, cv=cv_generator) 
+
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
         y_score = clf.predict_proba(X_test)
