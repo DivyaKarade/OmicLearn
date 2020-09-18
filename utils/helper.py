@@ -12,7 +12,7 @@ from itertools import chain
 import sklearn
 import sklearn.metrics as metrics
 from sklearn.impute import KNNImputer
-from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit, GridSearchCV
+from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, SelectKBest
 from sklearn.metrics import roc_curve, plot_roc_curve, precision_recall_curve, auc, plot_confusion_matrix
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
@@ -213,7 +213,7 @@ def impute_nan(X, missing_value, random_state):
 
     return X
 
-def return_classifier(classifier, random_state, tuning_type, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator):
+def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator):
     """
     Returns classifier object based on name
     """
@@ -233,18 +233,15 @@ def return_classifier(classifier, random_state, tuning_type, n_estimators, learn
     elif classifier == 'DecisionTree':
         clf = tree.DecisionTreeClassifier(criterion = criterion, max_features = clf_max_features, random_state = random_state)
     elif classifier == 'AdaBoost':
-        if tuning_type == 'Manual':
-            clf = ensemble.AdaBoostClassifier(n_estimators = n_estimators, random_state = random_state, learning_rate=learning_rate)
-        elif tuning_type == 'GridSearchCV':
-            clf = GridSearchCV()
+        clf = ensemble.AdaBoostClassifier(n_estimators = n_estimators, random_state = random_state, learning_rate=learning_rate)
     elif classifier == 'LinearSVC':
         clf = svm.LinearSVC(penalty = penalty, C = c_val, loss = loss, random_state = random_state)
 
     return clf
 
-def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, tuning_type, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, bar):
+def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, bar):
 
-    clf = return_classifier(classifier, random_state, tuning_type, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
     
     if cv_method == 'RepeatedStratifiedKFold':
         cv_alg = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
@@ -268,23 +265,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
 
     for metric_name, metric_fct in scorer_dict.items():
         _cv_results[metric_name] = []
-    
-    # GridSearch
-    if (classifier == "AdaBoost") and (tuning_type == "GridSearchCV"):
-        try:
-            ada = ensemble.AdaBoostClassifier()
-            param_grid = {'n_estimators': [500, 1000, 2000], 'learning_rate': [.001, 0.01, .1]}
-            grid = GridSearchCV(estimator = ada, param_grid = param_grid, scoring = 'accuracy', n_jobs=-1) #Scoring type:? roc_auc may be better
-            grid.fit(X[10, :], y[10,])
-            grid_best_params = grid.best_params_
-            _cv_results['grid_params'] = grid_best_params
-            st.text(grid_best_params)
-            print(grid_best_params)
-            clf = ensemble.AdaBoostClassifier(n_estimators = grid_best_params['n_estimators'], random_state = random_state, learning_rate=grid_best_params['learning_rate'])
-        except Exception as nedir_bu:
-            st.text(nedir_bu)
-            print(nedir_bu)
-    
+
     for i, (train_index, test_index) in enumerate(cv_alg.split(X,y)):
 
         X_train = X.iloc[train_index]
@@ -295,7 +276,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         if classifier == "LinearSVC":
             from sklearn.calibration import CalibratedClassifierCV
             clf = CalibratedClassifierCV(clf, cv=cv_generator) 
-
+        
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
         y_score = clf.predict_proba(X_test)
@@ -332,9 +313,9 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
 
     return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test
 
-def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, tuning_type, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, bar):
+def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, bar):
 
-    clf = return_classifier(classifier, random_state, tuning_type, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
 
     roc_curve_results_cohort = []
     pr_curve_results_cohort = []
@@ -370,19 +351,6 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
         X_test = X[test_index]
         y_train = y[train_index]
         y_test = y[test_index]
-
-        if classifier == "LinearSVC":
-            from sklearn.calibration import CalibratedClassifierCV
-            clf = CalibratedClassifierCV(clf, cv=cv_generator) 
-
-        elif (classifier == "AdaBoost") and (tuning_type == "GridSearchCV"):
-            ada = ensemble.AdaBoostClassifier()
-            param_grid = {'n_estimators': [500, 1000, 2000], 'learning_rate': [.001, 0.01, .1]}
-            grid = GridSearchCV(estimator = ada, param_grid = param_grid, scoring = 'accuracy', n_jobs=-1) #Scoring type:? roc_auc may be better
-            grid.fit(X_train, y_train)
-            grid_best_params = grid.best_params_
-            _cohort_results['grid_params'] = grid_best_params
-            clf = ensemble.AdaBoostClassifier(n_estimators = grid_best_params['n_estimators'], random_state = random_state, learning_rate=grid_best_params['learning_rate'])
 
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
