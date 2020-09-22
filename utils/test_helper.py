@@ -26,6 +26,15 @@ def test_transform_dataset():
     Test if the transformation is done correctly
     """
 
-    df = pd.DataFrame(np.array([[1, 2, 'm'], [4, 5, 'w'], [7, 8, 'm']]), columns=['a', 'b', 'c'])
-    df_t = transform_dataset(df, ['c'],['a','b'])
+    df = pd.DataFrame(np.array([[1, 2, 'm', '+'], [4, 5, 'w', '-'], [7, 8, 'm', '-']]), columns=['a', 'b', 'c', 'd'])
+    df_t = transform_dataset(df, ['c'], ['a', 'b'])
     assert df_t['c'].dtype == np.dtype('int')
+
+    df_t = transform_dataset(df, ['c', 'd'], ['a', 'b'])
+    assert df_t['c'].dtype == np.dtype('int')
+    assert df_t['d'].dtype == np.dtype('int')
+
+    df_t = transform_dataset(df, [], ['a', 'b'])
+
+    for column in df_t.columns:
+        assert df_t[column].dtype == np.dtype('float')
