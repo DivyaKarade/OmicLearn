@@ -522,7 +522,7 @@ def generate_footer_parts():
     citations = """
         <b> APA Format: </b><br><br>
         Winter, S., Karayel, O., Strauss, M., Padmanabhan, S., Surface, M., & Merchant, K. et al. (2020). 
-        Urinary proteome profiling for stratifying patients with familial Parkinson’s disease. doi: 10.1101/2020.08.09.243584`
+        Urinary proteome profiling for stratifying patients with familial Parkinson’s disease. doi: 10.1101/2020.08.09.243584.
     """
 
     # Put the footer with tabs
@@ -531,8 +531,7 @@ def generate_footer_parts():
             <div class="tab"> <input type="radio" id="tab-1" name="tab-group-1" checked> <label for="tab-1">Citations</label> <div class="content"> <p> {} </p> </div> </div>
             <div class="tab"> <input type="radio" id="tab-2" name="tab-group-1"> <label for="tab-2">Report Bugs</label> <div class="content"> 
                 <p><br>
-                    Firstly, thank you very much for taking your time and we appreciate all contributions. 👍 
-                    <br><br>
+                    Firstly, thank you very much for taking your time and we appreciate all contributions. 👍 <br>
                     You can report the bugs or request a feature using the link below or sending us a e-mail:
                     <br><br>
                     <a class="download_link" href="https://github.com/OmicEra/proto_learn/issues/new/choose" target="_blank">Report a bug via GitHub</a>
