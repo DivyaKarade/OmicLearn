@@ -41,6 +41,16 @@ def main_components():
             .sidebar-content label, stText, p, .caption {color: #FFF !important}
             .tickBarMin, .tickBarMax {color: #f84f57 !important}
             .markdown-text-container p {color: #035672 !important}
+
+            /* Tabs */ 
+            .tabs { position: relative; min-height: 200px; clear: both; margin: 40px auto 0px auto; background: #efefef; box-shadow: 0 48px 80px -32px rgba(0,0,0,0.3); }
+            .tab {float: left;}
+            .tab label { background: #f84f57; cursor: pointer; font-weight: bold; font-size: 18px; padding: 10px; color: #fff; transition: background 0.1s, color 0.1s; margin-left: -1px; position: relative; left: 1px; top: -29px; z-index: 2; }
+            .tab label:hover {background: #035672;}
+            .tab [type=radio] { display: none; }
+            .content { position: absolute; top: -1px; left: 0; background: #fff; right: 0; bottom: 0; padding: 30px 20px; transition: opacity .1s linear; opacity: 0; }
+            [type=radio]:checked ~ label { background: #035672; color: #fff;}
+            [type=radio]:checked ~ label ~ .content { z-index: 1; opacity: 1; }
         </style>
     """
     st.markdown(main_external_css, unsafe_allow_html=True)
@@ -506,15 +516,39 @@ def save_sessions(widget_values, user_name):
     get_download_link(sessions_df, "session_history.csv")
 
 # Generate footer
-def generate_footer():
-    # Put the footer
-    footer_html = """
+def generate_footer_parts():
+
+    # Citations
+    citations = """
+        <b> APA Format: </b><br><br>
+        Winter, S., Karayel, O., Strauss, M., Padmanabhan, S., Surface, M., & Merchant, K. et al. (2020). 
+        Urinary proteome profiling for stratifying patients with familial Parkinson’s disease. doi: 10.1101/2020.08.09.243584`
+    """
+
+    # Put the footer with tabs
+    footer_parts_html = """
+        <div class="tabs">
+            <div class="tab"> <input type="radio" id="tab-1" name="tab-group-1" checked> <label for="tab-1">Citations</label> <div class="content"> <p> {} </p> </div> </div>
+            <div class="tab"> <input type="radio" id="tab-2" name="tab-group-1"> <label for="tab-2">Report Bugs</label> <div class="content"> 
+                <p><br>
+                    Firstly, thank you very much for taking your time and we appreciate all contributions. 👍 
+                    <br><br>
+                    You can report the bugs or request a feature using the link below or sending us a e-mail:
+                    <br><br>
+                    <a class="download_link" href="https://github.com/OmicEra/proto_learn/issues/new/choose" target="_blank">Report a bug via GitHub</a>
+                    <a class="download_link" href="mailto:info@omicera.com">Report a bug via Email</a>
+                </p>  
+            </div> </div>
+        </div>
+
         <div class="footer">
             <i> Proto Learn {} </i> powered by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH"> 
             <a href="https://omicera.com" target="_blank">OmicEra</a>
         </div>
-        """.format(version)
-    st.markdown(footer_html, unsafe_allow_html=True)
+        """.format(citations, version)
+
+    st.write("## Cite us & Report bugs")
+    st.markdown(footer_parts_html, unsafe_allow_html=True)
 
 # Main Function
 def ProtoLearn_Main():
@@ -585,7 +619,7 @@ def ProtoLearn_Main():
         save_sessions(widget_values, session_state.user_name)
 
         # Generate footer
-        generate_footer()
+        generate_footer_parts()
 
 # Run the Proto Learn
 if __name__ == '__main__':
