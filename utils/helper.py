@@ -212,7 +212,8 @@ def impute_nan(X, missing_value, random_state):
     return X
 
 def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, 
-            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator):
+            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, 
+            min_split_loss, max_depth, min_child_weight):
     """
     Returns classifier object based on name
     """
@@ -222,7 +223,7 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
     if classifier == 'XGBoost':
         from xgboost import XGBClassifier
-        clf = XGBClassifier(random_state = random_state)
+        clf = XGBClassifier(random_state = random_state, learning_rate=learning_rate, min_split_loss=min_split_loss, max_depth=max_depth, min_child_weight=min_child_weight)
     elif classifier == 'LogisticRegression':
         clf = linear_model.LogisticRegression(penalty=penalty.lower(), solver=solver, max_iter=max_iter, C=c_val, random_state = random_state, n_jobs=-1)
     elif classifier == 'KNeighborsClassifier':
@@ -241,10 +242,11 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
 def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
-                            clf_max_features, clf_max_features_int, loss, cv_generator, bar):
+                            clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, bar):
 
     clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, 
-                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, 
+                            min_split_loss, max_depth, min_child_weight)
     
     if cv_method == 'RepeatedStratifiedKFold':
         cv_alg = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
@@ -320,10 +322,11 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
 
 def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
-                            clf_max_features, clf_max_features_int, loss, cv_generator, bar):
+                            clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, bar):
 
     clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, 
-                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, 
+                            min_split_loss, max_depth, min_child_weight)
 
     roc_curve_results_cohort = []
     pr_curve_results_cohort = []

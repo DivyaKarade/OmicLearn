@@ -224,11 +224,11 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     # Define variables as 0 if classifier not of those:
     n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, \
     solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, \
-    loss, cv_generator = 0, 0, 0, "", "", "", "", 0, 0, "", "", 0, "", 0
+    loss, cv_generator, min_split_loss, max_depth, min_child_weight = 0, 0, 0, "", "", "", "", 0, 0, "", "", 0, "", 0, 0, 0, 0
 
     if classifier == 'AdaBoost':
         n_estimators = number_input_('Number of estimators:', value = 100, min_value = 1, max_value = 2000)
-        learning_rate = number_input_('Learning rate:', value = 1, min_value = 1, max_value = 100)
+        learning_rate = number_input_('Learning rate:', value = 1.0, min_value = 0.001, max_value = 100.0)
 
     elif classifier == 'KNeighborsClassifier':
         n_neighbors = number_input_('Number of neighbors:', value = 100, min_value = 1, max_value = 2000)
@@ -260,6 +260,12 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         c_val = number_input_('C parameter:', value = 1, min_value = 1, max_value = 100)
         cv_generator = number_input_('Cross-validation generator:', value = 2, min_value = 2, max_value = 100)
 
+    elif classifier == 'XGBoost':
+        learning_rate = eta = number_input_('Learning rate:', value = 0.3, min_value = 0.0, max_value = 1.0)
+        min_split_loss = gamma = number_input_('Min. split loss:', value = 0, min_value = 0, max_value = 100)
+        max_depth = number_input_('Max. depth:', value = 6, min_value = 0, max_value = 100)
+        min_child_weight = number_input_('Min. child weight:', value = 1, min_value = 0, max_value = 100)
+
     # Sidebar -- Cross-Validation
     st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
     cv_method = selectbox_("Specify CV method:", ["RepeatedStratifiedKFold", "StratifiedKFold", "StratifiedShuffleSplit"])
@@ -282,7 +288,8 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         
     return random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, \
         n_trees, classifiers, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, \
-        max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, cv_method, cv_splits, cv_repeats, \
+        max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
+        min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, \
         features_selected, classifier, manual_features, features
 
 # Feature selection
@@ -316,13 +323,14 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
 # Display results and plots
 def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, 
     knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, 
-    cv_generator, cv_method, cv_splits, cv_repeats, class_0, class_1):
+    cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1):
     
     # Cross-Validation                
     st.markdown("Running Cross-Validation")
     _cv_results, roc_curve_results, pr_curve_results, split_results, y_test = \
         perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
-        n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, st.progress(0))
+        n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
+        min_split_loss, max_depth, min_child_weight, st.progress(0))
     st.header('Cross-Validation')
 
     # ROC-AUC
@@ -363,7 +371,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         st.header('Cohort comparison')
         _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos, y_test = \
             perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
-            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, st.progress(0))
+            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
+            min_split_loss, max_depth, min_child_weight, st.progress(0))
 
         # ROC-AUC for Cohorts
         st.subheader('Receiver operating characteristic')
@@ -406,7 +415,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
 def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, 
             classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos,
             n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
-            clf_max_features, clf_max_features_int, loss, cv_generator):
+            clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight):
     
     st.write("## Summary")
     text = ""
@@ -568,8 +577,9 @@ def ProtoLearn_Main():
 
     # Sidebar widgets
     random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, n_trees, classifiers, \
-    n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, \
-    loss, cv_generator, cv_method, cv_splits, cv_repeats, features_selected, classifier, manual_features, features = \
+    n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, \
+    clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, \
+    cv_method, cv_splits, cv_repeats, features_selected, classifier, manual_features, features = \
         generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins)
 
     # Analysis Part
@@ -588,14 +598,15 @@ def ProtoLearn_Main():
 
         # Plotting and Get the results
         summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = \
-            all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, 
-                knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, 
-                cv_generator, cv_method, cv_splits, cv_repeats, class_0, class_1)
+            all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors,
+                knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss,
+                cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1)
 
         # Generate summary text
         generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, classifier, 
             cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos, n_estimators, learning_rate, 
-            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
+            clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight)
         
         # Session and Run info
         widget_values["Date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " (UTC)"
