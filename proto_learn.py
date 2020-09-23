@@ -475,7 +475,7 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
     elif classifier == 'LinearSVC':
         text += 'For classification, we used a {}-Classifier (penalty={}, loss={}, C={} and CV={}). '.format(classifier, penalty, loss, c_val, cv_generator)
     elif classifier == 'XGBoost':
-        text += 'For classification, we used a {}-Classifier ({}). '.format(classifier, xgboost.__version__ )
+        text += 'For classification, we used a {}-Classifier (version={}, min_split_loss={}, max_depth={} and min_child_weight={}). '.format(classifier, xgboost.__version__, min_split_loss, max_depth, min_child_weight)
 
     # Cross-Validation
     if cv_method == 'RepeatedStratifiedKFold':
