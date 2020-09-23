@@ -28,6 +28,7 @@ def main_components():
     # External CSS
     main_external_css = """
         <style>
+            .footer {position: absolute; height: 50px; bottom: -150px; width:100%; padding:10px; text-align:center; }
             #MainMenu, .reportview-container .main footer {display: none;}
             .btn-outline-secondary {background: #FFF !important}
             .download_link {color: #f63366 !important; text-decoration: none !important; z-index: 99999 !important; 
@@ -40,6 +41,16 @@ def main_components():
             .sidebar-content label, stText, p, .caption {color: #FFF !important}
             .tickBarMin, .tickBarMax {color: #f84f57 !important}
             .markdown-text-container p {color: #035672 !important}
+
+            /* Tabs */ 
+            .tabs { position: relative; min-height: 200px; clear: both; margin: 40px auto 0px auto; background: #efefef; box-shadow: 0 48px 80px -32px rgba(0,0,0,0.3); }
+            .tab {float: left;}
+            .tab label { background: #f84f57; cursor: pointer; font-weight: bold; font-size: 18px; padding: 10px; color: #fff; transition: background 0.1s, color 0.1s; margin-left: -1px; position: relative; left: 1px; top: -29px; z-index: 2; }
+            .tab label:hover {background: #035672;}
+            .tab [type=radio] { display: none; }
+            .content { position: absolute; top: -1px; left: 0; background: #fff; right: 0; bottom: 0; padding: 30px 20px; transition: opacity .1s linear; opacity: 0; }
+            [type=radio]:checked ~ label { background: #035672; color: #fff;}
+            [type=radio]:checked ~ label ~ .content { z-index: 1; opacity: 1; }
         </style>
     """
     st.markdown(main_external_css, unsafe_allow_html=True)
@@ -213,11 +224,11 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     # Define variables as 0 if classifier not of those:
     n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, \
     solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, \
-    loss, cv_generator = 0, 0, 0, "", "", "", "", 0, 0, "", "", 0, "", 0
+    loss, cv_generator, min_split_loss, max_depth, min_child_weight = 0, 0, 0, "", "", "", "", 0, 0, "", "", 0, "", 0, 0, 0, 0
 
     if classifier == 'AdaBoost':
         n_estimators = number_input_('Number of estimators:', value = 100, min_value = 1, max_value = 2000)
-        learning_rate = number_input_('Learning rate:', value = 1, min_value = 1, max_value = 100)
+        learning_rate = number_input_('Learning rate:', value = 1.0, min_value = 0.001, max_value = 100.0)
 
     elif classifier == 'KNeighborsClassifier':
         n_neighbors = number_input_('Number of neighbors:', value = 100, min_value = 1, max_value = 2000)
@@ -249,6 +260,12 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         c_val = number_input_('C parameter:', value = 1, min_value = 1, max_value = 100)
         cv_generator = number_input_('Cross-validation generator:', value = 2, min_value = 2, max_value = 100)
 
+    elif classifier == 'XGBoost':
+        learning_rate = eta = number_input_('Learning rate:', value = 0.3, min_value = 0.0, max_value = 1.0)
+        min_split_loss = gamma = number_input_('Min. split loss:', value = 0, min_value = 0, max_value = 100)
+        max_depth = number_input_('Max. depth:', value = 6, min_value = 0, max_value = 100)
+        min_child_weight = number_input_('Min. child weight:', value = 1, min_value = 0, max_value = 100)
+
     # Sidebar -- Cross-Validation
     st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
     cv_method = selectbox_("Specify CV method:", ["RepeatedStratifiedKFold", "StratifiedKFold", "StratifiedShuffleSplit"])
@@ -271,7 +288,8 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         
     return random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, \
         n_trees, classifiers, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, \
-        max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, cv_method, cv_splits, cv_repeats, \
+        max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
+        min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, \
         features_selected, classifier, manual_features, features
 
 # Feature selection
@@ -305,13 +323,14 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
 # Display results and plots
 def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, 
     knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, 
-    cv_generator, cv_method, cv_splits, cv_repeats, class_0, class_1):
+    cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1):
     
     # Cross-Validation                
     st.markdown("Running Cross-Validation")
     _cv_results, roc_curve_results, pr_curve_results, split_results, y_test = \
         perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
-        n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, st.progress(0))
+        n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
+        min_split_loss, max_depth, min_child_weight, st.progress(0))
     st.header('Cross-Validation')
 
     # ROC-AUC
@@ -352,7 +371,8 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         st.header('Cohort comparison')
         _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos, y_test = \
             perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
-            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, st.progress(0))
+            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
+            min_split_loss, max_depth, min_child_weight, st.progress(0))
 
         # ROC-AUC for Cohorts
         st.subheader('Receiver operating characteristic')
@@ -395,7 +415,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
 def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, 
             classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos,
             n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
-            clf_max_features, clf_max_features_int, loss, cv_generator):
+            clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight):
     
     st.write("## Summary")
     text = ""
@@ -455,7 +475,7 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
     elif classifier == 'LinearSVC':
         text += 'For classification, we used a {}-Classifier (penalty={}, loss={}, C={} and CV={}). '.format(classifier, penalty, loss, c_val, cv_generator)
     elif classifier == 'XGBoost':
-        text += 'For classification, we used a {}-Classifier ({}). '.format(classifier, xgboost.__version__ )
+        text += 'For classification, we used a {}-Classifier (version={}, min_split_loss={}, max_depth={} and min_child_weight={}). '.format(classifier, xgboost.__version__, min_split_loss, max_depth, min_child_weight)
 
     # Cross-Validation
     if cv_method == 'RepeatedStratifiedKFold':
@@ -504,6 +524,40 @@ def save_sessions(widget_values, user_name):
     st.dataframe(sessions_df.T)
     get_download_link(sessions_df, "session_history.csv")
 
+# Generate footer
+def generate_footer_parts():
+
+    # Citations
+    citations = """
+        <b> APA Format: </b><br><br>
+        Winter, S., Karayel, O., Strauss, M., Padmanabhan, S., Surface, M., & Merchant, K. et al. (2020). 
+        Urinary proteome profiling for stratifying patients with familial Parkinson’s disease. doi: 10.1101/2020.08.09.243584.
+    """
+
+    # Put the footer with tabs
+    footer_parts_html = """
+        <div class="tabs">
+            <div class="tab"> <input type="radio" id="tab-1" name="tab-group-1" checked> <label for="tab-1">Citations</label> <div class="content"> <p> {} </p> </div> </div>
+            <div class="tab"> <input type="radio" id="tab-2" name="tab-group-1"> <label for="tab-2">Report Bugs</label> <div class="content"> 
+                <p><br>
+                    Firstly, thank you very much for taking your time and we appreciate all contributions. 👍 <br>
+                    You can report the bugs or request a feature using the link below or sending us a e-mail:
+                    <br><br>
+                    <a class="download_link" href="https://github.com/OmicEra/proto_learn/issues/new/choose" target="_blank">Report a bug via GitHub</a>
+                    <a class="download_link" href="mailto:info@omicera.com">Report a bug via Email</a>
+                </p>  
+            </div> </div>
+        </div>
+
+        <div class="footer">
+            <i> Proto Learn {} </i> powered by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH"> 
+            <a href="https://omicera.com" target="_blank">OmicEra</a>
+        </div>
+        """.format(citations, version)
+
+    st.write("## Cite us & Report bugs")
+    st.markdown(footer_parts_html, unsafe_allow_html=True)
+
 # Main Function
 def ProtoLearn_Main():
     
@@ -523,8 +577,9 @@ def ProtoLearn_Main():
 
     # Sidebar widgets
     random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, n_trees, classifiers, \
-    n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, \
-    loss, cv_generator, cv_method, cv_splits, cv_repeats, features_selected, classifier, manual_features, features = \
+    n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, \
+    clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, \
+    cv_method, cv_splits, cv_repeats, features_selected, classifier, manual_features, features = \
         generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins)
 
     # Analysis Part
@@ -543,14 +598,15 @@ def ProtoLearn_Main():
 
         # Plotting and Get the results
         summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = \
-            all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, 
-                knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, 
-                cv_generator, cv_method, cv_splits, cv_repeats, class_0, class_1)
+            all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors,
+                knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss,
+                cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1)
 
         # Generate summary text
         generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, classifier, 
             cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos, n_estimators, learning_rate, 
-            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
+            clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight)
         
         # Session and Run info
         widget_values["Date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " (UTC)"
@@ -571,6 +627,9 @@ def ProtoLearn_Main():
         session_state = session_states.get(user_name=user_name)
         widget_values["user"] = session_state.user_name
         save_sessions(widget_values, session_state.user_name)
+
+        # Generate footer
+        generate_footer_parts()
 
 # Run the Proto Learn
 if __name__ == '__main__':
