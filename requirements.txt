@@ -5,4 +5,3 @@ scikit-learn==0.22.1
 xlrd==1.2.0
 plotly==4.9.0
 kaleido==0.0.1
-XlsxWriter==1.2.7
