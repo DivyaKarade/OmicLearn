@@ -1,9 +1,9 @@
-import pandas as pd
-from io import BytesIO
+import sys
 import numpy as np
-
-
-from helper import load_data, transform_dataset, normalize_dataset
+import pandas as pd
+sys.path.append('..')
+from io import BytesIO
+from utils.helper import load_data, transform_dataset, normalize_dataset
 
 def test_load_data():
     """
