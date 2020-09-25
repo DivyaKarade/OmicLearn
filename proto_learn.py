@@ -24,15 +24,15 @@ version = report['proto_learn_version']
 
 # Functions / Element Creations
 def main_components():
-    
+
     # External CSS
     main_external_css = """
         <style>
             .footer {position: absolute; height: 50px; bottom: -150px; width:100%; padding:10px; text-align:center; }
             #MainMenu, .reportview-container .main footer {display: none;}
             .btn-outline-secondary {background: #FFF !important}
-            .download_link {color: #f63366 !important; text-decoration: none !important; z-index: 99999 !important; 
-                            cursor:pointer !important; margin: 15px 0px; border: 1px solid #f63366; 
+            .download_link {color: #f63366 !important; text-decoration: none !important; z-index: 99999 !important;
+                            cursor:pointer !important; margin: 15px 0px; border: 1px solid #f63366;
                             text-align:center; padding: 8px !important; width: 200px;}
             .download_link:hover {background: #f63366 !important; color: #FFF !important;}
             h1, h2, h3, h4, h5, h6, a, a:visited {color: #f84f57 !important}
@@ -70,10 +70,10 @@ def main_components():
 
     return widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect
 
-# Show main text and data upload section 
+# Show main text and data upload section
 def main_text_and_data_upload():
     st.title("👨‍💻 DEV | Proto Learn — Clinical Proteomics Machine Learning Tool")
-    st.info(""" 
+    st.info("""
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature
         * Protein names should be uppercase
@@ -89,8 +89,8 @@ def main_text_and_data_upload():
 
 # Choosing sample dataset and data parameter selections
 def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, multiselect):
-    
-    # Sample dataset / uploaded file selection 
+
+    # Sample dataset / uploaded file selection
     if (sample_file != 'None') and (len(df) > 0):
         st.warning("Please, either choose a sample file or set it as `None` to work on your file")
         df = pd.DataFrame()
@@ -162,14 +162,14 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
 
 # Generate sidebar elements
 def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins):
-    
+
     # Sidebar -- Image/Title
     st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
     st.sidebar.markdown("# [Options](https://github.com/OmicEra/proto_learn/wiki/METHODS)")
-    
+
     # Sidebar -- Random State
     random_state = slider_("Random State:", min_value = 0, max_value = 99, value=23)
-    
+
     # Sidebar -- Preprocessing
     st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing)')
     normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer']
@@ -177,7 +177,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
 
     # Define these two variables if normalization is not these two:
     normalization_detail, n_quantiles = "", ""
-    
+
     if normalization == "PowerTransformer":
         normalization_detail = selectbox_("Power transformation method:", ["Yeo-Johnson", "Box-Cox"])
     elif normalization == "QuantileTransformer":
@@ -199,7 +199,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     if feature_method != 'Manual':
         max_features = number_input_('Maximum number of features:', value = 20, min_value = 1, max_value = 2000)
     else:
-        # Define `max_features` as 0 if `feature_method` is `Manual` 
+        # Define `max_features` as 0 if `feature_method` is `Manual`
         max_features = 0
 
     if feature_method == "ExtraTrees":
@@ -213,7 +213,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC','XGBoost']
     else:
         classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC']
-    
+
     # Disable all other classification methods
     if (n_missing > 0) and (missing_value == 'None'):
         classifiers = ['XGBoost']
@@ -253,7 +253,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         clf_max_features = selectbox_("Number of max. features:", ["auto", "int", "sqrt", "log2"])
         if clf_max_features == "int":
             clf_max_features_int = number_input_('Number of max. features:', value = 5, min_value = 1, max_value = 100)
-    
+
     elif classifier == 'LinearSVC':
         penalty = selectbox_("Specify norm in the penalization:", ["l2", "l1"])
         loss = selectbox_("Select loss function:", ["squared_hinge", "hinge"])
@@ -270,8 +270,8 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
     cv_method = selectbox_("Specify CV method:", ["RepeatedStratifiedKFold", "StratifiedKFold", "StratifiedShuffleSplit"])
     cv_splits = number_input_('CV Splits:', min_value = 2, max_value = 10, value=5)
-    
-    # Define placeholder variables for CV 
+
+    # Define placeholder variables for CV
     cv_repeats = 0, 0
     if cv_method == 'RepeatedStratifiedKFold':
         cv_repeats = number_input_('CV Repeats:', min_value = 1, max_value = 50, value=10)
@@ -285,7 +285,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         st.sidebar.subheader("Manually select proteins")
         manual_features = multiselect_("Select your proteins manually:", proteins, default=None)
         features = manual_features +  additional_features
-        
+
     return random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, \
         n_trees, classifiers, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, \
         max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
@@ -293,9 +293,9 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         features_selected, classifier, manual_features, features
 
 # Feature selection
-def feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization, 
+def feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, normalization,
                     normalization_detail, n_quantiles, feature_method, max_features, n_trees, random_state):
-    
+
     st.subheader("Feature selection")
     class_names = [df[option].value_counts().index[0], df_sub[option].value_counts().index[1]]
     st.markdown("Using the following identifiers: Class 0 `{}`, Class 1 `{}`".format(class_0, class_1))
@@ -317,7 +317,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
             get_download_link(p, 'feature_importance.pdf')
             get_download_link(p, 'feature_importance.svg')
         # st.dataframe(feature_df)
-    
+
     return class_names, subset, X, y, features
 
 # Display results and plots
@@ -331,6 +331,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
         n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
         min_split_loss, max_depth, min_child_weight, st.progress(0))
+
     st.header('Cross-Validation')
 
     # ROC-AUC
@@ -394,7 +395,7 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
         st.subheader('Confusion matrix')
         names = ['Train on {}, Test on {}'.format(_[0], _[1]) for _ in cohort_combos]
         names.insert(0, 'Sum of cohort comparisons')
-        
+
         # Confusion Matrix (CM) for Cohorts
         p = plot_confusion_matrices(class_0, class_1, cohort_results, names)
         st.plotly_chart(p)
@@ -412,23 +413,23 @@ def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_sta
     return summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos
 
 # Generate summary text
-def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, 
+def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees,
             classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos,
             n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
             clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight):
     
     st.write("## Summary")
     text = ""
-    
+
     # Packages
     packages_plain_text = """
-        Proto Learn ({proto_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts. 
-        Machine learning was done in Python ({python_version}). Protein tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}). 
-        The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}). 
-        For generating the plots and charts, Plotly ({plotly_version}) library was used. 
+        Proto Learn ({proto_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts.
+        Machine learning was done in Python ({python_version}). Protein tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}).
+        The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}).
+        For generating the plots and charts, Plotly ({plotly_version}) library was used.
     """
     text += packages_plain_text.format(**report)
-    
+
     # Normalization
     if normalization == 'None':
         text += 'After importing, no further normalization was performed. '
@@ -480,26 +481,26 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
     # Cross-Validation
     if cv_method == 'RepeatedStratifiedKFold':
         cv_plain_text = """
-            When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {}, 
-            we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std) 
-            and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std). 
+            When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {},
+            we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std)
+            and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
         """
-        text += cv_plain_text.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1), 
+        text += cv_plain_text.format(cv_repeats, cv_splits, ''.join(class_0), ''.join(class_1),
             summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'], summary.loc['mean']['pr_auc'], summary.loc['std']['pr_auc'])
     else:
         cv_plain_text = """
-            When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC) 
-            with an average AUC (area under the curve) of {:.2f} ({:.2f} std) and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std). 
+            When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC)
+            with an average AUC (area under the curve) of {:.2f} ({:.2f} std) and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
         """
-        text += cv_plain_text.format(cv_method, cv_splits, ''.join(class_0), ''.join(class_1), 
+        text += cv_plain_text.format(cv_method, cv_splits, ''.join(class_0), ''.join(class_1),
             summary.loc['mean']['roc_auc'], summary.loc['std']['roc_auc'], summary.loc['mean']['pr_auc'], summary.loc['std']['pr_auc'])
 
-    if cohort_column is not 'None':
+    if cohort_column != 'None':
         text += 'When training on one cohort and predicting on another to classify {} vs. {}, we achieved the following AUCs: '.format(''.join(class_0), ''.join(class_1))
         for i, cohort_combo in enumerate(cohort_combos):
             text+= '{:.2f} when training on {} and predicting on {} '.format(pd.DataFrame(_cohort_results).iloc[i]['roc_auc'], cohort_combo[0], cohort_combo[1])
             text+= ', and {:.2f} for PR Curve when training on {} and predicting on {}. '.format(pd.DataFrame(_cohort_results).iloc[i]['pr_auc'], cohort_combo[0], cohort_combo[1])
-    
+
     # Print the all text
     st.info(text)
 
@@ -510,7 +511,7 @@ def get_sessions():
 
 # Saving session info
 def save_sessions(widget_values, user_name):
-    
+
     session_no, session_dict = get_sessions()
     session_no.append(len(session_no) + 1)
     session_dict[session_no[-1]] = widget_values
@@ -518,7 +519,7 @@ def save_sessions(widget_values, user_name):
     sessions_df = sessions_df.T
     sessions_df = sessions_df.drop(sessions_df[sessions_df["user"] != user_name].index).reset_index(drop=True)
     new_column_names = {k:v.replace(":", "").replace("Select", "") for k,v in zip(sessions_df.columns,sessions_df.columns)}
-    sessions_df = sessions_df.rename(columns=new_column_names) 
+    sessions_df = sessions_df.rename(columns=new_column_names)
     sessions_df = sessions_df.drop("user", axis=1)
     st.write("## Session History")
     st.dataframe(sessions_df.T)
@@ -560,11 +561,11 @@ def generate_footer_parts():
 
 # Main Function
 def ProtoLearn_Main():
-    
+
     # Main components
     widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect = main_components()
 
-    # Welcome text and Data uploading 
+    # Welcome text and Data uploading
     sample_file, df = main_text_and_data_upload()
 
     # Checkpoint for whether data uploaded/selected
@@ -587,7 +588,7 @@ def ProtoLearn_Main():
 
         # Feature Selection
         class_names, subset, X, y, features = \
-        feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins, 
+        feature_selection(df, option, class_0, class_1, df_sub, features, manual_features, additional_features, proteins,
             normalization, normalization_detail, n_quantiles, feature_method, max_features, n_trees, random_state)
         st.markdown('Using classifier `{}`.'.format(classifier))
         st.markdown('Using features `{}`.'.format(features))
@@ -607,7 +608,7 @@ def ProtoLearn_Main():
             cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos, n_estimators, learning_rate, 
             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
             clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight)
-        
+
         # Session and Run info
         widget_values["Date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " (UTC)"
         widget_values["ROC AUC Mean"] = summary.loc['mean']['roc_auc']
