@@ -2,11 +2,10 @@
 <h2 align="center"> 📰 Manual and Documentation is available at: <a href="https://github.com/OmicEra/proto_learn/wiki" target="_blank">Proto Learn Wiki Page </a> </h2>
 <h2 align="center"> 🟢 Proto Learn is now accessible through the website: <a href="http://proto-learn.com/" target="_blank">proto-learn.com</a> </h2>
 
-![Proto Learn CI/CD](https://github.com/OmicEra/QC_Dashboard/workflows/QC_Dashboard_Workflow/badge.svg)
+![Proto Learn Tests](https://github.com/OmicEra/proto_learn/workflows/Proto%20Learn%20Tests/badge.svg)
 ![Python Badges](https://img.shields.io/badge/Tested_with_Python-3.7-blue)
 ![Proto Learn Version](https://img.shields.io/badge/Release-v1.0.0-orange)
 ![Proto Learn Release](https://img.shields.io/badge/Release%20Date-September%202020-green)
-![Proto Learn Views](https://img.shields.io/badge/Views-20k-blueviolet.svg)
 ![Proto Learn Server Status](https://img.shields.io/badge/Server%20Status-up-success)
 ![Proto Learn License](https://img.shields.io/badge/License-MIT-lightgrey)
 
