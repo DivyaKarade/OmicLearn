@@ -170,7 +170,7 @@ def plot_feature_importance(features, feature_importance, pvalues):
     feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
 
     # Hide pvalue if it does not exist
-    if np.isnan(pvalues).all(): 
+    if np.isnan(pvalues).all():
         hover_data = ["Name", "Feature_importance"]
     else:
         hover_data = ["Name", "Feature_importance", "P_value"]
@@ -212,7 +212,8 @@ def impute_nan(X, missing_value, random_state):
     return X
 
 def return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, 
-            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator):
+            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, 
+            min_split_loss, max_depth, min_child_weight):
     """
     Returns classifier object based on name
     """
@@ -222,13 +223,13 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
     if classifier == 'XGBoost':
         from xgboost import XGBClassifier
-        clf = XGBClassifier(random_state = random_state)
+        clf = XGBClassifier(random_state = random_state, learning_rate=learning_rate, min_split_loss=min_split_loss, max_depth=max_depth, min_child_weight=min_child_weight)
     elif classifier == 'LogisticRegression':
         clf = linear_model.LogisticRegression(penalty=penalty.lower(), solver=solver, max_iter=max_iter, C=c_val, random_state = random_state, n_jobs=-1)
     elif classifier == 'KNeighborsClassifier':
         clf = neighbors.KNeighborsClassifier(n_neighbors = n_neighbors, weights = knn_weights, algorithm = knn_algorithm, n_jobs=-1)
     elif classifier == 'RandomForest':
-        clf = ensemble.RandomForestClassifier(n_estimators = n_estimators, criterion = criterion, max_features = clf_max_features, 
+        clf = ensemble.RandomForestClassifier(n_estimators = n_estimators, criterion = criterion, max_features = clf_max_features,
                                                 random_state = random_state, n_jobs=-1)
     elif classifier == 'DecisionTree':
         clf = tree.DecisionTreeClassifier(criterion = criterion, max_features = clf_max_features, random_state = random_state)
@@ -241,10 +242,11 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
 def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
-                            clf_max_features, clf_max_features_int, loss, cv_generator, bar):
+                            clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, bar):
 
     clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, 
-                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, 
+                            min_split_loss, max_depth, min_child_weight)
     
     if cv_method == 'RepeatedStratifiedKFold':
         cv_alg = RepeatedStratifiedKFold(n_splits=cv_splits, n_repeats=cv_repeats, random_state=random_state)
@@ -279,8 +281,8 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         # Since LinearSVC does not have `predict_proba()`
         if classifier == "LinearSVC":
             from sklearn.calibration import CalibratedClassifierCV
-            clf = CalibratedClassifierCV(clf, cv=cv_generator) 
-        
+            clf = CalibratedClassifierCV(clf, cv=cv_generator)
+
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
         y_score = clf.predict_proba(X_test)
@@ -296,6 +298,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
                 _cv_results[metric_name].append(metric_fct(y_test, y_score[:,1]))
             elif metric_name in ['precision', 'recall', 'f1']:
                 _cv_results[metric_name].append(metric_fct(y_test, y_pred, zero_division=0))
+
             else:
                 _cv_results[metric_name].append(metric_fct(y_test, y_pred))
 
@@ -320,10 +323,11 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
 
 def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
-                            clf_max_features, clf_max_features_int, loss, cv_generator, bar):
+                            clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, bar):
 
     clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, 
-                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator)
+                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, 
+                            min_split_loss, max_depth, min_child_weight)
 
     roc_curve_results_cohort = []
     pr_curve_results_cohort = []
@@ -363,7 +367,7 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
         # Since LinearSVC does not have `predict_proba()`
         if classifier == "LinearSVC":
             from sklearn.calibration import CalibratedClassifierCV
-            clf = CalibratedClassifierCV(clf, cv=cv_generator) 
+            clf = CalibratedClassifierCV(clf, cv=cv_generator)
 
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
@@ -448,7 +452,7 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     steps = []
     for i in range(len(data)):
         step = dict(
-            method = 'update', 
+            method = 'update',
             args = [
                 # Make the i'th trace visible
                 {'visible': [t == i for t in range(len(data))]},
@@ -497,7 +501,7 @@ def plot_roc_curve_cv(roc_curve_results):
     for fpr, tpr, threshold in roc_curve_results:
         roc_auc = auc(fpr, tpr)
         roc_aucs.append(roc_auc)
-        p.add_trace(go.Scatter(x=fpr, y=tpr, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.2))
+        p.add_trace(go.Scatter(x=fpr, y=tpr, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.1))
         tpr = np.interp(base_fpr, fpr, tpr)
         tpr[0]=0.0
         tprs.append(tpr)
@@ -510,8 +514,8 @@ def plot_roc_curve_cv(roc_curve_results):
     mean_rocauc = np.mean(roc_aucs).round(2)
     sd_rocauc = np.std(roc_aucs).round(2)
 
-    p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill = None, line_color='gray', opacity=0.2, showlegend=False))
-    p.add_trace(go.Scatter(x=base_fpr, y=tprs_upper, fill='tonexty', line_color='gray', opacity=0.2, name='±1 std. dev'))
+    p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill = None, line_color='gray', opacity=0.1, showlegend=False))
+    p.add_trace(go.Scatter(x=base_fpr, y=tprs_upper, fill='tonexty', line_color='gray', opacity=0.1, name='±1 std. dev'))
 
     hovertemplate = "Base FPR %{x:.2f} <br> %{text}"
     text = ["Upper TPR {:.2f} <br> Mean TPR {:.2f} <br> Lower TPR {:.2f}".format(u, m, l) for u, m, l in zip(tprs_upper, mean_tprs, tprs_lower)]
@@ -595,10 +599,11 @@ def plot_pr_curve_cv(pr_curve_results, y_test):
     for precision, recall, _ in pr_curve_results:
         pr_auc = auc(recall, precision)
         pr_aucs.append(pr_auc)
-        p.add_trace(go.Scatter(x=recall, y=precision, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.2))
-        precision = np.interp(base_recall, precision, recall)
+        p.add_trace(go.Scatter(x=recall, y=precision, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.1))
+        precision = np.interp(base_recall, recall, precision, period=100)
         precision[0]=1.0
         precisions.append(precision)
+
 
     precisions = np.array(precisions)
     mean_precisions = precisions.mean(axis=0)
@@ -608,7 +613,7 @@ def plot_pr_curve_cv(pr_curve_results, y_test):
     mean_prauc = np.mean(pr_aucs).round(2)
     sd_prauc = np.std(pr_aucs).round(2)
 
-    p.add_trace(go.Scatter(x=base_recall, y=precisions_lower, fill = None, line_color='gray', opacity=0.2, showlegend=False))
+    p.add_trace(go.Scatter(x=base_recall, y=precisions_lower, fill = None, line_color='gray', opacity=0.1, showlegend=False))
     p.add_trace(go.Scatter(x=base_recall, y=precisions_upper, fill='tonexty', line_color='gray', opacity=0.2, name='±1 std. dev'))
 
     hovertemplate = "Base Recall %{x:.2f} <br>%{text}"
@@ -651,7 +656,7 @@ def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos, y_test):
         text= "Train: {} <br>Test: {}".format(cohort_combos[idx][0], cohort_combos[idx][1])
         hovertemplate = "Recall: %{x:.2f} <br>Precision: %{y:.2f}" + "<br>" + text
         p.add_trace(go.Scatter(x=recall, y=precision, hovertemplate=hovertemplate, hoverinfo='all', mode='lines', name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], pr_auc)))
-        precision = np.interp(base_recall, recall, precision)
+        precision = np.interp(base_recall, recall, precision, period=100)
         precision[0]=1.0
         precisions.append(precision)
 
@@ -663,7 +668,7 @@ def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos, y_test):
     mean_prauc = np.mean(pr_aucs).round(2)
     sd_prauc = np.std(pr_aucs).round(2)
     pr_df = pd.DataFrame({'base_recall':base_recall,'mean_precisions':mean_precisions,'lower':precisions_lower,'upper':precisions_upper})
-    
+
     no_skill = len(y_test[y_test==1]) / len(y_test)
     p.add_trace(go.Scatter(x=[0, 1], y=[no_skill, no_skill], line=dict(color='black', dash='dash'), name="Chance"))
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
@@ -701,7 +706,7 @@ def get_system_report():
 
 def get_download_link(exported_object, name):
     """
-    Generate download link for charts in SVG and PDF formats and for dataframes in CSV format 
+    Generate download link for charts in SVG and PDF formats and for dataframes in CSV format
     """
 
     os.makedirs("downloads/", exist_ok=True)
@@ -722,7 +727,7 @@ def get_download_link(exported_object, name):
         b64 = base64.encodebytes(pdf).decode()
         href = f'<a class="download_link" href="data:application/pdf;base64,%s" download="%s" >Download as *.pdf</a>' % (b64, name)
         st.markdown(href, unsafe_allow_html=True)
-    
+
     elif extension == 'csv':
         exported_object.to_csv("downloads/"+ name, index=False)
         with open("downloads/" + name, "rb") as f:
@@ -733,5 +738,3 @@ def get_download_link(exported_object, name):
 
     else:
         raise NotImplementedError('This output format function is not implemented')
-
-
