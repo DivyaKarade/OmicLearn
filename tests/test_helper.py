@@ -12,7 +12,7 @@ def test_load_data():
     """
 
     # Excel
-    df = pd.DataFrame({'Data': [1,2,3,4]})
+    df = pd.DataFrame({'Data': [1, 2, 3, 4]})
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
     df.to_excel(writer, sheet_name='Sheet1', index=False)
@@ -21,7 +21,7 @@ def test_load_data():
     pd.testing.assert_frame_equal(xlsx_data, df)
 
     # csv
-    df = pd.DataFrame({'A': [1,1], 'B': [0,0]})
+    df = pd.DataFrame({'A': [1, 1], 'B': [0, 0]})
     csv_data = load_data('test_csv_c.csv', 'Comma (,)')
     print(csv_data)
     pd.testing.assert_frame_equal(csv_data, df)
@@ -55,7 +55,7 @@ def test_normalize_dataset():
     Calls all the Normalization Methods
     """
 
-    df = pd.DataFrame({'Data': [1,2,3,4]})
+    df = pd.DataFrame({'Data': [1, 2, 3, 4]})
 
     for normalization in ['StandardScaler', 'MinMaxScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer']:
         if normalization == 'PowerTransformer':
