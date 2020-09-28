@@ -81,6 +81,7 @@ def main_text_and_data_upload():
     """)
     st.subheader("Dataset")
     file_buffer = st.file_uploader("Upload your dataset below", type=["csv", "xlsx"])
+    st.markdown("By uploading a file, you agree that you have read [the licence agreement](https://github.com/OmicEra/proto_learn).")
     delimiter = st.selectbox("Determine the delimiter in your dataset", ["Excel File", "Comma (,)", "Semicolon (;)"])
     sample_file = st.selectbox("Or select sample file here:", ["None", "Sample"])
     df = load_data(file_buffer, delimiter)
