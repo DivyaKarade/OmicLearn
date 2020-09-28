@@ -317,7 +317,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
         if p:
             get_download_link(p, 'feature_importance.pdf')
             get_download_link(p, 'feature_importance.svg')
-        # st.dataframe(feature_df)
+        get_download_link(feature_df, 'feature_importance.csv')
 
     return class_names, subset, X, y, features
 
