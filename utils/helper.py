@@ -166,7 +166,7 @@ def plot_feature_importance(features, feature_importance, pvalues):
     """
 
     n_features = len(features)
-    feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance','P_value'])
+    feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance', 'P_value'])
     feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
 
     # Hide pvalue if it does not exist
@@ -174,7 +174,6 @@ def plot_feature_importance(features, feature_importance, pvalues):
         hover_data = ["Name", "Feature_importance"]
     else:
         hover_data = ["Name", "Feature_importance", "P_value"]
-
 
     p = px.bar(feature_df, x="Feature_importance", y="Name", orientation='h', hover_data=hover_data,
             labels={ "Feature_importance": "Feature importance", }, height=600,
@@ -223,7 +222,8 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
     if classifier == 'XGBoost':
         from xgboost import XGBClassifier
-        clf = XGBClassifier(random_state = random_state, learning_rate=learning_rate, min_split_loss=min_split_loss, max_depth=max_depth, min_child_weight=min_child_weight)
+        clf = XGBClassifier(random_state = random_state, learning_rate=learning_rate, min_split_loss=min_split_loss, 
+                            max_depth=max_depth, min_child_weight=min_child_weight)
     elif classifier == 'LogisticRegression':
         clf = linear_model.LogisticRegression(penalty=penalty.lower(), solver=solver, max_iter=max_iter, C=c_val, random_state = random_state, n_jobs=-1)
     elif classifier == 'KNeighborsClassifier':
@@ -445,7 +445,11 @@ def plot_confusion_matrices(class_0, class_1, results, names):
 
     #  Heatmap
     custom_colorscale = [[0, '#e8f1f7'], [1, "#3886bc"]]
-    data = [go.Heatmap(x=x_, y=y_, z=cm_results[step][1], visible=False, hoverinfo='none', colorscale = custom_colorscale) for step in range(len(cm_results))]
+    data = [
+        go.Heatmap(x=x_, y=y_, z=cm_results[step][1], visible=False, 
+        hoverinfo='none', colorscale = custom_colorscale) 
+        for step in range(len(cm_results))
+        ]
     data[0]['visible'] = True
 
     # Build slider steps
@@ -517,10 +521,11 @@ def plot_roc_curve_cv(roc_curve_results):
     p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill = None, line_color='gray', opacity=0.1, showlegend=False))
     p.add_trace(go.Scatter(x=base_fpr, y=tprs_upper, fill='tonexty', line_color='gray', opacity=0.1, name='±1 std. dev'))
 
-    hovertemplate = "Base FPR %{x:.2f} <br> %{text}"
-    text = ["Upper TPR {:.2f} <br> Mean TPR {:.2f} <br> Lower TPR {:.2f}".format(u, m, l) for u, m, l in zip(tprs_upper, mean_tprs, tprs_lower)]
+    hovertemplate = "Base FPR %{x:.2f} <br>%{text}"
+    text = ["Upper TPR {:.2f} <br>Mean TPR {:.2f} <br>Lower TPR {:.2f}".format(u, m, l) for u, m, l in zip(tprs_upper, mean_tprs, tprs_lower)]
 
-    p.add_trace(go.Scatter(x=base_fpr, y=mean_tprs, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc)))
+    p.add_trace(go.Scatter(x=base_fpr, y=mean_tprs, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', 
+                            line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc)))
     p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), name="Chance"))
 
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
@@ -555,7 +560,8 @@ def plot_roc_curve_cohort(roc_curve_results_cohort, cohort_combos):
         roc_df = pd.DataFrame({'fpr':fpr,'tpr':tpr, 'train':cohort_combos[idx][0], 'test':cohort_combos[idx][1]})
         text= "Train: {} <br>Test: {}".format(cohort_combos[idx][0], cohort_combos[idx][1])
         hovertemplate = "False positive rate: %{x:.2f} <br>True positive rate: %{y:.2f}" + "<br>" + text
-        p.add_trace(go.Scatter(x=fpr, y=tpr, hovertemplate=hovertemplate, hoverinfo='all', mode='lines', name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], roc_auc)))
+        p.add_trace(go.Scatter(x=fpr, y=tpr, hovertemplate=hovertemplate, hoverinfo='all', mode='lines', 
+                    name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], roc_auc)))
         tpr = np.interp(base_fpr, fpr, tpr)
         tpr[0]=0.0
         tprs.append(tpr)
@@ -617,9 +623,11 @@ def plot_pr_curve_cv(pr_curve_results, y_test):
     p.add_trace(go.Scatter(x=base_recall, y=precisions_upper, fill='tonexty', line_color='gray', opacity=0.2, name='±1 std. dev'))
 
     hovertemplate = "Base Recall %{x:.2f} <br>%{text}"
-    text = ["Upper Precision {:.2f} <br>Mean Precision {:.2f} <br>Lower Precision {:.2f}".format(u, m, l) for u, m, l in zip(precisions_upper, mean_precisions, precisions_lower)]
+    text = ["Upper Precision {:.2f} <br>Mean Precision {:.2f} <br>Lower Precision {:.2f}".format(u, m, l) 
+                for u, m, l in zip(precisions_upper, mean_precisions, precisions_lower)]
 
-    p.add_trace(go.Scatter(x=base_recall, y=mean_precisions, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', line=dict(color='black', width=2), name='Mean PR\n(AUC = {:.2f}±{:.2f})'.format(mean_prauc, sd_prauc)))
+    p.add_trace(go.Scatter(x=base_recall, y=mean_precisions, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text', 
+                            line=dict(color='black', width=2), name='Mean PR\n(AUC = {:.2f}±{:.2f})'.format(mean_prauc, sd_prauc)))
     no_skill = len(y_test[y_test==1]) / len(y_test)
     p.add_trace(go.Scatter(x=[0, 1], y=[no_skill, no_skill], line=dict(color=red_color, dash='dash'), name="Chance"))
 
@@ -655,7 +663,8 @@ def plot_pr_curve_cohort(pr_curve_results_cohort, cohort_combos, y_test):
         pr_df = pd.DataFrame({'recall':recall,'precision':precision, 'train':cohort_combos[idx][0], 'test':cohort_combos[idx][1]})
         text= "Train: {} <br>Test: {}".format(cohort_combos[idx][0], cohort_combos[idx][1])
         hovertemplate = "Recall: %{x:.2f} <br>Precision: %{y:.2f}" + "<br>" + text
-        p.add_trace(go.Scatter(x=recall, y=precision, hovertemplate=hovertemplate, hoverinfo='all', mode='lines', name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], pr_auc)))
+        p.add_trace(go.Scatter(x=recall, y=precision, hovertemplate=hovertemplate, hoverinfo='all', mode='lines', 
+                                name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], pr_auc)))
         precision = np.interp(base_recall, recall, precision, period=100)
         precision[0]=1.0
         precisions.append(precision)
