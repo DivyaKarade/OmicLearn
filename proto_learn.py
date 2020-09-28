@@ -166,13 +166,13 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
 
     # Sidebar -- Image/Title
     st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
-    st.sidebar.markdown("# [Options](https://github.com/OmicEra/proto_learn/wiki/METHODS)")
+    st.sidebar.markdown("# [⦿ Options](https://github.com/OmicEra/proto_learn/wiki/METHODS)")
 
     # Sidebar -- Random State
     random_state = slider_("Random State:", min_value = 0, max_value = 99, value=23)
 
     # Sidebar -- Preprocessing
-    st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing)')
+    st.sidebar.markdown('## [⦿ Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing)')
     normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer']
     normalization = selectbox_("Normalization method:", normalizations)
 
@@ -186,14 +186,14 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         normalization_detail = selectbox_("Output distribution method:", ["Uniform", "Normal"])
 
     if n_missing > 0:
-        st.sidebar.markdown('## [Missing value imputation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-imputation-of-missing-values)')
+        st.sidebar.markdown('## [⦿ Missing value imputation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-imputation-of-missing-values)')
         missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer', 'None']
         missing_value = selectbox_("Missing value imputation", missing_values)
     else:
         missing_value = 'None'
 
     # Sidebar -- Feature Selection
-    st.sidebar.markdown('## [Feature selection](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection)')
+    st.sidebar.markdown('## [⦿ Feature selection](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection)')
     feature_methods = ['ExtraTrees', 'k-best (mutual_info_classif)','k-best (f_classif)', 'k-best (chi2)', 'Manual']
     feature_method = selectbox_("Feature selection method:", feature_methods)
 
@@ -209,7 +209,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         n_trees = 0
 
     # Sidebar -- Classification method selection
-    st.sidebar.markdown('## [Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
+    st.sidebar.markdown('## [⦿ Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
     if xgboost_installed:
         classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC','XGBoost']
     else:
@@ -268,7 +268,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         min_child_weight = number_input_('Min. child weight:', value = 1, min_value = 0, max_value = 100)
 
     # Sidebar -- Cross-Validation
-    st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
+    st.sidebar.markdown('## [⦿ Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
     cv_method = selectbox_("Specify CV method:", ["RepeatedStratifiedKFold", "StratifiedKFold", "StratifiedShuffleSplit"])
     cv_splits = number_input_('CV Splits:', min_value = 2, max_value = 10, value=5)
 
