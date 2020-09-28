@@ -553,8 +553,8 @@ def generate_footer_parts():
         </div>
 
         <div class="footer">
-            <i> Proto Learn {} </i> powered by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH"> 
-            <a href="https://omicera.com" target="_blank">OmicEra</a>
+            <i> Proto Learn {} </i> developed and brought to you by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH"> 
+            <a href="https://omicera.com" target="_blank">OmicEra</a>.
         </div>
         """.format(citations, version)
 
