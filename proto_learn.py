@@ -522,8 +522,9 @@ def save_sessions(widget_values, user_name):
     new_column_names = {k:v.replace(":", "").replace("Select", "") for k,v in zip(sessions_df.columns,sessions_df.columns)}
     sessions_df = sessions_df.rename(columns=new_column_names)
     sessions_df = sessions_df.drop("user", axis=1)
+    
     st.write("## Session History")
-    st.dataframe(sessions_df.T)
+    st.dataframe(sessions_df.T.style.set_precision(4)) # Display only 3 decimal points in UI side
     get_download_link(sessions_df, "session_history.csv")
 
 # Generate footer
