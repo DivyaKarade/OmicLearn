@@ -317,6 +317,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
         st.plotly_chart(p, use_container_width=True)
 
         # Display `feature_df` with UniProt links
+        st.subheader("Feature selection table")
         st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
         st.write("\n\n\n")
 

@@ -185,8 +185,8 @@ def plot_feature_importance(features, feature_importance, pvalues):
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     
     # Update `feature_df` for NaN in `P_values` and Column Naming
-    feature_df.rename(columns=({'Name':'Name and UniProt'}))
     feature_df.dropna(axis='columns', how="all", inplace=True)
+    feature_df.rename(columns={'Name':'Name and UniProt Link', 'Feature_importance': 'Feature Importance', 'P_value': 'P-Value'}, inplace=True)
 
     return p, feature_df
 
