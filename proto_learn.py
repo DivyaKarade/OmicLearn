@@ -315,6 +315,8 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
         features, feature_importance, p_values = select_features(feature_method, X, y, max_features, n_trees, random_state)
         p, feature_df = plot_feature_importance(features, feature_importance, p_values)
         st.plotly_chart(p, use_container_width=True)
+        feature_df_ui = feature_df.to_html(escape=False)
+        st.write(feature_df_ui, use_container_width=True, unsafe_allow_html=True)
         if p:
             get_download_link(p, 'feature_importance.pdf')
             get_download_link(p, 'feature_importance.svg')

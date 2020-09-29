@@ -160,6 +160,9 @@ def select_features(feature_method, X, y, max_features, n_trees, random_state):
 
     return top_features, top_features_importance, top_features_pvalues
 
+def make_clickable(url, name):
+    return '<a href="{}" target="_blank">{}</a>'.format(url+name,name)
+
 def plot_feature_importance(features, feature_importance, pvalues):
     """
     Creates a Plotly barplot to plot feature importance
@@ -182,6 +185,8 @@ def plot_feature_importance(features, feature_importance, pvalues):
     p.update_traces(marker_color='#f84f57')
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
+    feature_df["UniProt Link"] = feature_df.apply(lambda x: make_clickable('https://www.uniprot.org/uniprot/?query=', x['Name']), axis=1)
+
     return p, feature_df
 
 def impute_nan(X, missing_value, random_state):
