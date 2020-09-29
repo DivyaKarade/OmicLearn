@@ -315,8 +315,11 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
         features, feature_importance, p_values = select_features(feature_method, X, y, max_features, n_trees, random_state)
         p, feature_df = plot_feature_importance(features, feature_importance, p_values)
         st.plotly_chart(p, use_container_width=True)
-        feature_df_ui = feature_df.to_html(escape=False)
-        st.write(feature_df_ui, use_container_width=True, unsafe_allow_html=True)
+
+        # Display `feature_df` with UniProt links
+        st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+        st.write("\n\n\n")
+
         if p:
             get_download_link(p, 'feature_importance.pdf')
             get_download_link(p, 'feature_importance.svg')
@@ -535,7 +538,7 @@ def generate_footer_parts():
 
     # Citations
     citations = """
-        <b> APA Format: </b><br><br>
+        <br> APA Format: </br><br><br>
         Winter, S., Karayel, O., Strauss, M., Padmanabhan, S., Surface, M., & Merchant, K. et al. (2020). 
         Urinary proteome profiling for stratifying patients with familial Parkinson’s disease. doi: 10.1101/2020.08.09.243584.
     """

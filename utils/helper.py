@@ -160,9 +160,6 @@ def select_features(feature_method, X, y, max_features, n_trees, random_state):
 
     return top_features, top_features_importance, top_features_pvalues
 
-def make_clickable(url, name):
-    return '<a href="{}" target="_blank">{}</a>'.format(url+name,name)
-
 def plot_feature_importance(features, feature_importance, pvalues):
     """
     Creates a Plotly barplot to plot feature importance
@@ -171,6 +168,7 @@ def plot_feature_importance(features, feature_importance, pvalues):
     n_features = len(features)
     feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance', 'P_value'])
     feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
+    feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.uniprot.org/uniprot/?query={}" title="Go to UniProt DB" target="_blank">{}</a>'.format(x, x) if x.startswith('_') else x)
 
     # Hide pvalue if it does not exist
     if np.isnan(pvalues).all():
@@ -185,7 +183,10 @@ def plot_feature_importance(features, feature_importance, pvalues):
     p.update_traces(marker_color='#f84f57')
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
-    feature_df["UniProt Link"] = feature_df.apply(lambda x: make_clickable('https://www.uniprot.org/uniprot/?query=', x['Name']), axis=1)
+    
+    # Update `feature_df` for NaN in `P_values` and Column Naming
+    feature_df.rename(columns=({'Name':'Name and UniProt'}))
+    feature_df.dropna(axis='columns', how="all", inplace=True)
 
     return p, feature_df
 
