@@ -52,6 +52,9 @@ def main_components():
             .content { position: absolute; top: -1px; left: 0; background: #fff; right: 0; bottom: 0; padding: 30px 20px; transition: opacity .1s linear; opacity: 0; }
             [type=radio]:checked ~ label { background: #035672; color: #fff;}
             [type=radio]:checked ~ label ~ .content { z-index: 1; opacity: 1; }
+
+            /* Feature Importance Plotly Link Color */
+            .js-plotly-plot .plotly svg a {color: #f84f57 !important}
         </style>
     """
     st.markdown(main_external_css, unsafe_allow_html=True)
@@ -315,16 +318,16 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
         features, feature_importance, p_values = select_features(feature_method, X, y, max_features, n_trees, random_state)
         p, feature_df = plot_feature_importance(features, feature_importance, p_values)
         st.plotly_chart(p, use_container_width=True)
+        if p:
+            get_download_link(p, 'feature_importance.pdf')
+            get_download_link(p, 'feature_importance.svg')
 
         # Display `feature_df` with UniProt links
         st.subheader("Feature selection table")
         st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
         st.write("\n\n\n")
-
-        if p:
-            get_download_link(p, 'feature_importance.pdf')
-            get_download_link(p, 'feature_importance.svg')
         get_download_link(feature_df, 'feature_importance.csv')
+
 
     return class_names, subset, X, y, features
 

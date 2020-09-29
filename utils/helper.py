@@ -168,7 +168,8 @@ def plot_feature_importance(features, feature_importance, pvalues):
     n_features = len(features)
     feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance', 'P_value'])
     feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
-    feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.uniprot.org/uniprot/?query={}" title="Go to UniProt DB" target="_blank">{}</a>'.format(x, x) if x.startswith('_') else x)
+    feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.uniprot.org/uniprot/?query={}" title="Go to UniProt DB" target="_blank">{}</a>'.format(x, x) 
+                                                    if not x.startswith('_') else x)
 
     # Hide pvalue if it does not exist
     if np.isnan(pvalues).all():
