@@ -314,6 +314,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     if feature_method == 'Manual':
         features = manual_features +  additional_features
         pass
+    
     else:
         features, feature_importance, p_values = select_features(feature_method, X, y, max_features, n_trees, random_state)
         p, feature_df = plot_feature_importance(features, feature_importance, p_values)
@@ -327,7 +328,6 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
         st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
         st.write("\n\n\n")
         get_download_link(feature_df, 'feature_importance.csv')
-
 
     return class_names, subset, X, y, features
 
