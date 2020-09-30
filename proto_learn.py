@@ -542,7 +542,7 @@ def generate_footer_parts():
 
     # Citations
     citations = """
-        <br> APA Format: </br><br><br>
+        <br> <b>APA Format:</b> <br>
         Winter, S., Karayel, O., Strauss, M., Padmanabhan, S., Surface, M., & Merchant, K. et al. (2020). 
         Urinary proteome profiling for stratifying patients with familial Parkinson’s disease. doi: 10.1101/2020.08.09.243584.
     """
