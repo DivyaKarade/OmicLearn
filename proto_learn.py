@@ -1,5 +1,6 @@
 import random
 import pandas as pd
+import numpy as np
 from PIL import Image
 import streamlit as st
 from datetime import datetime
@@ -317,7 +318,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     
     else:
         features, feature_importance, p_values = select_features(feature_method, X, y, max_features, n_trees, random_state)
-        p, feature_df = plot_feature_importance(features, feature_importance, p_values)
+        p, feature_df = plot_feature_importance(features, feature_importance, p_values, mode='feature_selection')
         st.plotly_chart(p, use_container_width=True)
         if p:
             get_download_link(p, 'feature_importance.pdf')
@@ -332,19 +333,36 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     return class_names, subset, X, y, features
 
 # Display results and plots
-def all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, 
+def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, 
     knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, 
     cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1):
     
     # Cross-Validation                
     st.markdown("Running Cross-Validation")
-    _cv_results, roc_curve_results, pr_curve_results, split_results, y_test = \
+    _cv_results, roc_curve_results, pr_curve_results, split_results, y_test, clf_feature_importances = \
         perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
         n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
         min_split_loss, max_depth, min_child_weight, st.progress(0))
 
     st.header('Cross-Validation')
 
+    # Feature Importances from Classifier
+    st.subheader('Feature Importances from Classifier')
+    if clf_feature_importances:
+        p, feature_df = plot_feature_importance(features, clf_feature_importances, [np.NaN] * len(features), mode='clf_feature_importances')
+        st.plotly_chart(p, use_container_width=True)
+        if p:
+            get_download_link(p, 'clf_feature_importance.pdf')
+            get_download_link(p, 'clf_feature_importance.svg')
+
+        # Display `feature_df` with UniProt links
+        st.subheader("Feature importances from classifier table")
+        st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+        st.write("\n\n\n")
+        get_download_link(feature_df, 'clf_feature_importances.csv')
+    else:
+        st.warning('Feature importance attribute is not defined for this classifier.')
+    
     # ROC-AUC
     st.subheader('Receiver operating characteristic')
     p = plot_roc_curve_cv(roc_curve_results)
@@ -611,7 +629,7 @@ def ProtoLearn_Main():
 
         # Plotting and Get the results
         summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = \
-            all_plotting_and_results(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors,
+            all_plotting_and_results(X, y, features, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors,
                 knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss,
                 cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1)
 

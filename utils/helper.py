@@ -160,7 +160,7 @@ def select_features(feature_method, X, y, max_features, n_trees, random_state):
 
     return top_features, top_features_importance, top_features_pvalues
 
-def plot_feature_importance(features, feature_importance, pvalues):
+def plot_feature_importance(features, feature_importance, pvalues, mode):
     """
     Creates a Plotly barplot to plot feature importance
     """
@@ -171,17 +171,25 @@ def plot_feature_importance(features, feature_importance, pvalues):
     feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.uniprot.org/uniprot/?query={}" title="Go to UniProt DB" target="_blank">{}</a>'.format(x, x) 
                                                     if not x.startswith('_') else x)
 
+    # Define for plot moded
+    if mode == 'feature_selection':
+        marker_color = '#f84f57'
+        title = 'Top {} features selected'.format(n_features)
+        labels={"Feature_importance": "Feature importance"}
+    elif mode == 'clf_feature_importances':
+        marker_color = '#035672'
+        title = 'Top {} features from classifier'.format(n_features)
+        labels={"Feature_importance": "Feature importances from classifier"}
+
     # Hide pvalue if it does not exist
     if np.isnan(pvalues).all():
         hover_data = ["Name", "Feature_importance"]
     else:
         hover_data = ["Name", "Feature_importance", "P_value"]
 
-    p = px.bar(feature_df, x="Feature_importance", y="Name", orientation='h', hover_data=hover_data,
-            labels={ "Feature_importance": "Feature importance", }, height=600,
-            title='Top {} features'.format(n_features))
+    p = px.bar(feature_df, x="Feature_importance", y="Name", orientation='h', hover_data=hover_data, labels=labels, height=600, title=title)
     p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)', showlegend=False)
-    p.update_traces(marker_color='#f84f57')
+    p.update_traces(marker_color=marker_color)
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     
@@ -295,6 +303,14 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         y_pred = clf.predict(X_test)
         y_score = clf.predict_proba(X_test)
 
+        # Feature importances received from classifier
+        if classifier == 'LogisticRegression':
+            clf_feature_importances = clf.coef_
+        elif classifier in ['AdaBoost', 'RandomForest', 'DecisionTree']:
+            clf_feature_importances = clf.feature_importances_
+        else:
+            clf_feature_importances = ""
+
         # ROC CURVE
         fpr, tpr, cutoffs = roc_curve(y_test, y_score[:, 1])
 
@@ -327,7 +343,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         else:
             bar.progress((i+1)/(cv_splits))
 
-    return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test
+    return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test, clf_feature_importances
 
 def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
