@@ -307,11 +307,10 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         if classifier in ['LogisticRegression', 'LinearSVC']:
             # FIXME: 'COEF is problematic'
             clf_feature_importances = list(clf.coef_)
-        elif classifier in ['AdaBoost', 'RandomForest', 'DecisionTree']:
+        elif classifier in ['AdaBoost', 'RandomForest', 'DecisionTree', 'XGBoost']:
             clf_feature_importances = list(clf.feature_importances_)
         else:
             clf_feature_importances = None
-            # TODO: ADD 'XGBoost'
             # INFO: KNN has no att. like `coef_` or `feature_importances_`
 
         # ROC CURVE
