@@ -304,12 +304,13 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         elif classifier in ['AdaBoost', 'RandomForest', 'DecisionTree', 'XGBoost']:
             clf_feature_importances = list(clf.feature_importances_)
         else:
-            # NotImplemented st.warning for KNeighborsClassifier.
+            # Not implemented st.warning() for `KNeighborsClassifier`.
             clf_feature_importances = None
 
         # Calculate prediction probabilities
-        # Since LinearSVC does not have `predict_proba()`
+        # FIXME: Here, `coef_` for LinearSVC not using CalibratedClassifierCV but `predict_proba` uses it. Is it a problem?
         if classifier == "LinearSVC":
+            # Since LinearSVC does not have `predict_proba()`
             from sklearn.calibration import CalibratedClassifierCV
             calibrated_clf = CalibratedClassifierCV(clf, cv=cv_generator)
             calibrated_clf.fit(X_train, y_train)
