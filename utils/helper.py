@@ -304,12 +304,13 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         y_score = clf.predict_proba(X_test)
 
         # Feature importances received from classifier
-        if classifier == 'LogisticRegression':
-            clf_feature_importances = clf.coef_
+        if classifier in ['LogisticRegression', 'LinearSVC']:
+            # FIXME: 'COEF is problematic'
+            clf_feature_importances = list(clf.coef_)
         elif classifier in ['AdaBoost', 'RandomForest', 'DecisionTree']:
-            clf_feature_importances = clf.feature_importances_
+            clf_feature_importances = list(clf.feature_importances_)
         else:
-            clf_feature_importances = ""
+            clf_feature_importances = None
 
         # ROC CURVE
         fpr, tpr, cutoffs = roc_curve(y_test, y_score[:, 1])
