@@ -349,7 +349,6 @@ def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, 
     # Feature Importances from Classifier
     st.subheader('Feature Importances from Classifier')
     if clf_feature_importances:
-        st.write(clf_feature_importances)
         p, feature_df = plot_feature_importance(features, clf_feature_importances, [np.NaN] * len(features), mode='clf_feature_importances')
         st.plotly_chart(p, use_container_width=True)
         if p:

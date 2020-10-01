@@ -294,14 +294,9 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         y_train = y.iloc[train_index]
         y_test = y.iloc[test_index]
 
-        # Since LinearSVC does not have `predict_proba()`
-        if classifier == "LinearSVC":
-            from sklearn.calibration import CalibratedClassifierCV
-            clf = CalibratedClassifierCV(clf, cv=cv_generator)
-
+        # Fitting and predicting
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
-        y_score = clf.predict_proba(X_test)
 
         # Feature importances received from classifier
         if classifier in ['LogisticRegression', 'LinearSVC']:
@@ -311,6 +306,17 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         else:
             # NotImplemented st.warning for KNeighborsClassifier.
             clf_feature_importances = None
+
+        # Calculate prediction probabilities
+        # Since LinearSVC does not have `predict_proba()`
+        if classifier == "LinearSVC":
+            from sklearn.calibration import CalibratedClassifierCV
+            calibrated_clf = CalibratedClassifierCV(clf, cv=cv_generator)
+            calibrated_clf.fit(X_train, y_train)
+            y_pred = calibrated_clf.predict(X_test)
+            y_score = calibrated_clf.predict_proba(X_test)
+        else:
+            y_score = clf.predict_proba(X_test)
 
         # ROC CURVE
         fpr, tpr, cutoffs = roc_curve(y_test, y_score[:, 1])
