@@ -311,6 +311,8 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
             clf_feature_importances = list(clf.feature_importances_)
         else:
             clf_feature_importances = None
+            # TODO: ADD 'XGBoost'
+            # INFO: KNN has no att. like `coef_` or `feature_importances_`
 
         # ROC CURVE
         fpr, tpr, cutoffs = roc_curve(y_test, y_score[:, 1])
