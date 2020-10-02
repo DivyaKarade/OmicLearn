@@ -1,6 +1,6 @@
 import random
-import pandas as pd
 import numpy as np
+import pandas as pd
 from PIL import Image
 import streamlit as st
 from datetime import datetime
@@ -44,7 +44,7 @@ def main_components():
             .tickBarMin, .tickBarMax {color: #f84f57 !important}
             .markdown-text-container p {color: #035672 !important}
 
-            /* Tabs */ 
+            /* Tabs */
             .tabs { position: relative; min-height: 200px; clear: both; margin: 40px auto 0px auto; background: #efefef; box-shadow: 0 48px 80px -32px rgba(0,0,0,0.3); }
             .tab {float: left;}
             .tab label { background: #f84f57; cursor: pointer; font-weight: bold; font-size: 18px; padding: 10px; color: #fff; transition: background 0.1s, color 0.1s; margin-left: -1px; position: relative; left: 1px; top: -29px; z-index: 2; }
@@ -80,9 +80,9 @@ def main_text_and_data_upload():
     st.title("👨‍💻 DEV | Proto Learn — Clinical Proteomics Machine Learning Tool")
     st.info("""
         * Upload your excel / csv file here. Maximum size is 200 Mb.
-        * Each row corresponds to a sample, each column to a feature
-        * Protein names should be uppercase
-        * Additional features should be marked with a leading '_'
+        * Each row corresponds to a sample, each column to a feature.
+        * Protein names should be uppercase.
+        * Additional features should be marked with a leading '_'.
     """)
     st.subheader("Dataset")
     file_buffer = st.file_uploader("Upload your dataset below", type=["csv", "xlsx"])
@@ -333,14 +333,14 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     return class_names, subset, X, y, features
 
 # Display results and plots
-def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors, 
-    knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, 
+def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors,
+    knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss,
     cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1):
     
-    # Cross-Validation                
+    # Cross-Validation
     st.markdown("Running Cross-Validation")
     _cv_results, roc_curve_results, pr_curve_results, split_results, y_test, clf_feature_importances = \
-        perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
+        perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate,
         n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
         min_split_loss, max_depth, min_child_weight, st.progress(0))
 
@@ -400,9 +400,9 @@ def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, 
     if cohort_column != 'None':
         st.header('Cohort comparison')
         _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos, y_test = \
-            perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
-            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
-            min_split_loss, max_depth, min_child_weight, st.progress(0))
+            perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate,
+            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, \
+            clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, st.progress(0))
 
         # ROC-AUC for Cohorts
         st.subheader('Receiver operating characteristic')
@@ -444,7 +444,7 @@ def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, 
 # Generate summary text
 def generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees,
             classifier, cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos,
-            n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
+            n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion,
             clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight):
     
     st.write("## Summary")
@@ -561,7 +561,7 @@ def generate_footer_parts():
     # Citations
     citations = """
         <br> <b>APA Format:</b> <br>
-        Winter, S., Karayel, O., Strauss, M., Padmanabhan, S., Surface, M., & Merchant, K. et al. (2020). 
+        Winter, S., Karayel, O., Strauss, M., Padmanabhan, S., Surface, M., & Merchant, K. et al. (2020).
         Urinary proteome profiling for stratifying patients with familial Parkinson’s disease. doi: 10.1101/2020.08.09.243584.
     """
 
@@ -569,19 +569,19 @@ def generate_footer_parts():
     footer_parts_html = """
         <div class="tabs">
             <div class="tab"> <input type="radio" id="tab-1" name="tab-group-1" checked> <label for="tab-1">Citations</label> <div class="content"> <p> {} </p> </div> </div>
-            <div class="tab"> <input type="radio" id="tab-2" name="tab-group-1"> <label for="tab-2">Report Bugs</label> <div class="content"> 
+            <div class="tab"> <input type="radio" id="tab-2" name="tab-group-1"> <label for="tab-2">Report Bugs</label> <div class="content">
                 <p><br>
                     Firstly, thank you very much for taking your time and we appreciate all contributions. 👍 <br>
                     You can report the bugs or request a feature using the link below or sending us a e-mail:
                     <br><br>
                     <a class="download_link" href="https://github.com/OmicEra/proto_learn/issues/new/choose" target="_blank">Report a bug via GitHub</a>
                     <a class="download_link" href="mailto:info@omicera.com">Report a bug via Email</a>
-                </p>  
+                </p>
             </div> </div>
         </div>
 
         <div class="footer">
-            <i> Proto Learn {} </i> developed and brought to you by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH"> 
+            <i> Proto Learn {} </i> developed and brought to you by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH">
             <a href="https://omicera.com" target="_blank">OmicEra</a>.
         </div>
         """.format(citations, version)
@@ -634,9 +634,9 @@ def ProtoLearn_Main():
                 cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1)
 
         # Generate summary text
-        generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, classifier, 
-            cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos, n_estimators, learning_rate, 
-            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
+        generate_text(normalization, normalization_detail, n_quantiles, missing_value, proteins, feature_method, max_features, n_trees, classifier,
+            cohort_column, cv_method, cv_repeats, cv_splits, class_0, class_1, summary, _cohort_results, cohort_combos, n_estimators, learning_rate,
+            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion,
             clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight)
 
         # Session and Run info
