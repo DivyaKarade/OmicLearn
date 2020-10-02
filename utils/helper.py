@@ -1,21 +1,19 @@
 # Main
 import os, sys
 import base64
-import itertools
 import numpy as np
 import pandas as pd
 import streamlit as st
-from io import BytesIO
 from itertools import chain
 
 # Sklearn
 import sklearn
 import sklearn.metrics as metrics
 from sklearn.impute import KNNImputer
+from sklearn import svm, tree, linear_model, neighbors, ensemble
+from sklearn.metrics import roc_curve, precision_recall_curve, auc
 from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, SelectKBest
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit
-from sklearn.metrics import roc_curve, plot_roc_curve, precision_recall_curve, auc, plot_confusion_matrix
-from sklearn import svm, tree, linear_model, neighbors, naive_bayes, ensemble, discriminant_analysis, gaussian_process
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 
 # Plotly Graphs
@@ -736,7 +734,7 @@ def get_system_report():
     """
 
     report = {}
-    report['proto_learn_version'] = "v0.1.5-dev"
+    report['proto_learn_version'] = "v0.1.6-dev"
     report['python_version'] = sys.version[:5]
     report['pandas_version'] = pd.__version__
     report['numpy_version'] = np.version.version
