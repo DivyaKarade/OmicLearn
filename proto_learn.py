@@ -318,7 +318,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     
     else:
         features, feature_importance, p_values = select_features(feature_method, X, y, max_features, n_trees, random_state)
-        p, feature_df = plot_feature_importance(features, feature_importance, p_values, mode='feature_selection')
+        p, feature_df, feature_df_wo_links = plot_feature_importance(features, feature_importance, p_values, mode='feature_selection')
         st.plotly_chart(p, use_container_width=True)
         if p:
             get_download_link(p, 'feature_importance.pdf')
@@ -328,7 +328,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
         st.subheader("Feature selection table")
         st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
         st.write("\n\n\n")
-        get_download_link(feature_df, 'feature_importance.csv')
+        get_download_link(feature_df_wo_links, 'feature_importance.csv')
 
     return class_names, subset, X, y, features
 
@@ -349,7 +349,7 @@ def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, 
     # Feature Importances from Classifier
     st.subheader('Feature Importances from Classifier')
     if clf_feature_importances:
-        p, feature_df = plot_feature_importance(features, clf_feature_importances, [np.NaN] * len(features), mode='clf_feature_importances')
+        p, feature_df, feature_df_wo_links = plot_feature_importance(features, clf_feature_importances, [np.NaN] * len(features), mode='clf_feature_importances')
         st.plotly_chart(p, use_container_width=True)
         if p:
             get_download_link(p, 'clf_feature_importance.pdf')
@@ -359,7 +359,7 @@ def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, 
         st.subheader("Feature importances from classifier table")
         st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
         st.write("\n\n\n")
-        get_download_link(feature_df, 'clf_feature_importances.csv')
+        get_download_link(feature_df_wo_links, 'clf_feature_importances.csv')
     else:
         st.warning('Feature importance attribute is not implemented for this classifier provided by scikit-learn.')
     
