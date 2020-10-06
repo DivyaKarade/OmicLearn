@@ -273,6 +273,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
     else:
         raise NotImplementedError('This CV method is not implemented')
 
+    clf_feature_importance_results = []
     roc_curve_results = []
     pr_curve_results = []
     split_results = []
@@ -300,12 +301,14 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
 
         # Feature importances received from classifier
         if classifier in ['LogisticRegression', 'LinearSVC']:
-            clf_feature_importances = list(clf.coef_[0])
+            clf_feature_importances_per_cv = list(clf.coef_[0])
         elif classifier in ['AdaBoost', 'RandomForest', 'DecisionTree', 'XGBoost']:
-            clf_feature_importances = list(clf.feature_importances_)
+            clf_feature_importances_per_cv = list(clf.feature_importances_)
         else:
             # Not implemented st.warning() for `KNeighborsClassifier`.
-            clf_feature_importances = None
+            clf_feature_importances_per_cv = None
+        clf_feature_importance_results.append(clf_feature_importances_per_cv)
+        clf_feature_importances = [sum(i)/len(i) for i in zip(*clf_feature_importance_results)] # Take the mean for each importance value per feature from each CV  
 
         # Calculate prediction probabilities
         # FIXME: Here, `coef_` for LinearSVC not using CalibratedClassifierCV but `predict_proba` uses it. Is it a problem?
@@ -351,7 +354,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         else:
             bar.progress((i+1)/(cv_splits))
 
-    return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test, clf_feature_importances
+    return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test, clf_feature_importances, clf_feature_importance_results
 
 def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
