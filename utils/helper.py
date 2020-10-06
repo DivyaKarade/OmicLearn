@@ -307,8 +307,10 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         else:
             # Not implemented st.warning() for `KNeighborsClassifier`.
             clf_feature_importances_per_cv = None
+        
+        # Take the mean for each importance value per feature from each CV  
         clf_feature_importance_results.append(clf_feature_importances_per_cv)
-        clf_feature_importances = [sum(i)/len(i) for i in zip(*clf_feature_importance_results)] # Take the mean for each importance value per feature from each CV  
+        clf_feature_importances = [sum(i)/len(i) for i in zip(*clf_feature_importance_results)] 
 
         # Calculate prediction probabilities
         # FIXME: Here, `coef_` for LinearSVC not using CalibratedClassifierCV but `predict_proba` uses it. Is it a problem?
@@ -354,7 +356,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         else:
             bar.progress((i+1)/(cv_splits))
 
-    return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test, clf_feature_importances, clf_feature_importance_results
+    return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test, clf_feature_importances
 
 def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
