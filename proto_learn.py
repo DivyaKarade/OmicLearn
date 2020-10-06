@@ -101,7 +101,13 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         st.warning("Please, either choose a sample file or set it as `None` to work on your file")
         df = pd.DataFrame()
     elif sample_file != 'None':
-        st.text("Here is the sample dataset:")
+        if sample_file == "Alzheimer":
+            st.info("""
+                **This dataset is retrieved from the following paper and the code for parsing is available at 
+                [GitHub](https://github.com/OmicEra/proto_learn/blob/master/data/Alzheimer_paper.ipynb):**\n
+                Bader, J., Geyer, P., Müller, J., Strauss, M., Koch, M., & Leypoldt, F. et al. (2020). 
+                Proteome profiling in cerebrospinal fluid reveals novel biomarkers of Alzheimer's disease. 
+                Molecular Systems Biology, 16(6). doi: [10.15252/msb.20199356](http://doi.org/10.15252/msb.20199356) """)
         df = pd.read_excel('data/'+ sample_file + '.xlsx')
         st.write(df)
     elif len(df) > 0:
