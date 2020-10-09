@@ -4,7 +4,7 @@
 - [Uploading data](#uploading-data)
   - [Sample Datasets](#sample-datasets)
 - [Sidebar: Selecting Parameters](#sidebar-selecting-parameters)
-- [Main Window: Selecting data, define workflow and explore results](#main-window-selecting-data-define-workflow-and-explore-results)
+- [Main Window: Selecting data, define workflow, and explore results](#main-window-selecting-data-define-workflow-and-explore-results)
   - [Data Selection](#data-selection)
   - [Running the Workflow](#running-the-workflow)
   - [Analysis results and plots](#analysis-results-and-plots)
@@ -70,14 +70,14 @@ Here is the list of sample datasets available:
 
 Proto Learn has a large variety of options to choose from which are detailed in the [methods wiki](https://github.com/OmicEra/proto_learn/wiki/METHODS).  The parameters can be selected in the sidebar.
 
-Moreover, after changing parameters, you are asked to re-run the analysis. Each analysis result will be stored in the [session history](#checking-the-session-history).
+Moreover, after changing the parameters, you are asked to re-run the analysis. Each analysis result will be stored in the [session history](#checking-the-session-history).
 
 ![Proto Learn SideBar](https://user-images.githubusercontent.com/49681382/95566522-54a5fa80-0a2a-11eb-9502-b11b63ed358e.png)
 
 
-_**Figure 4:** Proto Learn Side Bar Options_
+_**Figure 4:** Proto Learn sidebar options_
 
-## Main Window: Selecting data, define workflow and explore results
+## Main Window: Selecting data, define workflow, and explore results
 
 ### Data Selection
 
@@ -97,7 +97,7 @@ _**Figure 6:** Selections on the dataset_
 After selecting all parameters you are able to execute the workflow by clicking the `Run Analysis` button.
 
 ### Analysis results and plots
-Once the analysis is completed, Proto Learn automatically generates the plots together with a table showing the results of each validation run. The plots are downloadable as `.pdf` and `.svg` format.
+Once the analysis is completed, Proto Learn automatically generates the plots together with a table showing the results of each validation run. The plots are downloadable as `.pdf` and `.svg` format in addition to the `.png` format provided by Plotly.
 
 ![plot](https://user-images.githubusercontent.com/49681382/95567275-62a84b00-0a2b-11eb-873a-1c50db32d9c8.png)
 
@@ -105,7 +105,7 @@ _**Figure 7:** Bar chart for selected features, its table containing links to Un
 
 ![CLF_Feature_Imp](https://user-images.githubusercontent.com/49681382/95567884-36d99500-0a2c-11eb-9cdd-4d9df200cb97.png)
 
-_**Figure 8:** Bar chart for feature importance values recieved from the classifier, its table containing links to UniProt and download options_
+_**Figure 8:** Bar chart for feature importance values received from the classifier, its table containing links to UniProt and download options_
 
 ![ROC-CURVE](https://user-images.githubusercontent.com/49681382/95567533-be72d400-0a2b-11eb-8646-3b271a7c4ee8.png)
 
@@ -128,6 +128,5 @@ _**Figure 11:** Results table of the analysis and summary text_
 Each analysis run will be appended to the `Session History` so that you can investigate the different results for different parameter sets.
 
 ![session](https://user-images.githubusercontent.com/49681382/95568625-2544bd00-0a2d-11eb-9f13-912f54b4181c.png)
-
 
 _**Figure 12:** Session history table and download option_
