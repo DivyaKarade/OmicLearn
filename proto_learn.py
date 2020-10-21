@@ -393,8 +393,8 @@ def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, 
     p  = plot_confusion_matrices(class_0, class_1, split_results, names)
     st.plotly_chart(p)
     if p:
-        get_download_link(p, 'cm_cohorts.pdf')
-        get_download_link(p, 'cm_cohorts.svg')
+        get_download_link(p, 'cm.pdf')
+        get_download_link(p, 'cm.svg')
 
     # Results
     st.subheader('Run Results for `{}`'.format(classifier))
@@ -435,8 +435,8 @@ def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, 
         p = plot_confusion_matrices(class_0, class_1, cohort_results, names)
         st.plotly_chart(p)
         if p:
-            get_download_link(p, 'cm.pdf')
-            get_download_link(p, 'cm.svg')
+            get_download_link(p, 'cm_cohorts.pdf')
+            get_download_link(p, 'cm_cohorts.svg')
 
         st.subheader('Run Results for `{}`'.format(classifier))
         summary = pd.DataFrame(_cohort_results).describe()
