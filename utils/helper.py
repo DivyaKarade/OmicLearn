@@ -25,7 +25,7 @@ blue_color = '#0068c9'
 red_color = '#f63366'
 gray_color ='#f3f4f7'
 
-scores = ['roc_auc', 'precision', 'recall', 'f1', 'balanced_accuracy']
+scores = ['accuracy', 'roc_auc', 'precision', 'recall', 'f1', 'balanced_accuracy']
 scorer_dict = {}
 scorer_dict = {metric:metric+'_score' for metric in scores}
 scorer_dict = {key: getattr(metrics, metric) for key, metric in scorer_dict.items()}

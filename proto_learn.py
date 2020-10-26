@@ -657,6 +657,8 @@ def ProtoLearn_Main():
         widget_values["Recall Std"] = summary.loc['std']['recall']
         widget_values["F1 Score Mean"] = summary.loc['mean']['f1']
         widget_values["F1 Score Std"] = summary.loc['std']['f1']
+        widget_values["Accuracy Mean"] = summary.loc['mean']['accuracy']
+        widget_values["Accuracy Std"] = summary.loc['std']['accuracy']
         widget_values["Balanced Accuracy Mean"] = summary.loc['mean']['balanced_accuracy']
         widget_values["Balanced Accuracy Std"] = summary.loc['std']['balanced_accuracy']
         widget_values["Class Ratio"] = summary.loc['mean']['class_ratio']
