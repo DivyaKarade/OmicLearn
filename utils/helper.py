@@ -300,21 +300,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
 
-        # Feature importances received from classifier
-        if classifier in ['LogisticRegression', 'LinearSVC']:
-            clf_feature_importances_per_cv = list(clf.coef_[0])
-        elif classifier in ['AdaBoost', 'RandomForest', 'DecisionTree', 'XGBoost']:
-            clf_feature_importances_per_cv = list(clf.feature_importances_)
-        else:
-            # Not implemented st.warning() for `KNeighborsClassifier`.
-            clf_feature_importances_per_cv = None
-        
-        # Take the mean for each importance value per feature from each CV  
-        clf_feature_importance_results.append(clf_feature_importances_per_cv)
-        clf_feature_importances = [sum(i)/len(i) for i in zip(*clf_feature_importance_results)] 
-
         # Calculate prediction probabilities
-        # FIXME: Here, `coef_` for LinearSVC not using CalibratedClassifierCV but `predict_proba` uses it. Is it a problem?
         if classifier == "LinearSVC":
             # Since LinearSVC does not have `predict_proba()`
             from sklearn.calibration import CalibratedClassifierCV
@@ -324,6 +310,31 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
             y_score = calibrated_clf.predict_proba(X_test)
         else:
             y_score = clf.predict_proba(X_test)
+
+        # Feature importances received from classifier
+        if classifier == 'LogisticRegression':
+            clf_feature_importances_per_cv = list(clf.coef_[0])
+
+        elif classifier == 'LinearSVC':
+            coef_avg = 0
+            for j in calibrated_clf.calibrated_classifiers_:
+                coef_avg = coef_avg + j.base_estimator.coef_
+            coef_avg  = coef_avg / len(calibrated_clf.calibrated_classifiers_)
+            clf_feature_importances_per_cv = list(coef_avg)
+
+        elif classifier in ['AdaBoost', 'RandomForest', 'DecisionTree', 'XGBoost']:
+            clf_feature_importances_per_cv = list(clf.feature_importances_)
+        
+        else:
+            # Not implemented st.warning() for `KNeighborsClassifier`.
+            clf_feature_importances_per_cv = None
+        
+        # Take the mean for each importance value per feature from each CV
+        if classifier == 'LinearSVC':
+            clf_feature_importances = [sum(i)/len(i) for i in zip(*clf_feature_importances_per_cv)]
+        else:    
+            clf_feature_importance_results.append(clf_feature_importances_per_cv)
+            clf_feature_importances = [sum(i)/len(i) for i in zip(*clf_feature_importance_results)]
 
         # ROC CURVE
         fpr, tpr, cutoffs = roc_curve(y_test, y_score[:, 1])
