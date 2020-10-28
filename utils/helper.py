@@ -284,6 +284,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
     _cv_results['n_class_0'] = []
     _cv_results['n_class_1'] = []
     _cv_results['class_ratio'] = []
+    _cv_results['pr_auc'] = []
 
     for metric_name, metric_fct in scorer_dict.items():
         _cv_results[metric_name] = []
@@ -335,17 +336,16 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
                 _cv_results[metric_name].append(metric_fct(y_test, y_score[:,1]))
             elif metric_name in ['precision', 'recall', 'f1']:
                 _cv_results[metric_name].append(metric_fct(y_test, y_pred, zero_division=0))
-
             else:
                 _cv_results[metric_name].append(metric_fct(y_test, y_pred))
 
         # CV Results DF
-        _cv_results['pr_auc'] = float(auc(recall, precision)) # ADD PR Curve AUC Score
         _cv_results['num_feat'].append(X.shape[-1])
         _cv_results['n_obs'].append(len(y))
         _cv_results['n_class_0'].append(np.sum(y))
         _cv_results['n_class_1'].append(np.sum(~y))
         _cv_results['class_ratio'].append(np.sum(y)/len(y))
+        _cv_results['pr_auc'].append(auc(recall, precision)) # ADD PR Curve AUC Score
 
         roc_curve_results.append((fpr, tpr, cutoffs))
         pr_curve_results.append((precision, recall, _))
@@ -375,6 +375,7 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
     _cohort_results['n_obs'] = []
     _cohort_results['n_class_0'] = []
     _cohort_results['class_ratio'] = []
+    _cohort_results['pr_auc'] = []
 
     for metric_name, metric_fct in scorer_dict.items():
 
@@ -425,11 +426,11 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
                 _cohort_results[metric_name].append(metric_fct(y_test, y_pred))
 
         # Cohort Results DF
-        _cohort_results['pr_auc'] = float(auc(recall, precision)) # ADD PR Curve AUC Score
         _cohort_results['num_feat'].append(X.shape[-1])
         _cohort_results['n_obs'].append(len(y))
         _cohort_results['n_class_0'].append(np.sum(y))
         _cohort_results['class_ratio'].append(np.sum(y)/len(y))
+        _cohort_results['pr_auc'].append(auc(recall, precision)) # ADD PR Curve AUC Score
 
         roc_curve_results_cohort.append((fpr, tpr, cutoffs))
         pr_curve_results_cohort.append((precision, recall, _ ))
@@ -646,7 +647,6 @@ def plot_pr_curve_cv(pr_curve_results, y_test):
         precision = np.interp(base_recall, recall, precision, period=100)
         precision[0]=1.0
         precisions.append(precision)
-
 
     precisions = np.array(precisions)
     mean_precisions = precisions.mean(axis=0)
