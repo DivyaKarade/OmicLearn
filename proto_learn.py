@@ -77,7 +77,7 @@ def main_components():
 
 # Show main text and data upload section
 def main_text_and_data_upload():
-    st.title("👨‍💻 DEV | Proto Learn — Clinical Proteomics Machine Learning Tool")
+    st.title("Proto Learn — Clinical Proteomics Machine Learning Tool")
     st.info("""
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature.
