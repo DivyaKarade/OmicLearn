@@ -13,7 +13,7 @@
 
 ## Omic Learn
 
-Transparent exploration of machine learning approaches for clinical proteomics data sets.
+Transparent exploration of machine learning approaches for omics data sets.
 
 This Wiki aims to provide general background information for Machine Learning, and it's applicability for clinical proteomics.
 

@@ -77,11 +77,11 @@ def main_components():
 
 # Show main text and data upload section
 def main_text_and_data_upload():
-    st.title("Omic Learn — Clinical Proteomics Machine Learning Tool")
+    st.title("Omic Learn — Omics Machine Learning Tool")
     st.info("""
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature.
-        * Protein names should be uppercase.
+        * 'Identifiers' such as protein IDs, gene names, lipids or miRNA IDs should be uppercase.
         * Additional features should be marked with a leading '_'.
     """)
     st.subheader("Dataset")
@@ -122,7 +122,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         if n_missing > 0:
             st.warning('Found {} missing values. Use missing value imputation or xgboost classifier.'.format(n_missing))
 
-        # Distinguish the proteins from others
+        # Distinguish the identifiers from others
         proteins = [_ for _ in df.columns.to_list() if _[0] != '_']
         not_proteins = [_ for _ in df.columns.to_list() if _[0] == '_']
 
@@ -159,8 +159,8 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
             st.text("Select additional features. All non numerical values will be encoded (e.g. M/F -> 0,1)")
             additional_features = st.multiselect("Select additional features for trainig:", remainder, default=None)
             #Todo: Check if we need additional features
-            st.subheader("Exclude proteins")
-            exclude_features = st.multiselect("Select proteins that should be excluded:", proteins, default=None)
+            st.subheader("Exclude identifiers")
+            exclude_features = st.multiselect("Select identifiers that should be excluded:", proteins, default=None)
 
         # Dataset -- Cohort selections
         st.subheader("Cohort comparison")
@@ -294,8 +294,8 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
     manual_features, features = "", []
 
     if feature_method == 'Manual':
-        st.sidebar.subheader("Manually select proteins")
-        manual_features = multiselect_("Select your proteins manually:", proteins, default=None)
+        st.sidebar.subheader("Manually select identifiers")
+        manual_features = multiselect_("Select your identifiers manually:", proteins, default=None)
         features = manual_features +  additional_features
 
     return random_state, normalization, normalization_detail, n_quantiles, missing_value, feature_method, max_features, \
@@ -459,7 +459,7 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
     # Packages
     packages_plain_text = """
         Omic Learn ({omic_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts.
-        Machine learning was done in Python ({python_version}). Protein tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}).
+        Machine learning was done in Python ({python_version}). Identifier tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}).
         The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}).
         For generating the plots and charts, Plotly ({plotly_version}) library was used.
     """
@@ -485,11 +485,11 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
 
     # Features
     if feature_method == 'Manual':
-        text += 'A total of {} proteins were manually selected. '.format(len(proteins))
+        text += 'A total of {} identifiers were manually selected. '.format(len(proteins))
     elif feature_method == 'ExtraTrees':
-        text += 'Proteins were selected using a {} (n_trees={}) strategy with the maximum number of {} features. '.format(feature_method, n_trees, max_features)
+        text += 'Identifiers were selected using a {} (n_trees={}) strategy with the maximum number of {} features. '.format(feature_method, n_trees, max_features)
     else:
-        text += 'Proteins were selected using a {} strategy with the maximum number of {} features. '.format(feature_method, max_features)
+        text += 'Identifiers were selected using a {} strategy with the maximum number of {} features. '.format(feature_method, max_features)
 
     # Classifier
     if classifier == 'AdaBoost':
@@ -609,7 +609,7 @@ def OmicLearn_Main():
     remainder, proteins, not_proteins, option, df_sub, additional_features, \
     n_missing, subset_column = checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, multiselect)
 
-    # Proteins selection
+    # Identifiers selection
     proteins = [_ for _ in proteins if _ not in exclude_features]
 
     # Sidebar widgets
