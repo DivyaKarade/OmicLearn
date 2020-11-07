@@ -7,13 +7,13 @@ assignees: ''
 
 ---
 
-> If you are using [`proto-learn.com`](http://proto-learn.com/), you can skip the following headline _`Describe your setup`_.
+> If you are using [`omiclearn.com`](http://omiclearn.com/), you can skip the following headline _`Describe your setup`_.
 
 **Describe your setup:**
  - OS (Operating system) with version: `[e.g. Ubuntu 18.04 LTS]`
  - Browser: `[e.g. Chrome, Safari]`
  - Python Verson: `[e.g. 3.7]`
- - List the versions of packages if you installed different versions specified in [requirements.txt](https://github.com/OmicEra/proto_learn/blob/master/requirements.txt):
+ - List the versions of packages if you installed different versions specified in [requirements.txt](https://github.com/OmicEra/OmicLearn/blob/master/requirements.txt):
    ```
    pandas==0.0.0.0
    numpy==0.0.0.0

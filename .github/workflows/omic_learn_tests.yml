@@ -1,6 +1,6 @@
-# Proto Learn Tests
+# Omic Learn Tests
 
-name: Proto Learn Tests
+name: Omic Learn Tests
 
 on:
   push:

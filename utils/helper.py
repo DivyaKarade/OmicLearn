@@ -752,7 +752,7 @@ def get_system_report():
     """
 
     report = {}
-    report['proto_learn_version'] = "v0.1.8-dev"
+    report['omic_learn_version'] = "v0.1.9-dev"
     report['python_version'] = sys.version[:5]
     report['pandas_version'] = pd.__version__
     report['numpy_version'] = np.version.version

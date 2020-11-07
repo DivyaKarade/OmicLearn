@@ -1,17 +1,17 @@
-<p align="center"> <img src="https://user-images.githubusercontent.com/49681382/92229419-1f9a0b80-eeb2-11ea-87d9-3a2b505397bd.png" height="240" width="277" /> </p>
-<h2 align="center"> 📰 Manual and Documentation is available at: <a href="https://github.com/OmicEra/proto_learn/wiki" target="_blank">Proto Learn Wiki Page </a> </h2>
-<h2 align="center"> 🟢 Proto Learn is now accessible through the website: <a href="http://proto-learn.com/" target="_blank">proto-learn.com</a> </h2>
+<p align="center"> <img src="https://user-images.githubusercontent.com/49681382/98436689-68f31b00-20ee-11eb-8fa4-f9836a1e7d4d.png" height="270" width="277" /> </p>
+<h2 align="center"> 📰 Manual and Documentation is available at: <a href="https://github.com/OmicEra/OmicLearn/wiki" target="_blank">Omic Learn Wiki Page </a> </h2>
+<h2 align="center"> 🟢 Omic Learn is now accessible through the website: <a href="http://omiclearn.com/" target="_blank">omiclearn.com</a> </h2>
 
-![Proto Learn Tests](https://github.com/OmicEra/proto_learn/workflows/Proto%20Learn%20Tests/badge.svg)
+![Omic Learn Tests](https://github.com/OmicEra/OmicLearn/workflows/Omic%20Learn%20Tests/badge.svg)
 ![Python Badges](https://img.shields.io/badge/Tested_with_Python-3.7-blue)
-![Proto Learn Version](https://img.shields.io/badge/Release-v1.0.0-orange)
-![Proto Learn Release](https://img.shields.io/badge/Release%20Date-September%202020-green)
-![Proto Learn Server Status](https://img.shields.io/badge/Server%20Status-up-success)
-![Proto Learn License](https://img.shields.io/badge/License-MIT-lightgrey)
+![Omic Learn Version](https://img.shields.io/badge/Release-v1.0.0-orange)
+![Omic Learn Release](https://img.shields.io/badge/Release%20Date-November%202020-green)
+![Omic Learn Server Status](https://img.shields.io/badge/Server%20Status-up-success)
+![Omic Learn License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 ---
 
-## Proto Learn
+## Omic Learn
 
 Transparent exploration of machine learning approaches for clinical proteomics data sets.
 
@@ -21,47 +21,47 @@ On Wiki page, click on the sidebar on the right to get more information about in
 
 ## Installation & Running
 
-> More details for [`Installation & Running`](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Installation-&-Running) is available [on Wiki pages](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Installation-&-Running).
+> More details for [`Installation & Running`](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Installation-&-Running) is available [on Wiki pages](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Installation-&-Running).
 
-- It is strongly recommended to install Proto Learn in its own environment using [Anaconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) Python distributions.
+- It is strongly recommended to install Omic Learn in its own environment using [Anaconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) Python distributions.
 
-  1. Open the console and create a new conda environment: `conda create --name proto_learn python=3.7`
-  2. Activate the environment: `conda activate proto_learn` for Linux / Mac Os X / Windows
+  1. Open the console and create a new conda environment: `conda create --name omic_learn python=3.7`
+  2. Activate the environment: `conda activate omic_learn` for Linux / Mac Os X / Windows
   
   
   > **Note:** Type following command for conda versions prior to `4.6`:
   >
-  > `source activate proto_learn` for macOS and Linux
+  > `source activate omic_learn` for macOS and Linux
   >
-  > `activate proto_learn` for Windows
+  > `activate omic_learn` for Windows
 
-  3. Redirect to the folder of choice and clone the repository: `git clone https://github.com/OmicEra/proto_learn`
+  3. Redirect to the folder of choice and clone the repository: `git clone https://github.com/OmicEra/OmicLearn`
   4. Install the packages with `pip install -r requirements.txt`
   5. To be able to use Xgboost, install via conda: `conda install py-xgboost`
 
-- After successfull instalattion, type the following command to run Proto Learn:
+- After successfull instalattion, type the following command to run Omic Learn:
 
-  `streamlit run proto_learn.py --browser.gatherUsageStats False`
+  `streamlit run omic_learn.py --browser.gatherUsageStats False`
   
-  > `Running with Docker` option is also available. Please, check it out from [the Wiki pages](https://github.com/OmicEra/proto_learn/wiki/INSTALLATION-%26-RUNNING/).
+  > `Running with Docker` option is also available. Please, check it out from [the Wiki pages](https://github.com/OmicEra/OmicLearn/wiki/INSTALLATION-%26-RUNNING/).
   
- - Then, the Proto Learn page will be accessible via [`http://localhost:8501`](http://localhost:8501).
+ - Then, the Omic Learn page will be accessible via [`http://localhost:8501`](http://localhost:8501).
 
-## Getting Started with Proto Learn
+## Getting Started with Omic Learn
 
-![Proto Learn Workflow](https://user-images.githubusercontent.com/49681382/91734594-cb421380-ebb3-11ea-91fa-8acc8826ae7b.png)
+![Omic Learn Workflow](https://user-images.githubusercontent.com/49681382/91734594-cb421380-ebb3-11ea-91fa-8acc8826ae7b.png)
 
-Above, you can see the main steps for workflow of Proto Learn at a glance. 
+Above, you can see the main steps for workflow of Omic Learn at a glance. 
 
-To get started with Proto Learn, [a special page](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Using) is prepared for [`Using Proto Learn`](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Using). 
+To get started with Omic Learn, [a special page](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Using) is prepared for [`Using Omic Learn`](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Using). 
 
 On this page, you can click on the titles listed in *Table of Contents* for jumping into to the detailed documentation for each section explaning them and allowing you to give a try for the steps in the workflow using the example dataset. 
 
 ## Contributing
 Firstly, thank you very much for taking your time and we appreciate all contributions. 👍
 
-📰 For the details, please check our [`CONTRIBUTING`](https://github.com/OmicEra/proto_learn/blob/master/CONTRIBUTING.md) guideline out. 
+📰 For the details, please check our [`CONTRIBUTING`](https://github.com/OmicEra/OmicLearn/blob/master/CONTRIBUTING.md) guideline out. 
 
-When contributing to **Proto Learn**, please [open a new issue](https://github.com/OmicEra/proto_learn/issues/new/choose) to report the bug or discuss the changes you plan before sending a PR (pull request).
+When contributing to **Omic Learn**, please [open a new issue](https://github.com/OmicEra/OmicLearn/issues/new/choose) to report the bug or discuss the changes you plan before sending a PR (pull request).
 
 Also, be aware that you agree to the `OmicEra Individual Contributor License Agreement` by submitting your code. 🤝

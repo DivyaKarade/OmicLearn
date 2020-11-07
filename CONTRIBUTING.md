@@ -2,13 +2,13 @@
 
 Firstly, contributions are welcome and we appreciate all of them!. 
 
-You can contribute **Proto Learn** in many ways:
+You can contribute **Omic Learn** in many ways:
 
 ## Types of Contributions
 
 ### 1. Report Bugs
 
-Report bugs at https://github.com/OmicEra/proto_learn/issues/new/choose by selecting `Bug report` from the list.
+Report bugs at https://github.com/OmicEra/OmicLearn/issues/new/choose by selecting `Bug report` from the list.
 
 If you are reporting a bug/problem, please include:
 
@@ -22,30 +22,30 @@ If you are reporting a bug/problem, please include:
 
 ### 2. Fix Bugs
 
-If you might interested in fixing bugs, look through the [`GitHub issues`](https://github.com/OmicEra/proto_learn/issues). The issues tagged with "bug" or "help wanted" is open to whoever wants to implement it.
+If you might interested in fixing bugs, look through the [`GitHub issues`](https://github.com/OmicEra/OmicLearn/issues). The issues tagged with "bug" or "help wanted" is open to whoever wants to implement it.
 
 ### 3. Request Feature / Submit Feedback
 
 New feature requests are also welcome! 
-You might have a look at our `Feature request` template on [`GitHub issues`](https://github.com/OmicEra/proto_learn/issues).
+You might have a look at our `Feature request` template on [`GitHub issues`](https://github.com/OmicEra/OmicLearn/issues).
 
 
 ### 4. Write Documentation
 
-Implementing our [Proto Learn Wiki](https://github.com/OmicEra/proto_learn/wiki) page would be great idea! You might add articles, detailed explanations or blog posts into the our pages.
+Implementing our [Omic Learn Wiki](https://github.com/OmicEra/OmicLearn/wiki) page would be great idea! You might add articles, detailed explanations or blog posts into the our pages.
 
 --- 
 
 ## 👇 Get Started!
 
-Ready to contribute? Here's how to set up `proto_learn` for local development.
+Ready to contribute? Here's how to set up `omic_learn` for local development.
 
-1.  Fork the `proto_learn` repo on GitHub.
+1.  Fork the `omic_learn` repo on GitHub.
 2.  Clone your fork locally:
 
-    `git clone https://github.com/OmicEra/proto_learn.git`
+    `git clone https://github.com/OmicEra/OmicLearn.git`
 
-3.  Follow the installation instructions in the [Installation & Running](https://github.com/OmicEra/proto_learn/wiki/HOW-TO:-Installation-&-Running ) page for installing `proto_learn` own environment.
+3.  Follow the installation instructions in the [Installation & Running](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Installation-&-Running ) page for installing `omic_learn` own environment.
 
 4.  Create a branch for local development:
 

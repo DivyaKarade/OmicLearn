@@ -8,7 +8,7 @@ import utils.session_states as session_states
 from utils.helper import get_download_link, make_recording_widget, load_data, transform_dataset, normalize_dataset
 from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
 from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, plot_pr_curve_cv, plot_pr_curve_cohort, get_system_report
-icon = Image.open('./utils/proto_learn.png')
+icon = Image.open('./utils/omic_learn.png')
 
 # Checkpoint for XGBoost
 xgboost_installed = False
@@ -21,7 +21,7 @@ except ModuleNotFoundError:
 
 # Define all versions
 report = get_system_report()
-version = report['proto_learn_version']
+version = report['omic_learn_version']
 
 # Functions / Element Creations
 def main_components():
@@ -77,7 +77,7 @@ def main_components():
 
 # Show main text and data upload section
 def main_text_and_data_upload():
-    st.title("Proto Learn — Clinical Proteomics Machine Learning Tool")
+    st.title("Omic Learn — Clinical Proteomics Machine Learning Tool")
     st.info("""
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature.
@@ -86,7 +86,7 @@ def main_text_and_data_upload():
     """)
     st.subheader("Dataset")
     file_buffer = st.file_uploader("Upload your dataset below", type=["csv", "xlsx"])
-    st.markdown("By uploading a file, you agree that you accepting [the licence agreement](https://github.com/OmicEra/proto_learn).")
+    st.markdown("By uploading a file, you agree that you accepting [the licence agreement](https://github.com/OmicEra/OmicLearn).")
     delimiter = st.selectbox("Determine the delimiter in your dataset", ["Excel File", "Comma (,)", "Semicolon (;)"])
     sample_file = st.selectbox("Or select sample file here:", ["None", "Alzheimer", "Sample"])
     df = load_data(file_buffer, delimiter)
@@ -104,7 +104,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
         if sample_file == "Alzheimer":
             st.info("""
                 **This dataset is retrieved from the following paper and the code for parsing is available at 
-                [GitHub](https://github.com/OmicEra/proto_learn/blob/master/data/Alzheimer_paper.ipynb):**\n
+                [GitHub](https://github.com/OmicEra/OmicLearn/blob/master/data/Alzheimer_paper.ipynb):**\n
                 Bader, J., Geyer, P., Müller, J., Strauss, M., Koch, M., & Leypoldt, F. et al. (2020). 
                 Proteome profiling in cerebrospinal fluid reveals novel biomarkers of Alzheimer's disease. 
                 Molecular Systems Biology, 16(6). doi: [10.15252/msb.20199356](http://doi.org/10.15252/msb.20199356) """)
@@ -176,14 +176,14 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
 def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins):
 
     # Sidebar -- Image/Title
-    st.sidebar.image(icon, use_column_width=True, caption="Proto Learn " + version)
-    st.sidebar.markdown("# [Options](https://github.com/OmicEra/proto_learn/wiki/METHODS)")
+    st.sidebar.image(icon, use_column_width=True, caption="Omic Learn " + version)
+    st.sidebar.markdown("# [Options](https://github.com/OmicEra/OmicLearn/wiki/METHODS)")
 
     # Sidebar -- Random State
     random_state = slider_("Random State:", min_value = 0, max_value = 99, value=23)
 
     # Sidebar -- Preprocessing
-    st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing)')
+    st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing)')
     normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer']
     normalization = selectbox_("Normalization method:", normalizations)
 
@@ -197,14 +197,14 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         normalization_detail = selectbox_("Output distribution method:", ["Uniform", "Normal"])
 
     if n_missing > 0:
-        st.sidebar.markdown('## [Missing value imputation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-1.-Preprocessing#1-2-imputation-of-missing-values)')
+        st.sidebar.markdown('## [Missing value imputation](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-imputation-of-missing-values)')
         missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer', 'None']
         missing_value = selectbox_("Missing value imputation", missing_values)
     else:
         missing_value = 'None'
 
     # Sidebar -- Feature Selection
-    st.sidebar.markdown('## [Feature selection](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-2.-Feature-selection)')
+    st.sidebar.markdown('## [Feature selection](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-2.-Feature-selection)')
     feature_methods = ['ExtraTrees', 'k-best (mutual_info_classif)','k-best (f_classif)', 'k-best (chi2)', 'Manual']
     feature_method = selectbox_("Feature selection method:", feature_methods)
 
@@ -220,7 +220,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         n_trees = 0
 
     # Sidebar -- Classification method selection
-    st.sidebar.markdown('## [Classification](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-3.-Classification#3-classification)')
+    st.sidebar.markdown('## [Classification](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-3.-Classification#3-classification)')
     if xgboost_installed:
         classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC','XGBoost']
     else:
@@ -279,7 +279,7 @@ def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, 
         min_child_weight = number_input_('Min. child weight:', value = 1, min_value = 0, max_value = 100)
 
     # Sidebar -- Cross-Validation
-    st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/proto_learn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
+    st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
     cv_method = selectbox_("Specify CV method:", ["RepeatedStratifiedKFold", "StratifiedKFold", "StratifiedShuffleSplit"])
     cv_splits = number_input_('CV Splits:', min_value = 2, max_value = 10, value=5)
 
@@ -458,7 +458,7 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
 
     # Packages
     packages_plain_text = """
-        Proto Learn ({proto_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts.
+        Omic Learn ({omic_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts.
         Machine learning was done in Python ({python_version}). Protein tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}).
         The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}).
         For generating the plots and charts, Plotly ({plotly_version}) library was used.
@@ -580,14 +580,14 @@ def generate_footer_parts():
                     Firstly, thank you very much for taking your time and we appreciate all contributions. 👍 <br>
                     You can report the bugs or request a feature using the link below or sending us a e-mail:
                     <br><br>
-                    <a class="download_link" href="https://github.com/OmicEra/proto_learn/issues/new/choose" target="_blank">Report a bug via GitHub</a>
+                    <a class="download_link" href="https://github.com/OmicEra/OmicLearn/issues/new/choose" target="_blank">Report a bug via GitHub</a>
                     <a class="download_link" href="mailto:info@omicera.com">Report a bug via Email</a>
                 </p>
             </div> </div>
         </div>
 
         <div class="footer">
-            <i> Proto Learn {} </i> developed and brought to you by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH">
+            <i> Omic Learn {} </i> developed and brought to you by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH">
             <a href="https://omicera.com" target="_blank">OmicEra</a>.
         </div>
         """.format(citations, version)
@@ -596,7 +596,7 @@ def generate_footer_parts():
     st.markdown(footer_parts_html, unsafe_allow_html=True)
 
 # Main Function
-def ProtoLearn_Main():
+def OmicLearn_Main():
 
     # Main components
     widget_values, n_missing, class_0, class_1, button_, slider_, multiselect_, number_input_, selectbox_, multiselect = main_components()
@@ -662,7 +662,7 @@ def ProtoLearn_Main():
         widget_values["Balanced Accuracy Mean"] = summary.loc['mean']['balanced_accuracy']
         widget_values["Balanced Accuracy Std"] = summary.loc['std']['balanced_accuracy']
         widget_values["Class Ratio"] = summary.loc['mean']['class_ratio']
-        user_name = str(random.randint(0,10000)) + "ProtoLearn"
+        user_name = str(random.randint(0,10000)) + "OmicLearn"
         session_state = session_states.get(user_name=user_name)
         widget_values["user"] = session_state.user_name
         save_sessions(widget_values, session_state.user_name)
@@ -670,10 +670,10 @@ def ProtoLearn_Main():
         # Generate footer
         generate_footer_parts()
 
-# Run the Proto Learn
+# Run the Omic Learn
 if __name__ == '__main__':
     try:
-        ProtoLearn_Main()
+        OmicLearn_Main()
     except (ValueError, IndexError) as val_ind_error:
         st.error("There is a problem with values/parameters or dataset due to {}.".format(val_ind_error))
     except TypeError as e:
