@@ -34,7 +34,7 @@ A common requirement for machine learning estimators is that datasets are standa
 
 As different classifiers use different optimizers, they are more or less suspective to proper standardization. Scalers for linear transformation and non-linear transformation such as [QuantileTransformer](#1-1-5-quantiletransformer) and  [PowerTransformer](#1-1-4-powertransformer) can be distinguished.
 
-Within Proto Learn, the following options can be selected:
+Within Omic Learn, the following options can be selected:
 
 ### [1. 1. 1. StandardScaler](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html)
 
@@ -101,4 +101,4 @@ When selecting None, no missing value imputation is performed. If the dataset ex
 
 ---
 ## 1. 3. Data encoding
-Another step in ML is that data needs to be encoded. When having categorical data, they need to be transformed. For proteomics data, this is typically unnecessary as we already have the protein intensity, which is a discrete variable. Within Proto Learn, we also allow to use additional features that could be categorical. Whenever a column contains non-numerical values, we use the [label encoder](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html) from scikit-learn, which transforms categorical values numerical values (i.e., `male`|`female` will be `0`|`1`).
+Another step in ML is that data needs to be encoded. When having categorical data, they need to be transformed. For proteomics data, this is typically unnecessary as we already have the protein intensity, which is a discrete variable. Within Omic Learn, we also allow to use additional features that could be categorical. Whenever a column contains non-numerical values, we use the [label encoder](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html) from scikit-learn, which transforms categorical values numerical values (i.e., `male`|`female` will be `0`|`1`).

@@ -9,6 +9,6 @@
 
 ### - `v1.0.0`
 
-> 📅 00 September 2020
+> 📅 00 November 2020
 >
-> This is initial release of Proto Learn.
+> This is the initial release of Omic Learn.

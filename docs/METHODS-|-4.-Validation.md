@@ -9,6 +9,7 @@
   - [4. 2. 4. Recall Score](#4-2-4-recall-score)
   - [4. 2. 5. F1 Score](#4-2-5-f1-score)
   - [4. 2. 6. Balanced Accuracy Score](#4-2-6-balanced-accuracy-score)
+  - [4. 2. 7. Confusion Matrix](#4-2-7-confusion-matrix)
 
 ---
 
@@ -20,10 +21,10 @@ For a typical approach, one would split all available data into train, validatio
 
 One way to get an estimate on how a model would generalize while still trying to use all available data is Cross-Validation (CV). Here, data is repeatedly split into train and validation sets. 
 
-Proto-learn is using a stratified-k-fold split, meaning that the original class ratio will be preserved for the splits. 
+Omic Learn is using a stratified-k-fold split, meaning that the original class ratio will be preserved for the splits. 
 Also, it is possible to shuffle the data and repeatedly shuffle the data and splitting it. The average of multiple splits gives a more robust estimate of the model performance.  The number of splits and the number of repeats can be changed with `cv_splits` and `cv_repeats`.
 
-Also, within Proto Learn, [StratifiedKFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html) and [StratifiedShuffleSplit](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedShuffleSplit.html) methods might be used in addition to [RepeatedStratifiedKFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedStratifiedKFold.html).
+Also, within Omic Learn, [StratifiedKFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html) and [StratifiedShuffleSplit](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedShuffleSplit.html) methods might be used in addition to [RepeatedStratifiedKFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedStratifiedKFold.html).
 
 ## [4. 2. Scores](https://scikit-learn.org/stable/modules/model_evaluation.html)
 In ML, there are several metrics to be employed for measuring the performance of the model, and for evaluating the quality of predictions.
@@ -53,5 +54,7 @@ Precision refers to a ratio of correctly classified positive samples to the tota
 `F1 Score` is the weighted average of both `Precision` and `Recall`.
 
 ### [4. 2. 6. Balanced Accuracy Score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score)
-
 The balanced accuracy calculates the average `Recall` for each class.
+
+### 4. 2. 7. Confusion Matrix
+`Confusion matrix` is a table with 4 different combinations of predicted and actual values.
