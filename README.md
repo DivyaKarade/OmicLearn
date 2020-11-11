@@ -21,7 +21,7 @@ On Wiki page, click on the sidebar on the right to get more information about in
 
 ## Installation & Running
 
-> More details for [`Installation & Running`](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Installation-&-Running) is available [on Wiki pages](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Installation-&-Running).
+> More details for **[`Installation & Running`](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Installation-&-Running)** is available **[on Wiki pages](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Installation-&-Running)**.
 
 - It is strongly recommended to install Omic Learn in its own environment using [Anaconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) Python distributions.
 
@@ -43,7 +43,7 @@ On Wiki page, click on the sidebar on the right to get more information about in
 
   `streamlit run omic_learn.py --browser.gatherUsageStats False`
   
-  > `Running with Docker` option is also available. Please, check it out from [the Wiki pages](https://github.com/OmicEra/OmicLearn/wiki/INSTALLATION-%26-RUNNING/).
+  > `Running with Docker` option is also available. Please, check it out from **[the Wiki pages](https://github.com/OmicEra/OmicLearn/wiki/INSTALLATION-%26-RUNNING/)**.
   
  - Then, the Omic Learn page will be accessible via [`http://localhost:8501`](http://localhost:8501).
 
@@ -53,15 +53,15 @@ On Wiki page, click on the sidebar on the right to get more information about in
 
 Above, you can see the main steps for workflow of Omic Learn at a glance. 
 
-To get started with Omic Learn, [a special page](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Using) is prepared for [`Using Omic Learn`](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Using). 
+To get started with Omic Learn, **[a special page](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Using)** is prepared for **[`Using Omic Learn`](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Using)**. 
 
 On this page, you can click on the titles listed in *Table of Contents* for jumping into to the detailed documentation for each section explaning them and allowing you to give a try for the steps in the workflow using the example dataset. 
 
 ## Contributing
 Firstly, thank you very much for taking your time and we appreciate all contributions. 👍
 
-📰 For the details, please check our [`CONTRIBUTING`](https://github.com/OmicEra/OmicLearn/blob/master/CONTRIBUTING.md) guideline out. 
+📰 For the details, please check our **[`CONTRIBUTING`](https://github.com/OmicEra/OmicLearn/blob/master/CONTRIBUTING.md)** guideline out. 
 
-When contributing to **Omic Learn**, please [open a new issue](https://github.com/OmicEra/OmicLearn/issues/new/choose) to report the bug or discuss the changes you plan before sending a PR (pull request).
+When contributing to **Omic Learn**, please **[open a new issue](https://github.com/OmicEra/OmicLearn/issues/new/choose)** to report the bug or discuss the changes you plan before sending a PR (pull request).
 
-Also, be aware that you agree to the `OmicEra Individual Contributor License Agreement` by submitting your code. 🤝
+Also, be aware that you agree to the **`OmicEra Individual Contributor License Agreement`** by submitting your code. 🤝
