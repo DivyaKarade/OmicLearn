@@ -167,7 +167,7 @@ def plot_feature_importance(features, feature_importance, pvalues, mode):
     feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance', 'P_value'])
     feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
     feature_df_wo_links = feature_df.copy()
-    feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.uniprot.org/uniprot/?query={}" title="Go to UniProt DB" target="_blank">{}</a>'.format(x, x) 
+    feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x) 
                                                     if not x.startswith('_') else x)
 
     # Define for plot moded
@@ -195,7 +195,7 @@ def plot_feature_importance(features, feature_importance, pvalues, mode):
     # Update `feature_df` for NaN in `P_values` and Column Naming
     feature_df.dropna(axis='columns', how="all", inplace=True)
     feature_df_wo_links.dropna(axis='columns', how="all", inplace=True)
-    feature_df.rename(columns={'Name':'Name and UniProt Link', 'Feature_importance': 'Feature Importance', 'P_value': 'P-Value'}, inplace=True)
+    feature_df.rename(columns={'Name':'Name and NCBI Link', 'Feature_importance': 'Feature Importance', 'P_value': 'P-Value'}, inplace=True)
     feature_df.sort_values("Feature Importance", ascending=False, inplace=True, na_position='last')
 
     return p, feature_df, feature_df_wo_links

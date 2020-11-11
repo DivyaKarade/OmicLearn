@@ -330,7 +330,7 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
             get_download_link(p, 'feature_importance.pdf')
             get_download_link(p, 'feature_importance.svg')
 
-        # Display `feature_df` with UniProt links
+        # Display `feature_df` with NCBI links
         st.subheader("Feature selection table")
         st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
         st.write("\n\n\n")
@@ -361,7 +361,7 @@ def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, 
             get_download_link(p, 'clf_feature_importance.pdf')
             get_download_link(p, 'clf_feature_importance.svg')
 
-        # Display `feature_df` with UniProt links
+        # Display `feature_df` with NCBI links
         st.subheader("Feature importances from classifier table")
         st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
         st.write("\n\n\n")
