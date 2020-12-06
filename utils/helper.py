@@ -166,6 +166,7 @@ def plot_feature_importance(features, feature_importance, pvalues, mode):
     n_features = len(features)
     feature_df = pd.DataFrame(list(zip(features, feature_importance, pvalues)), columns=['Name', 'Feature_importance', 'P_value'])
     feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
+    feature_df = feature_df.sort_values(by="Feature_importance", ascending=True)
     feature_df_wo_links = feature_df.copy()
     feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x) 
                                                     if not x.startswith('_') else x)
