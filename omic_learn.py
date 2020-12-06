@@ -85,7 +85,7 @@ def main_text_and_data_upload():
         * Additional features should be marked with a leading '_'.
     """)
     st.subheader("Dataset")
-    file_buffer = st.file_uploader("Upload your dataset below", type=["csv", "xlsx"])
+    file_buffer = st.file_uploader("Upload your dataset below", type=["csv", "xlsx", "xls"])
     st.markdown("By uploading a file, you agree that you accepting [the licence agreement](https://github.com/OmicEra/OmicLearn).")
     delimiter = st.selectbox("Determine the delimiter in your dataset", ["Excel File", "Comma (,)", "Semicolon (;)"])
     sample_file = st.selectbox("Or select sample file here:", ["None", "Alzheimer", "Sample"])
