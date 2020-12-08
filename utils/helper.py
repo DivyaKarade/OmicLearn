@@ -94,9 +94,9 @@ def transform_dataset(subset, additional_features, proteins):
     return X
 
 @st.cache(persist=True)
-def normalize_dataset(X, normalization, normalization_detail, n_quantiles, random_state):
+def normalize_dataset(X, X_train, normalization, normalization_detail, n_quantiles, random_state):
     """
-    Normalize data with normalizer
+    Normalize/Scale data with scalers
     """
     normalization_detail = normalization_detail.lower()
 
@@ -104,19 +104,24 @@ def normalize_dataset(X, normalization, normalization_detail, n_quantiles, rando
         pass
     elif normalization == 'StandardScaler':
         scaler = StandardScaler()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
+        scaler.fit(X_train)
+        X = pd.DataFrame(scaler.transform(X), columns=X.columns, index = X.index)
     elif normalization == 'MinMaxScaler':
         scaler = MinMaxScaler()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
+        scaler.fit(X_train)
+        X = pd.DataFrame(scaler.transform(X), columns=X.columns, index = X.index)
     elif normalization == 'RobustScaler':
         scaler = RobustScaler()
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
+        scaler.fit(X_train)
+        X = pd.DataFrame(scaler.transform(X), columns=X.columns, index = X.index)
     elif normalization == 'PowerTransformer':
         scaler = PowerTransformer(method=normalization_detail)
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
+        scaler.fit(X_train)
+        X = pd.DataFrame(scaler.transform(X), columns=X.columns, index = X.index)
     elif normalization == 'QuantileTransformer':
         scaler = QuantileTransformer(output_distribution=normalization_detail, n_quantiles=n_quantiles, random_state=random_state)
-        X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index = X.index)
+        scaler.fit(X_train)
+        X = pd.DataFrame(scaler.transform(X), columns=X.columns, index = X.index)
     else:
         raise NotImplementedError('Normalization not implemented')
 
@@ -257,7 +262,7 @@ def return_classifier(classifier, random_state, n_estimators, learning_rate, n_n
 
     return clf
 
-def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
+def perform_cross_validation(X, y, normalization, normalization_detail, n_quantiles, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate, 
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
                             clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, bar):
 
@@ -292,8 +297,8 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
 
     for i, (train_index, test_index) in enumerate(cv_alg.split(X,y)):
 
-        X_train = X.iloc[train_index]
-        X_test = X.iloc[test_index]
+        X_train = normalize_dataset(X.iloc[train_index], X.iloc[train_index], normalization, normalization_detail, n_quantiles, random_state)
+        X_test = normalize_dataset(X.iloc[test_index], X.iloc[train_index], normalization, normalization_detail, n_quantiles, random_state)
         y_train = y.iloc[train_index]
         y_test = y.iloc[test_index]
 
@@ -370,7 +375,7 @@ def perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats,
 
     return _cv_results, roc_curve_results, pr_curve_results, split_results, y_test, clf_feature_importances
 
-def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
+def perform_cohort_validation(X, y, normalization, normalization_detail, n_quantiles, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, 
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, 
                             clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, bar):
 
@@ -409,8 +414,8 @@ def perform_cohort_validation(X, y, subset, cohort_column, classifier, random_st
         train_index = subset[cohort_column] == c_1
         test_index = subset[cohort_column] == c_2
 
-        X_train = X[train_index]
-        X_test = X[test_index]
+        X_train = normalize_dataset(X[train_index], X[train_index], normalization, normalization_detail, n_quantiles, random_state)
+        X_test = normalize_dataset(X[test_index], X[train_index], normalization, normalization_detail, n_quantiles, random_state)
         y_train = y[train_index]
         y_test = y[test_index]
 

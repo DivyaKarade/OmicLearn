@@ -5,7 +5,7 @@ from PIL import Image
 import streamlit as st
 from datetime import datetime
 import utils.session_states as session_states
-from utils.helper import get_download_link, make_recording_widget, load_data, transform_dataset, normalize_dataset
+from utils.helper import get_download_link, make_recording_widget, load_data, transform_dataset
 from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
 from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_roc_curve_cohort, plot_pr_curve_cv, plot_pr_curve_cohort, get_system_report
 icon = Image.open('./utils/omic_learn.png')
@@ -316,7 +316,8 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     st.write(subset[option].value_counts())
     y = subset[option].isin(class_0) #is class 0 will be 1!
     X = transform_dataset(subset, additional_features, proteins)
-    X = normalize_dataset(X, normalization, normalization_detail, n_quantiles, random_state)
+    # X = normalize_dataset(X, normalization, normalization_detail, n_quantiles, random_state) 
+    ## This normalize_dataset() function has been moved to cross-validation functions in helper.py
 
     if feature_method == 'Manual':
         features = manual_features +  additional_features
@@ -339,14 +340,14 @@ def feature_selection(df, option, class_0, class_1, df_sub, features, manual_fea
     return class_names, subset, X, y, features
 
 # Display results and plots
-def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors,
+def all_plotting_and_results(X, y, normalization, normalization_detail, n_quantiles, features, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors,
     knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss,
     cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1):
     
     # Cross-Validation
     st.markdown("Running Cross-Validation")
     _cv_results, roc_curve_results, pr_curve_results, split_results, y_test, clf_feature_importances = \
-        perform_cross_validation(X, y, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate,
+        perform_cross_validation(X, y, normalization, normalization_detail, n_quantiles, classifier, cv_method, cv_splits, cv_repeats, random_state, n_estimators, learning_rate,
         n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator, \
         min_split_loss, max_depth, min_child_weight, st.progress(0))
 
@@ -406,7 +407,7 @@ def all_plotting_and_results(X, y, features, subset, cohort_column, classifier, 
     if cohort_column != 'None':
         st.header('Cohort comparison')
         _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos, y_test = \
-            perform_cohort_validation(X, y, subset, cohort_column, classifier, random_state, n_estimators, learning_rate,
+            perform_cohort_validation(X, y, normalization, normalization_detail, n_quantiles, subset, cohort_column, classifier, random_state, n_estimators, learning_rate,
             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, \
             clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, st.progress(0))
 
@@ -470,12 +471,12 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
         text += 'After importing, no further normalization was performed. '
     else:
         if n_quantiles != "":
-            text += 'After importing, features were normalized using a {} ({} as output distribution method and n_quantiles={}) approach. \n'\
+            text += 'After importing, features were normalized using a {} ({} as output distribution method and n_quantiles={}) approach for each fold. \n'\
                 .format(normalization, normalization_detail, n_quantiles)
         elif normalization_detail != "":
-            text += 'After importing, features were normalized using a {} ({}) approach. '.format(normalization, normalization_detail)
+            text += 'After importing, features were normalized using a {} ({}) approach for each fold. '.format(normalization, normalization_detail)
         else:
-            text += 'After importing, features were normalized using a {} approach. '.format(normalization)
+            text += 'After importing, features were normalized using a {} approach for each fold. '.format(normalization)
 
     # Missing value impt.
     if missing_value != "None":
@@ -635,7 +636,7 @@ def OmicLearn_Main():
 
         # Plotting and Get the results
         summary, _cohort_results, roc_curve_results_cohort, cohort_results, cohort_combos = \
-            all_plotting_and_results(X, y, features, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors,
+            all_plotting_and_results(X, y, normalization, normalization_detail, n_quantiles, features, subset, cohort_column, classifier, random_state, n_estimators, learning_rate, n_neighbors,
                 knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss,
                 cv_generator, min_split_loss, max_depth, min_child_weight, cv_method, cv_splits, cv_repeats, class_0, class_1)
 
