@@ -1,4 +1,4 @@
-<p align="center"> <img src="https://user-images.githubusercontent.com/49681382/98436689-68f31b00-20ee-11eb-8fa4-f9836a1e7d4d.png" height="270" width="277" /> </p>
+<p align="center"> <img src="https://user-images.githubusercontent.com/49681382/101802266-48204a00-3b20-11eb-85ec-08c123fca79e.png" height="270" width="277" /> </p>
 <h2 align="center"> 📰 Manual and Documentation is available at: <a href="https://github.com/OmicEra/OmicLearn/wiki" target="_blank">OmicLearn Wiki Page </a> </h2>
 <h2 align="center"> 🟢 OmicLearn is now accessible through the website: <a href="http://omiclearn.com/" target="_blank">omiclearn.com</a> </h2>
 
