@@ -67,4 +67,4 @@ def test_normalize_dataset():
         else:
             normalization_detail = ''
             n_quantiles = None
-        normalize_dataset(df, normalization, normalization_detail, n_quantiles, 23)
+        normalize_dataset(df, df, normalization, normalization_detail, n_quantiles, 23)
