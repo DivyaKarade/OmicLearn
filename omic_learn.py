@@ -77,7 +77,7 @@ def main_components():
 
 # Show main text and data upload section
 def main_text_and_data_upload():
-    st.title("Omic Learn — ML for Omics Data")
+    st.title("OmicLearn — ML for Omics Data")
     st.info("""
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature.
@@ -176,7 +176,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
 def generate_sidebar_elements(multiselect_, slider_, selectbox_, number_input_, n_missing, additional_features, proteins):
 
     # Sidebar -- Image/Title
-    st.sidebar.image(icon, use_column_width=True, caption="Omic Learn " + version)
+    st.sidebar.image(icon, use_column_width=True, caption="OmicLearn " + version)
     st.sidebar.markdown("# [Options](https://github.com/OmicEra/OmicLearn/wiki/METHODS)")
 
     # Sidebar -- Random State
@@ -459,7 +459,7 @@ def generate_text(normalization, normalization_detail, n_quantiles, missing_valu
 
     # Packages
     packages_plain_text = """
-        Omic Learn ({omic_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts.
+        OmicLearn ({omic_learn_version}) was utilized for performing the data analysis, model execution and generating the plots and charts.
         Machine learning was done in Python ({python_version}). Identifier tables were imported via the Pandas package ({pandas_version}) together with Numpy package ({numpy_version}).
         The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}).
         For generating the plots and charts, Plotly ({plotly_version}) library was used.
@@ -588,7 +588,7 @@ def generate_footer_parts():
         </div>
 
         <div class="footer">
-            <i> Omic Learn {} </i> developed and brought to you by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH">
+            <i> OmicLearn {} </i> developed and brought to you by <img src="https://omicera.com/wp-content/uploads/2020/05/cropped-oe-favicon-32x32.jpg" alt="OmicEra Diagnostics GmbH">
             <a href="https://omicera.com" target="_blank">OmicEra</a>.
         </div>
         """.format(citations, version)
@@ -671,7 +671,7 @@ def OmicLearn_Main():
         # Generate footer
         generate_footer_parts()
 
-# Run the Omic Learn
+# Run the OmicLearn
 if __name__ == '__main__':
     try:
         OmicLearn_Main()
