@@ -9,7 +9,7 @@
 
 > We highly recommend the [Anaconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) Python distribution which comes with a powerful package manager. 
 >
-> It is strongly recommended to install Omic Learn in its own environment.
+> It is strongly recommended to install OmicLearn in its own environment.
 
 1. Open the console and create a new conda environment: `conda create --name omic_learn python=3.7`
 2. Activate the environment: `conda activate omic_learn` for Linux / Mac Os X / Windows
@@ -28,7 +28,7 @@
 
 ## Running
 
-- To run Omic Learn, type the following command:
+- To run OmicLearn, type the following command:
 
 `streamlit run omic_learn.py --browser.gatherUsageStats False`
 
@@ -36,16 +36,16 @@
 
 > **Note:** A vanilla streamlit installation will show a menu bar in the upper left corner that offers additional functionality, such as recording screencasts. 
 >
-> For Omic Learn, this functionality is disabled. 
+> For OmicLearn, this functionality is disabled. 
 
 ## Running with Docker
 
 A docker instance should have at least 4 GB of memory. 
-To build the docker, navigate to the Omic Learn directory: 
+To build the docker, navigate to the OmicLearn directory: 
 
 * `docker build -f Dockerfile -t omic_learn:latest .`
 
 To run the docker container type:
 * `docker run -p 8501:8501 omic_learn:latest`
 
-* The Omic Learn page will be accessible via [`http://localhost:8501`](http://localhost:8501)
+* The OmicLearn page will be accessible via [`http://localhost:8501`](http://localhost:8501)

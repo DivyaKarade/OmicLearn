@@ -9,6 +9,6 @@
 
 ### - `v1.0.0`
 
-> 📅 00 November 2020
+> 📅 December 2020
 >
-> This is the initial release of Omic Learn.
+> This is the initial release of **OmicLearn**.

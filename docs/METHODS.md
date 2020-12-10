@@ -1,8 +1,8 @@
-**Omic Learn** aims to alleviate access to the latest techniques in machine learning to be used for omics datasets. Here, the tool heavily relies on [scikit-learn](https://scikit-learn.org/stable/) and additionally integrates state-of-the-art algorithms such as xgboost.
+**OmicLearn** aims to alleviate access to the latest techniques in machine learning to be used for omics datasets. Here, the tool heavily relies on [scikit-learn](https://scikit-learn.org/stable/) and additionally integrates state-of-the-art algorithms such as xgboost.
 
 A typical machine learning pipeline consists of `Preprocessing`, `Feature Selection`, `Classification` and `Validation` of your method. 
 
-With Omic Learn, you have the possibility to choose from several different choices and explore their effect when analyzing your data. 
+With OmicLearn, you have the possibility to choose from several different choices and explore their effect when analyzing your data. 
 
 Additional information about the individual processing steps can be found here:
 

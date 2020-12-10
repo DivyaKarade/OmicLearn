@@ -1,6 +1,6 @@
 ## **Table of Contents**
 - [**Table of Contents**](#table-of-contents)
-- [Using Omic Learn](#using-omic-learn)
+- [Using OmicLearn](#using-omic-learn)
 - [Uploading data](#uploading-data)
   - [Sample Datasets](#sample-datasets)
 - [Sidebar: Selecting Parameters](#sidebar-selecting-parameters)
@@ -9,18 +9,18 @@
   - [Running the Workflow](#running-the-workflow)
   - [Analysis results and plots](#analysis-results-and-plots)
   - [Checking the Session History](#checking-the-session-history)
-- [Cite us and Report bugs](#cite-us-and-report-bugs)
+- [Cite us and Report bugs](#cite-us--report-bugs)
 
 ---
 
-## Using Omic Learn
-[Omic Learn](http://omiclearn.com) enables researchers and scientists to explore the latest algorithms in machine learning (ML) for their usage in clinical proteomics.
+## Using OmicLearn
+[OmicLearn](http://omiclearn.com) enables researchers and scientists to explore the latest algorithms in machine learning (ML) for their usage in clinical proteomics.
 
 The core steps of the pipeline are  `Preprocessing`, `Missing Value Imputation`, `Feature Selection`, `Classification`, and `Validation` of selected method/algorithms and are presented in the flowchart below:
 
-![Omic Learn Workflow](https://user-images.githubusercontent.com/49681382/91734594-cb421380-ebb3-11ea-91fa-8acc8826ae7b.png)
+![OmicLearn Workflow](https://user-images.githubusercontent.com/49681382/91734594-cb421380-ebb3-11ea-91fa-8acc8826ae7b.png)
 
-_**Figure 1:** Main steps for the workflow of Omic Learn at a glance_
+_**Figure 1:** Main steps for the workflow of OmicLearn at a glance_
 
 ## Uploading data
 
@@ -49,7 +49,7 @@ _**Figure 3:** Missing value warning_
 
 ### Sample Datasets
 
-- Omic Learn has several sample [datasets](https://github.com/OmicEra/OmicLearn/tree/master/data) included that can be used for exploring the analysis, which can be selected from the dropdown menu.
+- OmicLearn has several sample [datasets](https://github.com/OmicEra/OmicLearn/tree/master/data) included that can be used for exploring the analysis, which can be selected from the dropdown menu.
 
 Here is the list of sample datasets available:
 
@@ -69,20 +69,20 @@ Here is the list of sample datasets available:
 
 ## Sidebar: Selecting Parameters
 
-Omic Learn has a large variety of options to choose from which are detailed in the [methods wiki](https://github.com/OmicEra/OmicLearn/wiki/METHODS).  The parameters can be selected in the sidebar.
+OmicLearn has a large variety of options to choose from which are detailed in the [methods wiki](https://github.com/OmicEra/OmicLearn/wiki/METHODS).  The parameters can be selected in the sidebar.
 
 Moreover, after changing the parameters, you are asked to re-run the analysis. Each analysis result will be stored in the [session history](#checking-the-session-history).
 
-![Omic Learn SideBar](https://user-images.githubusercontent.com/49681382/95566522-54a5fa80-0a2a-11eb-9502-b11b63ed358e.png)
+![OmicLearn SideBar](https://user-images.githubusercontent.com/49681382/95566522-54a5fa80-0a2a-11eb-9502-b11b63ed358e.png)
 
 
-_**Figure 4:** Omic Learn sidebar options_
+_**Figure 4:** OmicLearn sidebar options_
 
 ## Main Window: Selecting data, define workflow, and explore results
 
 ### Data Selection
 
-After uploading the data, the data will be displayed within the Omic Learn window and can be explored. The dropdown menu `Subset` allows you to specify a subset of data based on values within a comma. This way, you can exclude data that should not be used at all.
+After uploading the data, the data will be displayed within the OmicLearn window and can be explored. The dropdown menu `Subset` allows you to specify a subset of data based on values within a comma. This way, you can exclude data that should not be used at all.
 
 Within `Features,` you should select the target column. This refers to the variable that the classifier should be able to distinguish. As we are performing a binary classification task, there are only two options for the outcome of the classifier. By assigning multiple values to a class, multiple combinations of classifications can be tested.
 
@@ -98,7 +98,7 @@ _**Figure 5:** Selections on the dataset_
 After selecting all parameters you are able to execute the workflow by clicking the `Run Analysis` button.
 
 ### Analysis results and plots
-Once the analysis is completed, Omic Learn automatically generates the plots together with a table showing the results of each validation run. The plots are downloadable as `.pdf` and `.svg` format in addition to the `.png` format provided by Plotly.
+Once the analysis is completed, OmicLearn automatically generates the plots together with a table showing the results of each validation run. The plots are downloadable as `.pdf` and `.svg` format in addition to the `.png` format provided by Plotly.
 
 ![fig6_chart](https://user-images.githubusercontent.com/49681382/98795608-7294bf80-241b-11eb-8cf8-3225e84ef543.png)
 
@@ -122,7 +122,7 @@ _**Figure 8:** Receiver operating characteristic (ROC) Curve, Precision-Recall (
 
 _**Figure 9:** Confusion matrix, slider for looking at the other matrix tables and download options_
 
-Omic Learn generates a `Summary` to describe the method. This can be used for a method section in a publication.
+OmicLearn generates a `Summary` to describe the method. This can be used for a method section in a publication.
 
 ![results](https://user-images.githubusercontent.com/49681382/98795253-0f0a9200-241b-11eb-89e0-dc2d1e3f7581.png)
 
