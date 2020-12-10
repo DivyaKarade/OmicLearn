@@ -2,7 +2,7 @@
 
 Firstly, contributions are welcome and we appreciate all of them!. 
 
-You can contribute **Omic Learn** in many ways:
+You can contribute **OmicLearn** in many ways:
 
 ## Types of Contributions
 
@@ -32,7 +32,7 @@ You might have a look at our `Feature request` template on [`GitHub issues`](htt
 
 ### 4. Write Documentation
 
-Implementing our [Omic Learn Wiki](https://github.com/OmicEra/OmicLearn/wiki) page would be great idea! You might add articles, detailed explanations or blog posts into the our pages.
+Implementing our [OmicLearn Wiki](https://github.com/OmicEra/OmicLearn/wiki) page would be great idea! You might add articles, detailed explanations or blog posts into the our pages.
 
 --- 
 

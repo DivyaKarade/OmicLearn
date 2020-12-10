@@ -1,6 +1,6 @@
-# Omic Learn Tests
+# OmicLearn Tests
 
-name: Omic Learn Tests
+name: OmicLearn Tests
 
 on:
   push:
