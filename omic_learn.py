@@ -158,9 +158,18 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
             st.subheader("Additional features")
             st.text("Select additional features. All non numerical values will be encoded (e.g. M/F -> 0,1)")
             additional_features = st.multiselect("Select additional features for trainig:", remainder, default=None)
-            #Todo: Check if we need additional features
             st.subheader("Exclude identifiers")
-            exclude_features = st.multiselect("Select identifiers that should be excluded:", proteins, default=None)
+
+            # File uploading option for exclusion
+            exclusion_file_buffer = st.file_uploader("Upload your CSV (comma seperated ",") file here in which each row corresponds to a feature to be excluded.", type=["csv"])
+            exclusion_df = load_data(exclusion_file_buffer, "Comma (,)")
+            if len(exclusion_df) > 0:
+                st.text("Here is your identifiers that should be excluded:")
+                st.write(exclusion_df)
+                exclusion_df_list = list(exclusion_df.iloc[:,0].unique())
+                exclude_features = st.multiselect("Select identifiers that should be excluded:", proteins, default=exclusion_df_list)
+            else:
+                exclude_features = st.multiselect("Select identifiers that should be excluded:", proteins, default=None)
 
         # Dataset -- Cohort selections
         st.subheader("Cohort comparison")
