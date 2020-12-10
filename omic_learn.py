@@ -161,7 +161,7 @@ def checkpoint_for_data_upload(sample_file, df, class_0, class_1, n_missing, mul
             st.subheader("Exclude identifiers")
 
             # File uploading option for exclusion
-            exclusion_file_buffer = st.file_uploader("Upload your CSV (comma seperated ",") file here in which each row corresponds to a feature to be excluded.", type=["csv"])
+            exclusion_file_buffer = st.file_uploader("Upload your CSV (comma(,) seperated) file here in which each row corresponds to a feature to be excluded.", type=["csv"])
             exclusion_df = load_data(exclusion_file_buffer, "Comma (,)")
             if len(exclusion_df) > 0:
                 st.text("Here is your identifiers that should be excluded:")
