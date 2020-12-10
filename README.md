@@ -2,12 +2,12 @@
 <h2 align="center"> 📰 Manual and Documentation is available at: <a href="https://github.com/OmicEra/OmicLearn/wiki" target="_blank">OmicLearn Wiki Page </a> </h2>
 <h2 align="center"> 🟢 OmicLearn is now accessible through the website: <a href="http://omiclearn.com/" target="_blank">omiclearn.com</a> </h2>
 
-![OmicLearn Tests](https://github.com/OmicEra/OmicLearn/workflows/Omic%20Learn%20Tests/badge.svg)
+![OmicLearn Tests](https://github.com/OmicEra/OmicLearn/workflows/OmicLearn%20Tests/badge.svg)
 ![OmicLearn Python Badges](https://img.shields.io/badge/Tested_with_Python-3.7-blue)
 ![OmicLearn Version](https://img.shields.io/badge/Release-v1.0.0-orange)
 ![OmicLearn Release](https://img.shields.io/badge/Release%20Date-December%202020-green)
 ![OmicLearn Server Status](https://img.shields.io/badge/Server%20Status-up-success)
-![OmicLearn License](https://img.shields.io/badge/License-MIT-lightgrey)
+![OmicLearn License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
 ---
 
