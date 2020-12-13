@@ -175,24 +175,26 @@ def plot_feature_importance(features, feature_importance, pvalues, mode):
     feature_df_wo_links = feature_df.copy()
     feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x) 
                                                     if not x.startswith('_') else x)
+    feature_df["Plot_Name"] = feature_df_wo_links["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x[0:21]) 
+                                                    if not x.startswith('_') else x)
 
-    # Define for plot moded
+    # Define for plot mode
     if mode == 'feature_selection':
         marker_color = '#f84f57'
         title = 'Top {} features selected'.format(n_features)
-        labels={"Feature_importance": "Feature importance"}
+        labels={"Feature_importance": "Feature importance", "Plot_Name": "Names"}
     elif mode == 'clf_feature_importances':
         marker_color = '#035672'
         title = 'Top {} features from classifier'.format(n_features)
-        labels={"Feature_importance": "Feature importances from classifier"}
+        labels={"Feature_importance": "Feature importances from classifier", "Plot_Name": "Names"}
 
     # Hide pvalue if it does not exist
     if np.isnan(pvalues).all():
-        hover_data = ["Name", "Feature_importance"]
+        hover_data = {"Plot_Name":False, "Name":True, "Feature_importance":True}
     else:
-        hover_data = ["Name", "Feature_importance", "P_value"]
+        hover_data = {"Plot_Name":False, "Name":True, "Feature_importance":True, "P_value":True}
 
-    p = px.bar(feature_df, x="Feature_importance", y="Name", orientation='h', hover_data=hover_data, labels=labels, height=600, title=title)
+    p = px.bar(feature_df, x="Feature_importance", y="Plot_Name", orientation='h', hover_data=hover_data, labels=labels, height=600, title=title)
     p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)', showlegend=False)
     p.update_traces(marker_color=marker_color)
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
@@ -200,6 +202,7 @@ def plot_feature_importance(features, feature_importance, pvalues, mode):
     
     # Update `feature_df` for NaN in `P_values` and Column Naming
     feature_df.dropna(axis='columns', how="all", inplace=True)
+    feature_df.drop("Plot_Name", inplace=True, axis=1)
     feature_df_wo_links.dropna(axis='columns', how="all", inplace=True)
     feature_df.rename(columns={'Name':'Name and NCBI Link', 'Feature_importance': 'Feature Importance', 'P_value': 'P-Value'}, inplace=True)
     feature_df.sort_values("Feature Importance", ascending=False, inplace=True, na_position='last')
