@@ -445,7 +445,6 @@ def classify_and_plot(state):
         state['cohort_results'] = cohort_results
         get_download_link(state.cohort_summary, "run_results_cohort.csv")
 
-
     return state
 
 # Generate summary text
@@ -456,7 +455,7 @@ def generate_text(state):
     # Packages
     packages_plain_text = """
         OmicLearn ({omic_learn_version}) was utilized for performing the data analysis, model execution, and generating the plots and charts.
-        Machine learning was done in Python ({python_version}). Identifier tables were imported via the Pandas package ({pandas_version}) and manipulated using the Numpy package ({numpy_version}).
+        Machine learning was done in Python ({python_version}). Feature tables were imported via the Pandas package ({pandas_version}) and manipulated using the Numpy package ({numpy_version}).
         The machine learning pipeline was employed using the scikit-learn package ({sklearn_version}).
         For generating the plots and charts, Plotly ({plotly_version}) library was used.
     """
@@ -489,29 +488,28 @@ def generate_text(state):
     params = [f'{k} = {v}' for k, v in state.classifier_params.items()]
     text += f"For classification, we used a {state.classifier}-Classifier ({' '.join(params)}) "
 
-    if False: #ToDO: This is still buggy
-        # Cross-Validation
-        if state.cv_method == 'RepeatedStratifiedKFold':
-            cv_plain_text = """
-                When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {},
-                we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std)
-                and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
-            """
-            text += cv_plain_text.format(state.cv_repeats, state.cv_splits, ''.join(state.class_0), ''.join(state.class_1),
-                state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
-        else:
-            cv_plain_text = """
-                When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC)
-                with an average AUC (area under the curve) of {:.2f} ({:.2f} std) and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
-            """
-            text += cv_plain_text.format(state.cv_method, state.cv_splits, ''.join(state.class_0), ''.join(state.class_1),
-                state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
+    # Cross-Validation
+    if state.cv_method == 'RepeatedStratifiedKFold':
+        cv_plain_text = """
+            When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {},
+            we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std)
+            and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
+        """
+        text += cv_plain_text.format(state.cv_repeats, state.cv_splits, ''.join(state.class_0), ''.join(state.class_1),
+            state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
+    else:
+        cv_plain_text = """
+            When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC)
+            with an average AUC (area under the curve) of {:.2f} ({:.2f} std) and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
+        """
+        text += cv_plain_text.format(state.cv_method, state.cv_splits, ''.join(state.class_0), ''.join(state.class_1),
+            state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
 
-        if state.cohort_column != 'None':
-            text += 'When training on one cohort and predicting on another to classify {} vs. {}, we achieved the following AUCs: '.format(''.join(state.class_0), ''.join(state.class_1))
-            for i, cohort_combo in enumerate(state.cohort_combos):
-                text+= '{:.2f} when training on {} and predicting on {} '.format(state.cohort_results[i]['roc_auc'], cohort_combo[0], cohort_combo[1])
-                text+= ', and {:.2f} for PR Curve when training on {} and predicting on {}. '.format(state.cohort_results[i]['pr_auc'], cohort_combo[0], cohort_combo[1])
+    if state.cohort_column is not None:
+        text += 'When training on one cohort and predicting on another to classify {} vs. {}, we achieved the following AUCs: '.format(''.join(state.class_0), ''.join(state.class_1))
+        for i, cohort_combo in enumerate(state.cohort_combos):
+            text+= '{:.2f} when training on {} and predicting on {} '.format(state.cohort_results[i]['roc_auc'], cohort_combo[0], cohort_combo[1])
+            text+= ', and {:.2f} for PR Curve when training on {} and predicting on {}. '.format(state.cohort_results[i]['pr_auc'], cohort_combo[0], cohort_combo[1])
 
     # Print the all text
     st.info(text)
@@ -544,8 +542,8 @@ def generate_footer_parts():
     # Citations
     citations = """
         <br> <b>APA Format:</b> <br>
-        Winter, S., Karayel, O., Strauss, M., Padmanabhan, S., Surface, M., & Merchant, K. et al. (2020).
-        Urinary proteome profiling for stratifying patients with familial Parkinson’s disease. doi: 10.1101/2020.08.09.243584.
+        Torun, FM., Geyer, PE., Winter, SV., Doll, S., Strauss, MT. (2021).
+        Transparent exploration of machine learning approaches for clinical omics datasets. doi: 10.XXXX/XXXX.XX.XX.XXXXXX.
     """
 
     # Put the footer with tabs

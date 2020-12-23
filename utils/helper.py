@@ -315,6 +315,7 @@ def perform_cross_validation(state, cohort_column = None):
 
     for metric_name, metric_fct in scorer_dict.items():
         _cv_results[metric_name] = []
+    _cv_results['pr_auc'] = [] # ADD pr_auc manually
 
     X = state.X
     y = state.y
@@ -432,6 +433,7 @@ def perform_cross_validation(state, cohort_column = None):
             _cv_results['n_class_0_test'].append(np.sum(y_test))
             _cv_results['n_class_1_test'].append(np.sum(~y_test))
             _cv_results['class_ratio_test'].append(np.sum(y_test)/len(y_test))
+            _cv_results['pr_auc'].append(auc(recall, precision)) # ADD PR Curve AUC Score
 
             _cv_curves['pr_auc'].append(auc(recall, precision)) # ADD PR Curve AUC Score
             _cv_curves['roc_curves_'].append((fpr, tpr, cutoffs))
