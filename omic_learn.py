@@ -93,7 +93,7 @@ def main_components():
 
 # Show main text and data upload section
 def main_text_and_data_upload(state):
-    st.title("OmicLearn — ML for Omics Data")
+    st.title("DEV | OmicLearn — ML for Omics Data")
     st.info("""
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature.
@@ -145,6 +145,7 @@ def checkpoint_for_data_upload(state, record_widgets):
         state['not_proteins'] = [_ for _ in state.df.columns.to_list() if _[0] == '_']
 
         # Dataset -- Subset
+        st.markdown("\nSubset allows you to specify a subset of data based on values within a comma. \nThis way, you can exclude data that should not be used at all.")
         if st.checkbox("Create subset"):
             st.text('Create a subset based on values in the selected column')
             state['subset_column'] = st.selectbox("Select subset column:", ['None']+state.not_proteins)
@@ -153,6 +154,9 @@ def checkpoint_for_data_upload(state, record_widgets):
                 subset_options = state.df[state.subset_column].value_counts().index.tolist()
                 subset_class = multiselect("Select values to keep:", subset_options, default=subset_options)
                 state['df_sub'] = state.df[state.df[state.subset_column].isin(subset_class)].copy()
+            elif state.subset_column == 'None':
+                state['df_sub'] = state.df.copy()
+                state['subset_column'] = 'None'
         else:
             state['df_sub'] = state.df.copy()
             state['subset_column'] = 'None'
@@ -193,7 +197,7 @@ def checkpoint_for_data_upload(state, record_widgets):
                 state['exclude_features']  = []
 
             if st.checkbox("Manually select features"):
-                st.text("Manually select a subset of features.")
+                st.markdown("Manually select a subset of features.")
                 state.proteins = multiselect("Select your features manually:", state.proteins, default=None)
 
 
@@ -350,7 +354,10 @@ def classify_and_plot(state):
 
     # Feature Importances from Classifier
     st.subheader('Feature Importances from classifier')
-    st.text(f'This is the average feature importance from all {state.cv_splits*state.cv_repeats} cross validation runs.')
+    if state.cv_method == 'RepeatedStratifiedKFold':
+        st.markdown(f'This is the average feature importance from all {state.cv_splits*state.cv_repeats} cross validation runs.')
+    else:
+        st.markdown(f'This is the average feature importance from all {state.cv_splits} cross validation runs.')
     if cv_curves['feature_importances_'] is not None:
         p, feature_df, feature_df_wo_links = plot_feature_importance(cv_curves['feature_importances_'])
         st.plotly_chart(p, use_container_width=True)
@@ -627,14 +634,13 @@ def OmicLearn_Main():
         widget_values["user"] = session_state.user_name
         save_sessions(widget_values, session_state.user_name)
 
+        # Generate footer
+        generate_footer_parts()            
+
     else:
         if len(state.df) > 0:
             if (state.class_0 is None) or (state.class_1 is None):
                 st.error('Start with defining classes.')
-
-        # Generate footer
-    generate_footer_parts()
-
 
 
 # Run the OmicLearn
