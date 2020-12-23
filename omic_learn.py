@@ -5,9 +5,9 @@ from PIL import Image
 import streamlit as st
 from datetime import datetime
 import utils.session_states as session_states
+from utils.helper import plot_roc_curve_cv, plot_pr_curve_cv, get_system_report
 from utils.helper import get_download_link, make_recording_widget, load_data, transform_dataset
-from utils.helper import select_features, plot_feature_importance, impute_nan, perform_cross_validation, plot_confusion_matrices
-from utils.helper import perform_cohort_validation, plot_roc_curve_cv, plot_pr_curve_cv, get_system_report
+from utils.helper import plot_feature_importance, perform_cross_validation, plot_confusion_matrices
 icon = Image.open('./utils/omic_learn.png')
 
 # Checkpoint for XGBoost
