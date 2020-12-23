@@ -259,29 +259,36 @@ def return_classifier(classifier, classifier_params):
     cp = classifier_params.copy()
 
     if classifier in ['LogisticRegression', 'KNeighborsClassifier','RandomForest']:
-        cp['n_jobs'] =-1
+        cp['n_jobs'] = -1
+
+    if classifier == 'LinearSVC':
+        cv_generator = cp['cv_generator']
+    else:
+        cv_generator = None
 
     if classifier == 'XGBoost':
         from xgboost import XGBClassifier
-        clf = XGBClassifier(**cp)
+        clf = XGBClassifier()
     elif classifier == 'LogisticRegression':
-        clf = linear_model.LogisticRegression(**cp)
+        clf = linear_model.LogisticRegression()
     elif classifier == 'KNeighborsClassifier':
-        clf = neighbors.KNeighborsClassifier(**cp)
+        del cp['random_state']
+        clf = neighbors.KNeighborsClassifier()
     elif classifier == 'RandomForest':
-        clf = ensemble.RandomForestClassifier(**cp)
+        clf = ensemble.RandomForestClassifier()
     elif classifier == 'DecisionTree':
-        clf = tree.DecisionTreeClassifier(**cp)
+        clf = tree.DecisionTreeClassifier()
     elif classifier == 'AdaBoost':
-        clf = ensemble.AdaBoostClassifier(**cp)
+        clf = ensemble.AdaBoostClassifier()
     elif classifier == 'LinearSVC':
-        clf = svm.LinearSVC(**cp)
-
-    return clf
+        del cp['cv_generator']
+        clf = svm.LinearSVC()
+    clf.set_params(**cp)
+    return clf, cv_generator
 
 def perform_cross_validation(state, cohort_column = None):
 
-    clf = return_classifier(state.classifier, state.classifier_params)
+    clf, cv_generator = return_classifier(state.classifier, state.classifier_params)
 
     if state.cv_method == 'RepeatedStratifiedKFold':
         cv_alg = RepeatedStratifiedKFold(n_splits=state.cv_splits, n_repeats=state.cv_repeats, random_state=state.random_state)
@@ -449,7 +456,7 @@ def perform_cohort_validation(X, y, normalization, normalization_detail, n_quant
                             n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion,
                             clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, bar):
 
-    clf = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm,
+    clf, cv_generator = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm,
                             penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator,
                             min_split_loss, max_depth, min_child_weight)
 

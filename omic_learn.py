@@ -306,20 +306,20 @@ def generate_sidebar_elements(state, record_widgets):
     elif state.classifier == 'RandomForest':
         classifier_params['n_estimators'] = number_input_('Number of estimators:', value = 100, min_value = 1, max_value = 2000)
         classifier_params['criterion'] =  selectbox_("Function for measure the quality:", ["gini", "entropy"])
-        classifier_params['max_features_'] = selectbox_("Number of max. features:", ["auto", "int", "sqrt", "log2"])
-        if classifier_params['max_features_'] == "int":
+        classifier_params['max_features'] = selectbox_("Number of max. features:", ["auto", "int", "sqrt", "log2"])
+        if classifier_params['max_features'] == "int":
             classifier_params['max_features'] = number_input_('Number of max. features:', value = 5, min_value = 1, max_value = 100)
 
     elif state.classifier == 'DecisionTree':
         classifier_params['criterion'] =  selectbox_("Function for measure the quality:", ["gini", "entropy"])
-        classifier_params['max_features_'] = selectbox_("Number of max. features:", ["auto", "int", "sqrt", "log2"])
-        if classifier_params['max_features_'] == "int":
+        classifier_params['max_features'] = selectbox_("Number of max. features:", ["auto", "int", "sqrt", "log2"])
+        if classifier_params['max_features'] == "int":
             classifier_params['max_features'] = number_input_('Number of max. features:', value = 5, min_value = 1, max_value = 100)
 
     elif state.classifier == 'LinearSVC':
         classifier_params['penalty'] = selectbox_("Specify norm in the penalization:", ["l2", "l1"])
         classifier_params['loss'] = selectbox_("Select loss function:", ["squared_hinge", "hinge"])
-        classifier_params['c_val'] = number_input_('C parameter:', value = 1, min_value = 1, max_value = 100)
+        classifier_params['C'] = number_input_('C parameter:', value = 1, min_value = 1, max_value = 100)
         classifier_params['cv_generator'] = number_input_('Cross-validation generator:', value = 2, min_value = 2, max_value = 100)
 
     elif state.classifier == 'XGBoost':
