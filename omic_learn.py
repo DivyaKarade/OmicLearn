@@ -237,14 +237,12 @@ def generate_sidebar_elements(state, record_widgets):
     normalizations = ['None', 'StandardScaler', 'MinMaxScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer']
     state['normalization'] = selectbox_("Normalization method:", normalizations)
 
-    # Define these two variables if normalization is not these two:
-
     normalization_params = {}
-    normalization_params['random_state'] = state.random_state
 
     if state.normalization == "PowerTransformer":
-        normalization_params['method'] = selectbox_("Power transformation method:", ["Yeo-Johnson", "Box-Cox"])
+        normalization_params['method'] = selectbox_("Power transformation method:", ["Yeo-Johnson", "Box-Cox"]).lower()
     elif state.normalization == "QuantileTransformer":
+        normalization_params['random_state'] = state.random_state
         normalization_params['n_quantiles'] = number_input_("Number of quantiles:", value = 100, min_value = 1, max_value = 2000)
         normalization_params['output_distribution'] = selectbox_("Output distribution method:", ["Uniform", "Normal"]).lower()
     if state.n_missing > 0:

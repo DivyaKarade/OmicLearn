@@ -105,19 +105,23 @@ def normalize_dataset(X, normalization, normalization_params):
             return x
         def fit(self, x):
             pass
+        def set_params(self, x):
+            pass
 
     if normalization == 'None':
         scaler = scaler_()
     elif normalization == 'StandardScaler':
-        scaler = StandardScaler(**normalization_params)
+        scaler = StandardScaler()
     elif normalization == 'MinMaxScaler':
-        scaler = MinMaxScaler(**normalization_params)
+        scaler = MinMaxScaler()
     elif normalization == 'RobustScaler':
-        scaler = RobustScaler(**normalization_params)
+        scaler = RobustScaler()
     elif normalization == 'PowerTransformer':
-        scaler = PowerTransformer(**normalization_params)
+        scaler = PowerTransformer()
+        scaler.set_params(**normalization_params)
     elif normalization == 'QuantileTransformer':
-        scaler = QuantileTransformer(**normalization_params)
+        scaler = QuantileTransformer()
+        scaler.set_params(**normalization_params)
     else:
         raise NotImplementedError(f'Normalization method {normalization} not implemented')
 
@@ -347,6 +351,7 @@ def perform_cross_validation(state, cohort_column = None):
         X_train, scaler = normalize_dataset(X_train, state.normalization, state.normalization_params)
         X_test = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns, index = X_test.index)
 
+        # Define y
         y_train = y.iloc[train_index]
         y_test = y.iloc[test_index]
 
