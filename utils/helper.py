@@ -9,13 +9,12 @@ from itertools import chain
 # Sklearn
 import sklearn
 import sklearn.metrics as metrics
-from sklearn.impute import KNNImputer
+from sklearn.impute import SimpleImputer, KNNImputer
 from sklearn import svm, tree, linear_model, neighbors, ensemble
 from sklearn.metrics import roc_curve, precision_recall_curve, auc
 from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, SelectKBest
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
-from sklearn.impute import SimpleImputer
 
 # Plotly Graphs
 import plotly
@@ -457,88 +456,6 @@ def perform_cross_validation(state, cohort_column = None):
 
     return _cv_results, _cv_curves
 
-def perform_cohort_validation(X, y, normalization, normalization_detail, n_quantiles, subset, cohort_column, classifier, random_state, n_estimators, learning_rate,
-                            n_neighbors, knn_weights, knn_algorithm, penalty, solver, max_iter, c_val, criterion,
-                            clf_max_features, clf_max_features_int, loss, cv_generator, min_split_loss, max_depth, min_child_weight, bar):
-
-    clf, cv_generator = return_classifier(classifier, random_state, n_estimators, learning_rate, n_neighbors, knn_weights, knn_algorithm,
-                            penalty, solver, max_iter, c_val, criterion, clf_max_features, clf_max_features_int, loss, cv_generator,
-                            min_split_loss, max_depth, min_child_weight)
-
-    roc_curve_results_cohort = []
-    pr_curve_results_cohort = []
-    cohort_results = []
-
-    _cohort_results = {}
-    _cohort_results['num_feat'] = []
-    _cohort_results['n_obs'] = []
-    _cohort_results['n_class_0'] = []
-    _cohort_results['class_ratio'] = []
-    _cohort_results['pr_auc'] = []
-
-    for metric_name, metric_fct in scorer_dict.items():
-
-        _cohort_results[metric_name] = []
-
-    cohorts = subset[cohort_column].unique().tolist()
-    cohort_combos = []
-    for c_1 in cohorts:
-        for c_2 in cohorts:
-            if c_1 != c_2:
-                cohort_combos.append((c_1, c_2))
-
-    roc_curve_results_cohort = []
-
-    for i, cohort_combo in enumerate(cohort_combos):
-
-        c_1, c_2 = cohort_combo
-
-        train_index = subset[cohort_column] == c_1
-        test_index = subset[cohort_column] == c_2
-
-        X_train = normalize_dataset(X[train_index], X[train_index], normalization, normalization_detail, n_quantiles, random_state)
-        X_test = normalize_dataset(X[test_index], X[train_index], normalization, normalization_detail, n_quantiles, random_state)
-        y_train = y[train_index]
-        y_test = y[test_index]
-
-        # Since LinearSVC does not have `predict_proba()`
-        if classifier == "LinearSVC":
-            from sklearn.calibration import CalibratedClassifierCV
-            clf = CalibratedClassifierCV(clf, cv=cv_generator)
-
-        clf.fit(X_train, y_train)
-        y_pred = clf.predict(X_test)
-        y_pred_proba = clf.predict_proba(X_test)
-
-        # ROC Curve
-        fpr, tpr, cutoffs = roc_curve(y_test, y_pred_proba[:, 1])
-
-        # PR CURVE
-        precision, recall, _ = precision_recall_curve(y_test, y_pred_proba[:, 1])
-
-        for metric_name, metric_fct in scorer_dict.items():
-            if metric_name == 'roc_auc':
-                _cohort_results[metric_name].append(metric_fct(y_test, y_pred_proba[:,1]))
-            elif metric_name in ['precision', 'recall', 'f1']:
-                _cohort_results[metric_name].append(metric_fct(y_test, y_pred, zero_division=0))
-            else:
-                _cohort_results[metric_name].append(metric_fct(y_test, y_pred))
-
-        # Cohort Results DF
-        _cohort_results['num_feat'].append(X.shape[-1])
-        _cohort_results['n_obs'].append(len(y))
-        _cohort_results['n_class_0'].append(np.sum(y))
-        _cohort_results['class_ratio'].append(np.sum(y)/len(y))
-        _cohort_results['pr_auc'].append(auc(recall, precision)) # ADD PR Curve AUC Score
-
-        roc_curve_results_cohort.append((fpr, tpr, cutoffs))
-        pr_curve_results_cohort.append((precision, recall, _ ))
-        cohort_results.append((y_test.values, y_pred))
-
-        bar.progress((i+1)/len(cohort_combos))
-
-    return _cohort_results, roc_curve_results_cohort, pr_curve_results_cohort, cohort_results, cohort_combos, y_test
-
 def calculate_cm(y_test, y_pred):
     """
     Calculate confusion matrix
@@ -696,7 +613,6 @@ def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
                     )
     return p
 
-
 def plot_pr_curve_cv(pr_curve_results, class_ratio_test, cohort_combos = None):
     """Plotly chart for Precision-Recall PR curve"""
 
@@ -764,7 +680,6 @@ def plot_pr_curve_cv(pr_curve_results, class_ratio_test, cohort_combos = None):
                         ),
                     )
     return p
-
 
 def get_system_report():
     """
