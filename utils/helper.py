@@ -375,11 +375,7 @@ def perform_cross_validation(state, cohort_column = None):
             X_train = X_train[features_]
             X_test = X_test[features_]
 
-            # Fitting and predicting
-            clf.fit(X_train, y_train)
-            y_pred = clf.predict(X_test)
-
-            # Calculate prediction probabilities
+            # Fitting and predicting, and calculating prediction probabilities
             if state.classifier == "LinearSVC":
                 # Since LinearSVC does not have `predict_proba()`
                 from sklearn.calibration import CalibratedClassifierCV
@@ -388,6 +384,8 @@ def perform_cross_validation(state, cohort_column = None):
                 y_pred = calibrated_clf.predict(X_test)
                 y_pred_proba = calibrated_clf.predict_proba(X_test)
             else:
+                clf.fit(X_train, y_train)
+                y_pred = clf.predict(X_test)
                 y_pred_proba = clf.predict_proba(X_test)
 
             # Feature importances received from classifier
@@ -405,7 +403,6 @@ def perform_cross_validation(state, cohort_column = None):
             else:
                 # Not implemented st.warning() for `KNeighborsClassifier`.
                 feature_importance = None
-
 
             # ROC CURVE
             fpr, tpr, cutoffs = roc_curve(y_test, y_pred_proba[:, 1])
