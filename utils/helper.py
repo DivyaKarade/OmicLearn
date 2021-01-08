@@ -231,6 +231,8 @@ def impute_nan(X, missing_value, random_state):
         def fit(self, x):
             pass
 
+    X = X[X.columns[~X.isnull().all()]] #Remove columns w only nans
+
     if missing_value == 'Zero':
         imp = SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0)
     elif missing_value =='Mean':
@@ -342,10 +344,10 @@ def perform_cross_validation(state, cohort_column = None):
     X = X[state.features]
 
     for i, (train_index, test_index) in enumerate(iterator):
-
         # Missing value imputation
         X_train, imputer = impute_nan(X.iloc[train_index], state.missing_value, state.random_state)
-        X_test = pd.DataFrame(imputer.transform(X.iloc[test_index]), columns = X.iloc[test_index].columns)
+        cols = X_train.columns #Columns could be removed bc of nan
+        X_test = pd.DataFrame(imputer.transform(X.iloc[test_index][cols]), columns = cols)
 
         # Normalization of data
         X_train, scaler = normalize_dataset(X_train, state.normalization, state.normalization_params)
