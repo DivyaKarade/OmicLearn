@@ -247,7 +247,7 @@ def generate_sidebar_elements(state, record_widgets):
         normalization_params['output_distribution'] = selectbox_("Output distribution method:", ["Uniform", "Normal"]).lower()
     if state.n_missing > 0:
         st.sidebar.markdown('## [Missing value imputation](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-imputation-of-missing-values)')
-        missing_values = ['Zero', 'Mean', 'Median', 'IterativeImputer', 'KNNImputer', 'None']
+        missing_values = ['Zero', 'Mean', 'Median', 'KNNImputer', 'None']
         state['missing_value'] = selectbox_("Missing value imputation", missing_values)
     else:
         state['missing_value'] = 'None'
@@ -632,7 +632,7 @@ def OmicLearn_Main():
         save_sessions(widget_values, session_state.user_name)
 
         # Generate footer
-        generate_footer_parts()            
+        generate_footer_parts()
 
     else:
         if len(state.df) > 0:

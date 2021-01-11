@@ -16,6 +16,7 @@ from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, Sele
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 
+
 # Plotly Graphs
 import plotly
 import plotly.express as px
@@ -241,12 +242,8 @@ def impute_nan(X, missing_value, random_state):
         imp = SimpleImputer(missing_values=np.nan, strategy='median')
     elif missing_value == 'None':
         imp = imputer_()
-    elif missing_value == 'IterativeImputer':
-        from sklearn.experimental import enable_iterative_imputer
-        from sklearn.impute import IterativeImputer
-        imp = IterativeImputer(random_state=random_state)
     elif missing_value == 'KNNImputer':
-        imp = KNNImputer(n_neighbors=2)
+        imp = KNNImputer()
     else:
         raise NotImplementedError('Method {} not implemented'.format(missing_value))
 
