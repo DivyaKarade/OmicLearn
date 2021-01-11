@@ -468,11 +468,11 @@ def generate_text(state):
         params = [f'{k} = {v}' for k, v in state.normalization_params.items()]
         text += f"Data was normalized in each using a {state.normalization} ({' '.join(params)}) approach. "
 
-        # Missing value impt.
-        if state.missing_value != "None":
-            text += 'To impute missing values, a {}-imputation strategy is used. '.format(state.missing_value)
-        else:
-            text += 'The dataset contained no missing values; hence no imputation was performed'
+    # Missing value impt.
+    if state.missing_value != "None":
+        text += 'To impute missing values, a {}-imputation strategy is used. '.format(state.missing_value)
+    else:
+        text += 'The dataset contained no missing values; hence no imputation was performed'
 
     # Features
     if state.feature_method == 'None':
