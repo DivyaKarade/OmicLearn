@@ -22,8 +22,8 @@ import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 
-blue_color = '#0068c9'
-red_color = '#f63366'
+blue_color = '#035672'#'#0068c9'
+red_color = '#f84f57' #'#f63366'
 gray_color ='#f3f4f7'
 
 scores = ['accuracy', 'roc_auc', 'precision', 'recall', 'f1', 'balanced_accuracy']
@@ -175,10 +175,16 @@ def plot_feature_importance(feature_importance):
     """
     fi = [pd.DataFrame.from_dict(_, orient='index') for _ in feature_importance]
 
-    feature_df = pd.concat(fi)
-    feature_df = feature_df.groupby(feature_df.index).sum()
+    feature_df_ = pd.concat(fi)
+    feature_df = feature_df_.groupby(feature_df_.index).sum()
+    feature_df_std = feature_df_.groupby(feature_df_.index).std()
+    feature_df_std = feature_df_std/feature_df_std.sum()
+
     feature_df.columns = ['Feature_importance']
     feature_df = feature_df/feature_df.sum()
+
+    feature_df['Std'] = feature_df_std.values
+
     feature_df = feature_df.sort_values(by='Feature_importance', ascending=False)
 
     feature_df = feature_df[feature_df['Feature_importance'] > 0]
@@ -193,26 +199,27 @@ def plot_feature_importance(feature_importance):
 
 
     feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
+    feature_df["Std"] = feature_df["Std"].map('{:.3f}'.format)
     #feature_df = feature_df.sort_values(by="Feature_importance", ascending=True)
     feature_df_wo_links = feature_df.copy()
     feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x)
                                                     if not x.startswith('_') else x)
-    feature_df["Plot_Name"] = feature_df_wo_links["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x[0:21])
+    feature_df["Plot_Name"] = feature_df_wo_links["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x if len(x) < 20 else x[:20]+'..')
                                                     if not x.startswith('_') else x)
 
-
-    marker_color = '#035672'
+    marker_color = red_color
     title = 'Top 20 features from classifier'
     labels={"Feature_importance": "Feature importances from classifier", "Plot_Name": "Names"}
 
     # Hide pvalue if it does not exist
-    hover_data = {"Plot_Name":False, "Name":True, "Feature_importance":True}
+    hover_data = {"Plot_Name":False, "Name":True, "Feature_importance":True, "Std":True}
 
-    p = px.bar(feature_df.iloc[::-1], x="Feature_importance", y="Plot_Name", orientation='h', hover_data=hover_data, labels=labels, height=600, title=title)
+
+    p = px.bar(feature_df.iloc[::-1], x="Feature_importance", y="Plot_Name", error_x ="Std", orientation='h', hover_data=hover_data, labels=labels, height=800, title=title)
     p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)', showlegend=False)
     p.update_traces(marker_color=marker_color)
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
-    p.update_yaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_yaxes(showline=True, linewidth=1, linecolor='black', type='category')
 
     # Update `feature_df` for NaN in `P_values` and Column Naming
     feature_df.dropna(axis='columns', how="all", inplace=True)
@@ -395,7 +402,7 @@ def perform_cross_validation(state, cohort_column = None):
                 for j in calibrated_clf.calibrated_classifiers_:
                     coef_avg = coef_avg + j.base_estimator.coef_
                 coef_avg  = coef_avg / len(calibrated_clf.calibrated_classifiers_)
-                feature_importance = coef_avg
+                feature_importance = coef_avg[0]
 
             elif state.classifier in ['AdaBoost', 'RandomForest', 'DecisionTree', 'XGBoost']:
                 feature_importance = clf.feature_importances_
