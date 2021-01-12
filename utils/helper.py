@@ -22,8 +22,8 @@ import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 
-blue_color = '#035672'#'#0068c9'
-red_color = '#f84f57' #'#f63366'
+blue_color = '#035672'
+red_color = '#f84f57'
 gray_color ='#f3f4f7'
 
 scores = ['accuracy', 'roc_auc', 'precision', 'recall', 'f1', 'balanced_accuracy']
@@ -215,7 +215,7 @@ def plot_feature_importance(feature_importance):
     hover_data = {"Plot_Name":False, "Name":True, "Feature_importance":True, "Std":True}
 
 
-    p = px.bar(feature_df.iloc[::-1], x="Feature_importance", y="Plot_Name", error_x ="Std", orientation='h', hover_data=hover_data, labels=labels, height=800, title=title)
+    p = px.bar(feature_df.iloc[::-1], x="Feature_importance", y="Plot_Name", orientation='h', hover_data=hover_data, labels=labels, height=800, title=title)
     p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)', showlegend=False)
     p.update_traces(marker_color=marker_color)
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')

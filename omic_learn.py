@@ -200,7 +200,6 @@ def checkpoint_for_data_upload(state, record_widgets):
                 st.markdown("Manually select a subset of features. If only these features should be used, also set the feature selection method to None. Otherwise feature selection will be applied.")
                 state.proteins = multiselect("Select your features manually:", state.proteins, default=None)
 
-
         # Dataset -- Cohort selections
         state['cohort_checkbox'] = st.checkbox("Cohort comparison")
         if state.cohort_checkbox:
@@ -399,12 +398,9 @@ def classify_and_plot(state):
 
     # Results
     st.subheader('Run Results for `{}`'.format(state.classifier))
-
     state['summary'] = pd.DataFrame(pd.DataFrame(cv_results).describe())
-
     st.write(state.summary)
     get_download_link(state.summary, "run_results.csv")
-
 
     if state.cohort_checkbox:
         st.header('Cohort comparison')
@@ -481,10 +477,9 @@ def generate_text(state):
         text += 'Features were selected using a {} (n_trees={}) strategy with the maximum number of {} features. '.format(state.feature_method, state.n_trees, state.max_features)
     else:
         text += 'Features were selected using a {} strategy with the maximum number of {} features. '.format(state.feature_method, state.max_features)
-
     text += 'Normalization and feature selection was individually performed using the training data of each split. '
 
-
+    # Classification
     params = [f'{k} = {v}' for k, v in state.classifier_params.items()]
     text += f"For classification, we used a {state.classifier}-Classifier ({' '.join(params)}) "
 
@@ -638,7 +633,6 @@ def OmicLearn_Main():
         if len(state.df) > 0:
             if (state.class_0 is None) or (state.class_1 is None):
                 st.error('Start with defining classes.')
-
 
 # Run the OmicLearn
 if __name__ == '__main__':
