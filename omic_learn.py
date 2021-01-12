@@ -502,7 +502,6 @@ def generate_text(state):
 
     if state.cohort_column is not None:
         text += 'When training on one cohort and predicting on another to classify {} vs. {}, we achieved the following AUCs: '.format(''.join(state.class_0), ''.join(state.class_1))
-        st.write(state.cohort_results)
         for i, cohort_combo in enumerate(state.cohort_combos):
             text += '{:.2f} when training on {} and predicting on {} '.format(state.cohort_results['roc_auc'][i], cohort_combo[0], cohort_combo[1])
             text += ', and {:.2f} for PR Curve when training on {} and predicting on {}. '.format(state.cohort_results['pr_auc'][i], cohort_combo[0], cohort_combo[1])
