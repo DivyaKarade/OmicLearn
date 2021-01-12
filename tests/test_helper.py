@@ -5,6 +5,8 @@ sys.path.append('..')
 from io import BytesIO
 from utils.helper import load_data, transform_dataset, normalize_dataset
 
+state = {}
+
 def test_load_data():
     """
     Test the load data function
@@ -55,16 +57,19 @@ def test_normalize_dataset():
     Calls all the Normalization Methods
     """
 
+    normalization_params = {}
     df = pd.DataFrame({'Data': [1, 2, 3, 4]})
 
     for normalization in ['StandardScaler', 'MinMaxScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer']:
+        state['normalization'] = normalization
         if normalization == 'PowerTransformer':
-            normalization_detail = 'box-cox'
-            n_quantiles = None
+            normalization_params['method'] = 'box-cox'
         elif normalization == 'QuantileTransformer':
-            normalization_detail = 'uniform'
-            n_quantiles = 1000
+            del normalization_params['method']
+            normalization_params['random_state'] = 23
+            normalization_params['n_quantiles'] = 4
+            normalization_params['output_distribution'] = "uniform"
         else:
-            normalization_detail = ''
-            n_quantiles = None
-        normalize_dataset(df, df, normalization, normalization_detail, n_quantiles, 23)
+            pass
+        state['normalization_params'] = normalization_params
+        normalize_dataset(df, state['normalization'], state['normalization_params'])
