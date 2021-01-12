@@ -208,7 +208,7 @@ def plot_feature_importance(feature_importance):
                                                     if not x.startswith('_') else x)
 
     marker_color = red_color
-    title = 'Top 20 features from classifier'
+    title = 'Top features from classifier'
     labels={"Feature_importance": "Feature importances from classifier", "Plot_Name": "Names"}
 
     # Hide pvalue if it does not exist
