@@ -191,10 +191,11 @@ def plot_feature_importance(feature_importance):
 
     feature_df['Name'] = feature_df.index
 
-    if len(feature_df) > 20:
-        remainder = pd.DataFrame({'Feature_importance':[feature_df.iloc[30:].sum().values[0]],
+    display_limit = 20
+    if len(feature_df) > display_limit:
+        remainder = pd.DataFrame({'Feature_importance':[feature_df.iloc[display_limit:].sum().values[0]],
         'Name':'Remainder'}, index=['Remainder'])
-        feature_df = feature_df.iloc[:30] #Show at most 30 entries
+        feature_df = feature_df.iloc[:display_limit] #Show at most `display_limit` entries
         feature_df = feature_df.append(remainder)
 
 
