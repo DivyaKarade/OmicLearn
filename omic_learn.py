@@ -356,16 +356,21 @@ def classify_and_plot(state):
     else:
         st.markdown(f'This is the average feature importance from all {state.cv_splits} cross validation runs.')
     if cv_curves['feature_importances_'] is not None:
-        p, feature_df, feature_df_wo_links = plot_feature_importance(cv_curves['feature_importances_'])
-        st.plotly_chart(p, use_container_width=True)
-        if p:
-            get_download_link(p, 'clf_feature_importance.pdf')
-            get_download_link(p, 'clf_feature_importance.svg')
+        
+        # Check whether all feature importance attributes are 0 or not
+        if pd.DataFrame(cv_curves['feature_importances_']).isin([0]).all().all() == False:
+            p, feature_df, feature_df_wo_links = plot_feature_importance(cv_curves['feature_importances_'])
+            st.plotly_chart(p, use_container_width=True)
+            if p:
+                get_download_link(p, 'clf_feature_importance.pdf')
+                get_download_link(p, 'clf_feature_importance.svg')
 
-        # Display `feature_df` with NCBI links
-        st.subheader("Feature importances from classifier table")
-        st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
-        get_download_link(feature_df_wo_links, 'clf_feature_importances.csv')
+            # Display `feature_df` with NCBI links
+            st.subheader("Feature importances from classifier table")
+            st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+            get_download_link(feature_df_wo_links, 'clf_feature_importances.csv')
+        else:
+            st.warning("All feature importance attribute as zero (0). Hence, the plot and table are not displayed.")
     else:
         st.warning('Feature importance attribute is not implemented for this classifier.')
 
