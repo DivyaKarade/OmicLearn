@@ -575,7 +575,7 @@ def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
     tprs_lower = np.maximum(mean_tprs - std, 0)
 
     mean_rocauc = np.mean(roc_aucs).round(2)
-    sd_rocauc = np.std(roc_aucs).round(2)
+    sd_rocauc = np.std(roc_aucs, ddof=1).round(2)
 
     if cohort_combos is None:
         p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill = None, line_color='gray', opacity=0.1, showlegend=False))
@@ -640,7 +640,7 @@ def plot_pr_curve_cv(pr_curve_results, class_ratio_test, cohort_combos = None):
     precisions_lower = np.maximum(mean_precisions - std, 0)
 
     mean_prauc = np.mean(pr_aucs).round(2)
-    sd_prauc = np.std(pr_aucs).round(2)
+    sd_prauc = np.std(pr_aucs, ddof=1).round(2)
 
     if cohort_combos is None:
         p.add_trace(go.Scatter(x=base_recall, y=precisions_lower, fill = None, line_color='gray', opacity=0.1, showlegend=False))
