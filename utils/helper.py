@@ -471,9 +471,9 @@ def calculate_cm(y_test, y_pred):
            fn += 1
 
     tpr = tp/(tp+fn)
-    fpr = 1-tpr
+    fpr = fp/(fp+tn)
     tnr = tn/(tn+fp)
-    fnr = 1-tnr
+    fnr = fn/(fn+tp)
 
     return (tp, fp, tn, fn), (tpr, fpr, tnr, fnr)
 
