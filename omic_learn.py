@@ -197,7 +197,7 @@ def checkpoint_for_data_upload(state, record_widgets):
                 state['exclude_features']  = []
 
             if st.checkbox("Manually select features"):
-                st.markdown("Manually select a subset of features. If only these features should be used, also set the feature selection method to None. Otherwise feature selection will be applied.")
+                st.markdown("Manually select a subset of features. If only these features should be used, also set the `Feature selection` method to `None`. Otherwise feature selection will be applied.")
                 state.proteins = multiselect("Select your features manually:", state.proteins, default=None)
 
         # Dataset -- Cohort selections

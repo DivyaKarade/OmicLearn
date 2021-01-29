@@ -157,9 +157,9 @@ def select_features(feature_method, X, y, max_features, n_trees, random_state):
 
     elif feature_method == 'None':
         max_features = len(X.columns)
-        top_sortindex = np.arange(len(y))
-        p_values = np.zeros(len(y))
-        feature_importance = np.zeros(len(y))
+        top_sortindex = np.arange(len(X.columns))
+        p_values = np.zeros(len(X.columns))
+        feature_importance = np.zeros(len(X.columns))
     else:
         raise NotImplementedError('Method {} not implemented.'.format(feature_method))
 
