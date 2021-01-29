@@ -473,7 +473,7 @@ def generate_text(state):
     if state.missing_value != "None":
         text += 'To impute missing values, a {}-imputation strategy is used. '.format(state.missing_value)
     else:
-        text += 'The dataset contained no missing values; hence no imputation was performed'
+        text += 'The dataset contained no missing values; hence no imputation was performed. '
 
     # Features
     if state.feature_method == 'None':
@@ -486,14 +486,14 @@ def generate_text(state):
 
     # Classification
     params = [f'{k} = {v}' for k, v in state.classifier_params.items()]
-    text += f"For classification, we used a {state.classifier}-Classifier ({' '.join(params)}) "
+    text += f"For classification, we used a {state.classifier}-Classifier ({' '.join(params)}). "
 
     # Cross-Validation
     if state.cv_method == 'RepeatedStratifiedKFold':
         cv_plain_text = """
             When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {},
             we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std)
-            and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
+            and precision-recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
         """
         text += cv_plain_text.format(state.cv_repeats, state.cv_splits, ''.join(state.class_0), ''.join(state.class_1),
             state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
