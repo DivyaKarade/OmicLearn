@@ -189,20 +189,19 @@ def plot_feature_importance(feature_importance):
     if len(feature_df) > display_limit:
         remainder = pd.DataFrame({'Feature_importance':[feature_df.iloc[display_limit:].sum().values[0]],
         'Name':'Remainder'}, index=['Remainder'])
-        feature_df = feature_df.iloc[:display_limit] #Show at most `display_limit` entries
+        feature_df = feature_df.iloc[:display_limit] # Show at most `display_limit` entries
         feature_df = feature_df.append(remainder)
 
     feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.2f}'.format)
     feature_df["Std"] = feature_df["Std"].map('{:.2f}'.format)
-    #feature_df = feature_df.sort_values(by="Feature_importance", ascending=True)
     feature_df_wo_links = feature_df.copy()
     feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x)
                                                     if not x.startswith('_') and x!="Remainder" else x)
     feature_df["Plot_Name"] = feature_df_wo_links["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x if len(x) < 20 else x[:20]+'..')
                                                     if not x.startswith('_') and x!="Remainder" else x)
     marker_color = red_color
-    title = 'Top features from classifier'
-    labels={"Feature_importance": "Feature importances from classifier", "Plot_Name": "Names", "Std": "Standard Deviation"}
+    title = 'Top features from the classifier'
+    labels={"Feature_importance": "Feature importances from the classifier", "Plot_Name": "Names", "Std": "Standard Deviation"}
 
     # Hide pvalue if it does not exist
     hover_data = {"Plot_Name":False, "Name":True, "Feature_importance":True, "Std":True}

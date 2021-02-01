@@ -349,8 +349,8 @@ def classify_and_plot(state):
 
     st.header('Cross-Validation')
 
-    # Feature Importances from Classifier
-    st.subheader('Feature Importances from classifier')
+    # Feature importances from the classifier
+    st.subheader('Feature importances from the classifier')
     if state.cv_method == 'RepeatedStratifiedKFold':
         st.markdown(f'This is the average feature importance from all {state.cv_splits*state.cv_repeats} cross validation runs.')
     else:
