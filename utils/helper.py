@@ -572,25 +572,21 @@ def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
     std = tprs.std(axis=0)
     tprs_upper = np.minimum(mean_tprs + std, 1)
     tprs_lower = np.maximum(mean_tprs - std, 0)
-
     mean_rocauc = np.mean(roc_aucs).round(2)
     sd_rocauc = np.std(roc_aucs, ddof=1).round(2)
 
     if cohort_combos is None:
         p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill = None, line_color='gray', opacity=0.1, showlegend=False))
         p.add_trace(go.Scatter(x=base_fpr, y=tprs_upper, fill='tonexty', line_color='gray', opacity=0.1, name='±1 std. dev'))
-
         hovertemplate = "Base FPR %{x:.2f} <br>%{text}"
         text = ["Upper TPR {:.2f} <br>Mean TPR {:.2f} <br>Lower TPR {:.2f}".format(u, m, l) for u, m, l in zip(tprs_upper, mean_tprs, tprs_lower)]
-
         p.add_trace(go.Scatter(x=base_fpr, y=mean_tprs, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text',
                                 line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc)))
-
         p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), name="Chance"))
-
     else:
         p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color='black', dash='dash'), name="Chance"))
 
+    # Setting the figure layouts
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     p.update_layout(autosize=True,
@@ -637,30 +633,26 @@ def plot_pr_curve_cv(pr_curve_results, class_ratio_test, cohort_combos = None):
     std = precisions.std(axis=0)
     precisions_upper = np.minimum(mean_precisions + std, 1)
     precisions_lower = np.maximum(mean_precisions - std, 0)
-
     mean_prauc = np.mean(pr_aucs).round(2)
     sd_prauc = np.std(pr_aucs, ddof=1).round(2)
 
     if cohort_combos is None:
         p.add_trace(go.Scatter(x=base_recall, y=precisions_lower, fill = None, line_color='gray', opacity=0.1, showlegend=False))
         p.add_trace(go.Scatter(x=base_recall, y=precisions_upper, fill='tonexty', line_color='gray', opacity=0.2, name='±1 std. dev'))
-
         hovertemplate = "Base Recall %{x:.2f} <br>%{text}"
         text = ["Upper Precision {:.2f} <br>Mean Precision {:.2f} <br>Lower Precision {:.2f}".format(u, m, l)
                     for u, m, l in zip(precisions_upper, mean_precisions, precisions_lower)]
-
         p.add_trace(go.Scatter(x=base_recall, y=mean_precisions, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text',
                                 line=dict(color='black', width=2), name='Mean PR\n(AUC = {:.2f}±{:.2f})'.format(mean_prauc, sd_prauc)))
-
         no_skill = np.mean(class_ratio_test)
         p.add_trace(go.Scatter(x=[0, 1], y=[no_skill, no_skill], line=dict(color=red_color, dash='dash'), name="Chance"))
     else:
         no_skill = np.mean(class_ratio_test)
         p.add_trace(go.Scatter(x=[0, 1], y=[no_skill, no_skill], line=dict(color='black', dash='dash'), name="Chance"))
 
-
+    # Setting the figure layouts
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
-    p.update_yaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_yaxes(showline=True, linewidth=1, range=[0, 1], linecolor='black')
     p.update_layout(autosize=True,
                     width=800,
                     height=700,
@@ -681,7 +673,6 @@ def get_system_report():
     """
     Returns the package versions
     """
-
     report = {}
     report['omic_learn_version'] = "v0.9.0-dev"
     report['python_version'] = sys.version[:5]
