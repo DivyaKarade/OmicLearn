@@ -174,11 +174,10 @@ def plot_feature_importance(feature_importance):
     Creates a Plotly barplot to plot feature importance
     """
     fi = [pd.DataFrame.from_dict(_, orient='index') for _ in feature_importance]
-
     feature_df_ = pd.concat(fi)
     feature_df = feature_df_.groupby(feature_df_.index).sum()
     feature_df_std = feature_df_.groupby(feature_df_.index).std()
-    feature_df_std = feature_df_std/feature_df_std.sum()
+    feature_df_std = feature_df_std/feature_df_std.sum()/feature_df.sum()
     feature_df.columns = ['Feature_importance']
     feature_df = feature_df/feature_df.sum()
     feature_df['Std'] = feature_df_std.values
@@ -193,17 +192,17 @@ def plot_feature_importance(feature_importance):
         feature_df = feature_df.iloc[:display_limit] #Show at most `display_limit` entries
         feature_df = feature_df.append(remainder)
 
-    feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
-    feature_df["Std"] = feature_df["Std"].map('{:.3f}'.format)
+    feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.2f}'.format)
+    feature_df["Std"] = feature_df["Std"].map('{:.2f}'.format)
     #feature_df = feature_df.sort_values(by="Feature_importance", ascending=True)
     feature_df_wo_links = feature_df.copy()
     feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x)
-                                                    if not x.startswith('_') else x)
+                                                    if not x.startswith('_') and x!="Remainder" else x)
     feature_df["Plot_Name"] = feature_df_wo_links["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x if len(x) < 20 else x[:20]+'..')
-                                                    if not x.startswith('_') else x)
+                                                    if not x.startswith('_') and x!="Remainder" else x)
     marker_color = red_color
     title = 'Top features from classifier'
-    labels={"Feature_importance": "Feature importances from classifier", "Plot_Name": "Names"}
+    labels={"Feature_importance": "Feature importances from classifier", "Plot_Name": "Names", "Std": "Standard Deviation"}
 
     # Hide pvalue if it does not exist
     hover_data = {"Plot_Name":False, "Name":True, "Feature_importance":True, "Std":True}
@@ -213,13 +212,13 @@ def plot_feature_importance(feature_importance):
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black', type='category')
 
-    # Update `feature_df` for NaN in `P_values` and Column Naming
+    # Update `feature_df` for NaN values and column naming, ordering
     feature_df.dropna(axis='columns', how="all", inplace=True)
     feature_df.drop("Plot_Name", inplace=True, axis=1)
     feature_df_wo_links.dropna(axis='columns', how="all", inplace=True)
-    feature_df.rename(columns={'Name':'Name and NCBI Link', 'Feature_importance': 'Feature Importance'}, inplace=True)
+    feature_df.rename(columns={'Name': 'Name and NCBI Link', 'Feature_importance': 'Feature Importance', 'Std': 'Standard Deviation'}, inplace=True)
 
-    return p, feature_df, feature_df_wo_links
+    return p, feature_df[['Name and NCBI Link', 'Feature Importance', 'Standard Deviation']], feature_df_wo_links
 
 def impute_nan(X, missing_value, random_state):
     """
