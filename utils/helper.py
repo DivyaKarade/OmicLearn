@@ -16,23 +16,25 @@ from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, Sele
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 
-
 # Plotly Graphs
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 
+# Define common colors
 blue_color = '#035672'
 red_color = '#f84f57'
 gray_color ='#f3f4f7'
 
+# Define base metrics to be used
 scores = ['accuracy', 'roc_auc', 'precision', 'recall', 'f1', 'balanced_accuracy']
 scorer_dict = {}
 scorer_dict = {metric:metric+'_score' for metric in scores}
 scorer_dict = {key: getattr(metrics, metric) for key, metric in scorer_dict.items()}
 
 def make_recording_widget(f, widget_values):
-    """Return a function that wraps a streamlit widget and records the
+    """
+    Return a function that wraps a streamlit widget and records the
     widget's values to a global dictionary.
     """
     def wrapper(label, *args, **kwargs):
@@ -62,9 +64,7 @@ def transform_dataset(subset, additional_features, proteins):
     """
     Transforms data with label encoder
     """
-
     transformed_columns = []
-
     for _ in additional_features:
         if subset[_].dtype in [np.dtype('O'), np.dtype('str')]:
             le = LabelEncoder()
@@ -94,12 +94,10 @@ def transform_dataset(subset, additional_features, proteins):
             pass
     return X
 
-
 def normalize_dataset(X, normalization, normalization_params):
     """
     Normalize/Scale data with scalers
     """
-
     class scaler_():
         def transform(self, x):
             return x
@@ -129,7 +127,9 @@ def normalize_dataset(X, normalization, normalization_params):
     return pd.DataFrame(scaler.transform(X), columns=X.columns, index = X.index), scaler
 
 def select_features(feature_method, X, y, max_features, n_trees, random_state):
-
+    """
+    Returns the features and their imp. attributes based on the given method and params 
+    """
     if feature_method == 'ExtraTrees':
         clf = ensemble.ExtraTreesClassifier(n_estimators=n_trees, random_state = random_state)
         clf = clf.fit(X.fillna(0), y)
@@ -231,7 +231,6 @@ def impute_nan(X, missing_value, random_state):
             pass
 
     X = X[X.columns[~X.isnull().all()]] #Remove columns w only nans
-
     if missing_value == 'Zero':
         imp = SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0)
     elif missing_value =='Mean':
@@ -255,9 +254,7 @@ def return_classifier(classifier, classifier_params):
     Returns classifier object based on name
     """
     # Max Features parameter for RandomForest and DecisionTree
-
     cp = classifier_params.copy()
-
     if classifier in ['LogisticRegression', 'KNeighborsClassifier','RandomForest']:
         cp['n_jobs'] = -1
 
@@ -283,11 +280,14 @@ def return_classifier(classifier, classifier_params):
     elif classifier == 'LinearSVC':
         del cp['cv_generator']
         clf = svm.LinearSVC()
+
     clf.set_params(**cp)
     return clf, cv_generator
 
 def perform_cross_validation(state, cohort_column = None):
-
+    """
+    Performs cross-validation
+    """
     clf, cv_generator = return_classifier(state.classifier, state.classifier_params)
 
     if state.cv_method == 'RepeatedStratifiedKFold':
@@ -330,14 +330,11 @@ def perform_cross_validation(state, cohort_column = None):
                     cohort_combo_names.append((c_1, c_2))
 
         iterator = cohort_combos
-
         cohort_combo_names_ = []
-
     else:
         iterator = cv_alg.split(X,y)
 
     X = X[state.features]
-
     for i, (train_index, test_index) in enumerate(iterator):
         # Missing value imputation
         X_train, imputer = impute_nan(X.iloc[train_index], state.missing_value, state.random_state)
@@ -360,9 +357,7 @@ def perform_cross_validation(state, cohort_column = None):
             if (len(set(y_test)) == 1):
                 st.warning(f"Only 1 class present in cohort {cohort_combo_names[i][1]}. Skipping training on {cohort_combo_names[i][0]} and predicting on {cohort_combo_names[i][1]}.")
                 skip = True
-
             if not skip:
-
                 cohort_combo_names_.append(cohort_combo_names[i])
 
         if not skip:
@@ -394,7 +389,6 @@ def perform_cross_validation(state, cohort_column = None):
                     coef_avg = coef_avg + j.base_estimator.coef_
                 coef_avg  = coef_avg / len(calibrated_clf.calibrated_classifiers_)
                 feature_importance = coef_avg[0]
-
             elif state.classifier in ['AdaBoost', 'RandomForest', 'DecisionTree', 'XGBoost']:
                 feature_importance = clf.feature_importances_
             else:
@@ -421,14 +415,12 @@ def perform_cross_validation(state, cohort_column = None):
             _cv_results['n_class_0_train'].append(np.sum(y_train))
             _cv_results['n_class_1_train'].append(np.sum(~y_train))
             _cv_results['class_ratio_train'].append(np.sum(y_train)/len(y_train))
-
             _cv_results['num_feat_test'].append(X_test.shape[-1])
             _cv_results['n_obs_test'].append(len(y_test))
             _cv_results['n_class_0_test'].append(np.sum(y_test))
             _cv_results['n_class_1_test'].append(np.sum(~y_test))
             _cv_results['class_ratio_test'].append(np.sum(y_test)/len(y_test))
             _cv_results['pr_auc'].append(auc(recall, precision)) # ADD PR Curve AUC Score
-
             _cv_curves['pr_auc'].append(auc(recall, precision)) # ADD PR Curve AUC Score
             _cv_curves['roc_curves_'].append((fpr, tpr, cutoffs))
             _cv_curves['pr_curves_'].append((precision, recall, _))
@@ -456,9 +448,7 @@ def calculate_cm(y_test, y_pred):
     """
     Calculate confusion matrix
     """
-
     tp, fp, tn, fn = 0, 0, 0, 0
-
     for i in range(len(y_test)):
         if y_test[i] == y_pred[i] ==True:
            tp += 1
@@ -473,12 +463,10 @@ def calculate_cm(y_test, y_pred):
     fpr = fp/(fp+tn)
     tnr = tn/(tn+fp)
     fnr = fn/(fn+tp)
-
     return (tp, fp, tn, fn), (tpr, fpr, tnr, fnr)
 
 def plot_confusion_matrices(class_0, class_1, results, names):
-    "Plotly chart for confusion matrices"
-
+    "Returns Plotly chart for confusion matrices"
     cm_results = [calculate_cm(*_) for _ in results]
     #also include a summary confusion_matrix
     y_test_ = np.array(list(chain.from_iterable([_[0] for _ in results])))
@@ -541,12 +529,12 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     sliders = [dict(currentvalue={"prefix": "CV Split: "}, pad = {"t": 72}, active = 0, steps = steps)]
     p.layout.update(sliders=sliders)
     p.update_layout(autosize=False,width=700,height=700)
-
     return p
 
 def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
-    """Plotly chart for roc curve for cross validation"""
-
+    """
+    Plotly chart for roc curve for cross validation
+    """
     tprs = []
     base_fpr = np.linspace(0, 1, 101)
     roc_aucs = []
@@ -606,8 +594,9 @@ def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
     return p
 
 def plot_pr_curve_cv(pr_curve_results, class_ratio_test, cohort_combos = None):
-    """Plotly chart for Precision-Recall PR curve"""
-
+    """
+    Returns Plotly chart for Precision-Recall (PR) curve
+    """
     precisions = []
     base_recall = np.linspace(0, 1, 101)
     pr_aucs = []
@@ -687,7 +676,6 @@ def get_download_link(exported_object, name):
     """
     Generate download link for charts in SVG and PDF formats and for dataframes in CSV format
     """
-
     os.makedirs("downloads/", exist_ok=True)
     extension = name.split(".")[-1]
 
