@@ -16,23 +16,25 @@ from sklearn.feature_selection import chi2, mutual_info_classif, f_classif, Sele
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder, QuantileTransformer, PowerTransformer
 
-
 # Plotly Graphs
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 
+# Define common colors
 blue_color = '#035672'
 red_color = '#f84f57'
 gray_color ='#f3f4f7'
 
+# Define base metrics to be used
 scores = ['accuracy', 'roc_auc', 'precision', 'recall', 'f1', 'balanced_accuracy']
 scorer_dict = {}
 scorer_dict = {metric:metric+'_score' for metric in scores}
 scorer_dict = {key: getattr(metrics, metric) for key, metric in scorer_dict.items()}
 
 def make_recording_widget(f, widget_values):
-    """Return a function that wraps a streamlit widget and records the
+    """
+    Return a function that wraps a streamlit widget and records the
     widget's values to a global dictionary.
     """
     def wrapper(label, *args, **kwargs):
@@ -62,9 +64,7 @@ def transform_dataset(subset, additional_features, proteins):
     """
     Transforms data with label encoder
     """
-
     transformed_columns = []
-
     for _ in additional_features:
         if subset[_].dtype in [np.dtype('O'), np.dtype('str')]:
             le = LabelEncoder()
@@ -94,12 +94,10 @@ def transform_dataset(subset, additional_features, proteins):
             pass
     return X
 
-
 def normalize_dataset(X, normalization, normalization_params):
     """
     Normalize/Scale data with scalers
     """
-
     class scaler_():
         def transform(self, x):
             return x
@@ -129,7 +127,9 @@ def normalize_dataset(X, normalization, normalization_params):
     return pd.DataFrame(scaler.transform(X), columns=X.columns, index = X.index), scaler
 
 def select_features(feature_method, X, y, max_features, n_trees, random_state):
-
+    """
+    Returns the features and their imp. attributes based on the given method and params 
+    """
     if feature_method == 'ExtraTrees':
         clf = ensemble.ExtraTreesClassifier(n_estimators=n_trees, random_state = random_state)
         clf = clf.fit(X.fillna(0), y)
@@ -157,9 +157,9 @@ def select_features(feature_method, X, y, max_features, n_trees, random_state):
 
     elif feature_method == 'None':
         max_features = len(X.columns)
-        top_sortindex = np.arange(len(y))
-        p_values = np.zeros(len(y))
-        feature_importance = np.zeros(len(y))
+        top_sortindex = np.arange(len(X.columns))
+        p_values = np.zeros(len(X.columns))
+        feature_importance = np.zeros(len(X.columns))
     else:
         raise NotImplementedError('Method {} not implemented.'.format(feature_method))
 
@@ -174,61 +174,50 @@ def plot_feature_importance(feature_importance):
     Creates a Plotly barplot to plot feature importance
     """
     fi = [pd.DataFrame.from_dict(_, orient='index') for _ in feature_importance]
-
     feature_df_ = pd.concat(fi)
     feature_df = feature_df_.groupby(feature_df_.index).sum()
     feature_df_std = feature_df_.groupby(feature_df_.index).std()
-    feature_df_std = feature_df_std/feature_df_std.sum()
-
+    feature_df_std = feature_df_std/feature_df_std.sum()/feature_df.sum()
     feature_df.columns = ['Feature_importance']
     feature_df = feature_df/feature_df.sum()
-
     feature_df['Std'] = feature_df_std.values
-
     feature_df = feature_df.sort_values(by='Feature_importance', ascending=False)
-
     feature_df = feature_df[feature_df['Feature_importance'] > 0]
-
     feature_df['Name'] = feature_df.index
 
     display_limit = 20
     if len(feature_df) > display_limit:
         remainder = pd.DataFrame({'Feature_importance':[feature_df.iloc[display_limit:].sum().values[0]],
         'Name':'Remainder'}, index=['Remainder'])
-        feature_df = feature_df.iloc[:display_limit] #Show at most `display_limit` entries
+        feature_df = feature_df.iloc[:display_limit] # Show at most `display_limit` entries
         feature_df = feature_df.append(remainder)
 
-
-    feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
-    feature_df["Std"] = feature_df["Std"].map('{:.3f}'.format)
-    #feature_df = feature_df.sort_values(by="Feature_importance", ascending=True)
+    feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.2f}'.format)
+    feature_df["Std"] = feature_df["Std"].map('{:.2f}'.format)
     feature_df_wo_links = feature_df.copy()
     feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x)
-                                                    if not x.startswith('_') else x)
+                                                    if not x.startswith('_') and x!="Remainder" else x)
     feature_df["Plot_Name"] = feature_df_wo_links["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x if len(x) < 20 else x[:20]+'..')
-                                                    if not x.startswith('_') else x)
-
+                                                    if not x.startswith('_') and x!="Remainder" else x)
     marker_color = red_color
-    title = 'Top features from classifier'
-    labels={"Feature_importance": "Feature importances from classifier", "Plot_Name": "Names"}
+    title = 'Top features from the classifier'
+    labels={"Feature_importance": "Feature importances from the classifier", "Plot_Name": "Names", "Std": "Standard Deviation"}
 
     # Hide pvalue if it does not exist
     hover_data = {"Plot_Name":False, "Name":True, "Feature_importance":True, "Std":True}
-
-
     p = px.bar(feature_df.iloc[::-1], x="Feature_importance", y="Plot_Name", orientation='h', hover_data=hover_data, labels=labels, height=800, title=title)
     p.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, plot_bgcolor= 'rgba(0, 0, 0, 0)', showlegend=False)
     p.update_traces(marker_color=marker_color)
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black', type='category')
 
-    # Update `feature_df` for NaN in `P_values` and Column Naming
+    # Update `feature_df` for NaN values and column naming, ordering
     feature_df.dropna(axis='columns', how="all", inplace=True)
     feature_df.drop("Plot_Name", inplace=True, axis=1)
     feature_df_wo_links.dropna(axis='columns', how="all", inplace=True)
-    feature_df.rename(columns={'Name':'Name and NCBI Link', 'Feature_importance': 'Feature Importance'}, inplace=True)
+    feature_df.rename(columns={'Name': 'Name and NCBI Link', 'Feature_importance': 'Feature Importance', 'Std': 'Standard Deviation'}, inplace=True)
 
-    return p, feature_df, feature_df_wo_links
+    return p, feature_df[['Name and NCBI Link', 'Feature Importance', 'Standard Deviation']], feature_df_wo_links
 
 def impute_nan(X, missing_value, random_state):
     """
@@ -241,7 +230,6 @@ def impute_nan(X, missing_value, random_state):
             pass
 
     X = X[X.columns[~X.isnull().all()]] #Remove columns w only nans
-
     if missing_value == 'Zero':
         imp = SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0)
     elif missing_value =='Mean':
@@ -265,9 +253,7 @@ def return_classifier(classifier, classifier_params):
     Returns classifier object based on name
     """
     # Max Features parameter for RandomForest and DecisionTree
-
     cp = classifier_params.copy()
-
     if classifier in ['LogisticRegression', 'KNeighborsClassifier','RandomForest']:
         cp['n_jobs'] = -1
 
@@ -293,11 +279,14 @@ def return_classifier(classifier, classifier_params):
     elif classifier == 'LinearSVC':
         del cp['cv_generator']
         clf = svm.LinearSVC()
+
     clf.set_params(**cp)
     return clf, cv_generator
 
 def perform_cross_validation(state, cohort_column = None):
-
+    """
+    Performs cross-validation
+    """
     clf, cv_generator = return_classifier(state.classifier, state.classifier_params)
 
     if state.cv_method == 'RepeatedStratifiedKFold':
@@ -340,14 +329,11 @@ def perform_cross_validation(state, cohort_column = None):
                     cohort_combo_names.append((c_1, c_2))
 
         iterator = cohort_combos
-
         cohort_combo_names_ = []
-
     else:
         iterator = cv_alg.split(X,y)
 
     X = X[state.features]
-
     for i, (train_index, test_index) in enumerate(iterator):
         # Missing value imputation
         X_train, imputer = impute_nan(X.iloc[train_index], state.missing_value, state.random_state)
@@ -370,9 +356,7 @@ def perform_cross_validation(state, cohort_column = None):
             if (len(set(y_test)) == 1):
                 st.warning(f"Only 1 class present in cohort {cohort_combo_names[i][1]}. Skipping training on {cohort_combo_names[i][0]} and predicting on {cohort_combo_names[i][1]}.")
                 skip = True
-
             if not skip:
-
                 cohort_combo_names_.append(cohort_combo_names[i])
 
         if not skip:
@@ -404,7 +388,6 @@ def perform_cross_validation(state, cohort_column = None):
                     coef_avg = coef_avg + j.base_estimator.coef_
                 coef_avg  = coef_avg / len(calibrated_clf.calibrated_classifiers_)
                 feature_importance = coef_avg[0]
-
             elif state.classifier in ['AdaBoost', 'RandomForest', 'DecisionTree', 'XGBoost']:
                 feature_importance = clf.feature_importances_
             else:
@@ -431,14 +414,12 @@ def perform_cross_validation(state, cohort_column = None):
             _cv_results['n_class_0_train'].append(np.sum(y_train))
             _cv_results['n_class_1_train'].append(np.sum(~y_train))
             _cv_results['class_ratio_train'].append(np.sum(y_train)/len(y_train))
-
             _cv_results['num_feat_test'].append(X_test.shape[-1])
             _cv_results['n_obs_test'].append(len(y_test))
             _cv_results['n_class_0_test'].append(np.sum(y_test))
             _cv_results['n_class_1_test'].append(np.sum(~y_test))
             _cv_results['class_ratio_test'].append(np.sum(y_test)/len(y_test))
             _cv_results['pr_auc'].append(auc(recall, precision)) # ADD PR Curve AUC Score
-
             _cv_curves['pr_auc'].append(auc(recall, precision)) # ADD PR Curve AUC Score
             _cv_curves['roc_curves_'].append((fpr, tpr, cutoffs))
             _cv_curves['pr_curves_'].append((precision, recall, _))
@@ -466,9 +447,7 @@ def calculate_cm(y_test, y_pred):
     """
     Calculate confusion matrix
     """
-
     tp, fp, tn, fn = 0, 0, 0, 0
-
     for i in range(len(y_test)):
         if y_test[i] == y_pred[i] ==True:
            tp += 1
@@ -480,15 +459,13 @@ def calculate_cm(y_test, y_pred):
            fn += 1
 
     tpr = tp/(tp+fn)
-    fpr = 1-tpr
+    fpr = fp/(fp+tn)
     tnr = tn/(tn+fp)
-    fnr = 1-tnr
-
+    fnr = fn/(fn+tp)
     return (tp, fp, tn, fn), (tpr, fpr, tnr, fnr)
 
 def plot_confusion_matrices(class_0, class_1, results, names):
-    "Plotly chart for confusion matrices"
-
+    "Returns Plotly chart for confusion matrices"
     cm_results = [calculate_cm(*_) for _ in results]
     #also include a summary confusion_matrix
     y_test_ = np.array(list(chain.from_iterable([_[0] for _ in results])))
@@ -551,12 +528,12 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     sliders = [dict(currentvalue={"prefix": "CV Split: "}, pad = {"t": 72}, active = 0, steps = steps)]
     p.layout.update(sliders=sliders)
     p.update_layout(autosize=False,width=700,height=700)
-
     return p
 
 def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
-    """Plotly chart for roc curve for cross validation"""
-
+    """
+    Plotly chart for roc curve for cross validation
+    """
     tprs = []
     base_fpr = np.linspace(0, 1, 101)
     roc_aucs = []
@@ -582,25 +559,21 @@ def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
     std = tprs.std(axis=0)
     tprs_upper = np.minimum(mean_tprs + std, 1)
     tprs_lower = np.maximum(mean_tprs - std, 0)
-
     mean_rocauc = np.mean(roc_aucs).round(2)
-    sd_rocauc = np.std(roc_aucs).round(2)
+    sd_rocauc = np.std(roc_aucs, ddof=1).round(2)
 
     if cohort_combos is None:
         p.add_trace(go.Scatter(x=base_fpr, y=tprs_lower, fill = None, line_color='gray', opacity=0.1, showlegend=False))
         p.add_trace(go.Scatter(x=base_fpr, y=tprs_upper, fill='tonexty', line_color='gray', opacity=0.1, name='±1 std. dev'))
-
         hovertemplate = "Base FPR %{x:.2f} <br>%{text}"
         text = ["Upper TPR {:.2f} <br>Mean TPR {:.2f} <br>Lower TPR {:.2f}".format(u, m, l) for u, m, l in zip(tprs_upper, mean_tprs, tprs_lower)]
-
         p.add_trace(go.Scatter(x=base_fpr, y=mean_tprs, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text',
                                 line=dict(color='black', width=2), name='Mean ROC\n(AUC = {:.2f}±{:.2f})'.format(mean_rocauc, sd_rocauc)))
-
         p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color=red_color, dash='dash'), name="Chance"))
-
     else:
         p.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(color='black', dash='dash'), name="Chance"))
 
+    # Setting the figure layouts
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
     p.update_yaxes(showline=True, linewidth=1, linecolor='black')
     p.update_layout(autosize=True,
@@ -620,8 +593,9 @@ def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
     return p
 
 def plot_pr_curve_cv(pr_curve_results, class_ratio_test, cohort_combos = None):
-    """Plotly chart for Precision-Recall PR curve"""
-
+    """
+    Returns Plotly chart for Precision-Recall (PR) curve
+    """
     precisions = []
     base_recall = np.linspace(0, 1, 101)
     pr_aucs = []
@@ -647,30 +621,26 @@ def plot_pr_curve_cv(pr_curve_results, class_ratio_test, cohort_combos = None):
     std = precisions.std(axis=0)
     precisions_upper = np.minimum(mean_precisions + std, 1)
     precisions_lower = np.maximum(mean_precisions - std, 0)
-
     mean_prauc = np.mean(pr_aucs).round(2)
-    sd_prauc = np.std(pr_aucs).round(2)
+    sd_prauc = np.std(pr_aucs, ddof=1).round(2)
 
     if cohort_combos is None:
         p.add_trace(go.Scatter(x=base_recall, y=precisions_lower, fill = None, line_color='gray', opacity=0.1, showlegend=False))
         p.add_trace(go.Scatter(x=base_recall, y=precisions_upper, fill='tonexty', line_color='gray', opacity=0.2, name='±1 std. dev'))
-
         hovertemplate = "Base Recall %{x:.2f} <br>%{text}"
         text = ["Upper Precision {:.2f} <br>Mean Precision {:.2f} <br>Lower Precision {:.2f}".format(u, m, l)
                     for u, m, l in zip(precisions_upper, mean_precisions, precisions_lower)]
-
         p.add_trace(go.Scatter(x=base_recall, y=mean_precisions, text=text, hovertemplate=hovertemplate, hoverinfo = 'y+text',
                                 line=dict(color='black', width=2), name='Mean PR\n(AUC = {:.2f}±{:.2f})'.format(mean_prauc, sd_prauc)))
-
         no_skill = np.mean(class_ratio_test)
         p.add_trace(go.Scatter(x=[0, 1], y=[no_skill, no_skill], line=dict(color=red_color, dash='dash'), name="Chance"))
     else:
         no_skill = np.mean(class_ratio_test)
         p.add_trace(go.Scatter(x=[0, 1], y=[no_skill, no_skill], line=dict(color='black', dash='dash'), name="Chance"))
 
-
+    # Setting the figure layouts
     p.update_xaxes(showline=True, linewidth=1, linecolor='black')
-    p.update_yaxes(showline=True, linewidth=1, linecolor='black')
+    p.update_yaxes(showline=True, linewidth=1, range=[0, 1], linecolor='black')
     p.update_layout(autosize=True,
                     width=800,
                     height=700,
@@ -691,7 +661,6 @@ def get_system_report():
     """
     Returns the package versions
     """
-
     report = {}
     report['omic_learn_version'] = "v0.9.0-dev"
     report['python_version'] = sys.version[:5]
@@ -706,7 +675,6 @@ def get_download_link(exported_object, name):
     """
     Generate download link for charts in SVG and PDF formats and for dataframes in CSV format
     """
-
     os.makedirs("downloads/", exist_ok=True)
     extension = name.split(".")[-1]
 

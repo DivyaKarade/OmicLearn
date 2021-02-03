@@ -197,7 +197,7 @@ def checkpoint_for_data_upload(state, record_widgets):
                 state['exclude_features']  = []
 
             if st.checkbox("Manually select features"):
-                st.markdown("Manually select a subset of features. If only these features should be used, also set the feature selection method to None. Otherwise feature selection will be applied.")
+                st.markdown("Manually select a subset of features. If only these features should be used, also set the `Feature selection` method to `None`. Otherwise feature selection will be applied.")
                 state.proteins = multiselect("Select your features manually:", state.proteins, default=None)
 
         # Dataset -- Cohort selections
@@ -349,23 +349,28 @@ def classify_and_plot(state):
 
     st.header('Cross-Validation')
 
-    # Feature Importances from Classifier
-    st.subheader('Feature Importances from classifier')
+    # Feature importances from the classifier
+    st.subheader('Feature importances from the classifier')
     if state.cv_method == 'RepeatedStratifiedKFold':
         st.markdown(f'This is the average feature importance from all {state.cv_splits*state.cv_repeats} cross validation runs.')
     else:
         st.markdown(f'This is the average feature importance from all {state.cv_splits} cross validation runs.')
     if cv_curves['feature_importances_'] is not None:
-        p, feature_df, feature_df_wo_links = plot_feature_importance(cv_curves['feature_importances_'])
-        st.plotly_chart(p, use_container_width=True)
-        if p:
-            get_download_link(p, 'clf_feature_importance.pdf')
-            get_download_link(p, 'clf_feature_importance.svg')
+        
+        # Check whether all feature importance attributes are 0 or not
+        if pd.DataFrame(cv_curves['feature_importances_']).isin([0]).all().all() == False:
+            p, feature_df, feature_df_wo_links = plot_feature_importance(cv_curves['feature_importances_'])
+            st.plotly_chart(p, use_container_width=True)
+            if p:
+                get_download_link(p, 'clf_feature_importance.pdf')
+                get_download_link(p, 'clf_feature_importance.svg')
 
-        # Display `feature_df` with NCBI links
-        st.subheader("Feature importances from classifier table")
-        st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
-        get_download_link(feature_df_wo_links, 'clf_feature_importances.csv')
+            # Display `feature_df` with NCBI links
+            st.subheader("Feature importances from classifier table")
+            st.write(feature_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+            get_download_link(feature_df_wo_links, 'clf_feature_importances.csv')
+        else:
+            st.warning("All feature importance attribute as zero (0). Hence, the plot and table are not displayed.")
     else:
         st.warning('Feature importance attribute is not implemented for this classifier.')
 
@@ -468,7 +473,7 @@ def generate_text(state):
     if state.missing_value != "None":
         text += 'To impute missing values, a {}-imputation strategy is used. '.format(state.missing_value)
     else:
-        text += 'The dataset contained no missing values; hence no imputation was performed'
+        text += 'The dataset contained no missing values; hence no imputation was performed. '
 
     # Features
     if state.feature_method == 'None':
@@ -481,14 +486,14 @@ def generate_text(state):
 
     # Classification
     params = [f'{k} = {v}' for k, v in state.classifier_params.items()]
-    text += f"For classification, we used a {state.classifier}-Classifier ({' '.join(params)}) "
+    text += f"For classification, we used a {state.classifier}-Classifier ({' '.join(params)}). "
 
     # Cross-Validation
     if state.cv_method == 'RepeatedStratifiedKFold':
         cv_plain_text = """
             When using (RepeatedStratifiedKFold) a repeated (n_repeats={}), stratified cross-validation (n_splits={}) approach to classify {} vs. {},
             we achieved a receiver operating characteristic (ROC) with an average AUC (area under the curve) of {:.2f} ({:.2f} std)
-            and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
+            and precision-recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
         """
         text += cv_plain_text.format(state.cv_repeats, state.cv_splits, ''.join(state.class_0), ''.join(state.class_1),
             state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
