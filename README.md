@@ -48,7 +48,7 @@ The following image displays the main steps of OmicLearn:
 
 ![OmicLearn Workflow](https://user-images.githubusercontent.com/49681382/91734594-cb421380-ebb3-11ea-91fa-8acc8826ae7b.png)
 
-Detailed instructions on how to get started with OmicLearn can be found **[here.]**(https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Using)
+Detailed instructions on how to get started with OmicLearn can be found **[here.](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Using)**
 
 On this page, you can click on the titles listed in *Table of Contents*, which contains instructions for eachs ection.
 
