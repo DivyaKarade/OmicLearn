@@ -24,7 +24,7 @@ Transparent exploration of machine learning approaches for omics datasets.
   2. Activate the environment: `conda activate omic_learn` for Linux / Mac Os X / Windows
   
   
-  > **Note:** Type following command for conda versions prior to `4.6`:
+  > **Note:** Type the following command for conda versions prior to `4.6`:
   >
   > `source activate omic_learn` for macOS and Linux
   >
@@ -34,7 +34,7 @@ Transparent exploration of machine learning approaches for omics datasets.
   4. Install the required packages with `pip install -r requirements.txt`
   5. To be able to use Xgboost, install via conda: `conda install py-xgboost`
 
-- After successfull instalattion, type the following command to run OmicLearn:
+- After a successful installation, type the following command to run OmicLearn:
 
   `streamlit run omic_learn.py --browser.gatherUsageStats False`
   
@@ -50,7 +50,7 @@ The following image displays the main steps of OmicLearn:
 
 Detailed instructions on how to get started with OmicLearn can be found **[here.](https://github.com/OmicEra/OmicLearn/wiki/HOW-TO:-Using)**
 
-On this page, you can click on the titles listed in *Table of Contents*, which contains instructions for eachs ection.
+On this page, you can click on the titles listed in the *Table of Contents*, which contains instructions for each section.
 
 ## Contributing
 All contributions are welcome. 👍
