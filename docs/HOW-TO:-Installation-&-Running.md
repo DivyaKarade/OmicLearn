@@ -1,5 +1,5 @@
 ## **Table of Contents**
-- [Installation instructions](#installation)
+- [Installation instructions](#installation-instructions)
 - [Running](#running)
 - [Running with Docker](#running-with-docker)
 
@@ -22,7 +22,7 @@
 > `activate omic_learn` for Windows
 
 
-3. Redirect to the folder of choice and clone the repository: `git clone https://github.com/OmicEra/omic_learn`
+3. Redirect to the folder of choice and clone the repository: `git clone https://github.com/OmicEra/OmicLearn`
 4. Install the packages with `pip install -r requirements.txt`
 5. To be able to use Xgboost, install via conda: `conda install py-xgboost`
 

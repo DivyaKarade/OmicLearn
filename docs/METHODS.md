@@ -18,9 +18,8 @@ Additional information about the individual processing steps can be found here:
   * [1. 2. 1. Zero](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-1-zero)
   * [1. 2. 2. Mean](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-2-mean)
   * [1. 2. 3. Median](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-3-median)
-  * [1. 2. 4. IterativeImputer](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-4-iterativeimputer)
-  * [1. 2. 5. KNNImputer](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-5-knnimputer)
-  * [1. 2. 6. None](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-6-none)
+  * [1. 2. 4. KNNImputer](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-5-knnimputer)
+  * [1. 2. 5. None](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-6-none)
 - [1. 3. Data encoding](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-3-data-encoding)
 
 - [2. Feature selection](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-2.-Feature-selection#2-feature-selection)

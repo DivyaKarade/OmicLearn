@@ -12,9 +12,8 @@
   * [1. 2. 1. Zero](#1-2-1-zero)
   * [1. 2. 2. Mean](#1-2-2-mean)
   * [1. 2. 3. Median](#1-2-3-median)
-  * [1. 2. 4. IterativeImputer](#1-2-4-iterativeimputer)
-  * [1. 2. 5. KNNImputer](#1-2-5-knnimputer)
-  * [1. 2. 6. None](#1-2-6-none)
+  * [1. 2. 4. KNNImputer](#1-2-4-knnimputer)
+  * [1. 2. 5. None](#1-2-5-none)
 - [1. 3. Data encoding](#1-3-data-encoding)
 ---
 
@@ -90,13 +89,10 @@ Using `Mean` for imputation, missing protein values are replaced with the `mean`
 ### 1. 2. 3. Median
 Using `Median` for imputation, missing protein values are replaced with the `median` of the same protein.
 
-### 1. 2. 4. [IterativeImputer](https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html#sklearn.impute.IterativeImputer)
-The `IterativeImputer` is a more sophisticated approach trying to estimate missing values from other values. This can be very beneficial in a proteomics context as a lot of protein intensities are linearly correlated. Hence, one is, in principle, capable of estimating a protein intensity based on other intensities.
+### 1. 2. 4. [KNNImputer](https://scikit-learn.org/stable/modules/generated/sklearn.impute.KNNImputer.html#sklearn.impute.KNNImputer)
+The `KNNImputer` is trying to estimate missing values from existing values. Here, this is done by using a `k-Nearest Neighbors` approach. In brief, a Euclidean distance metric is used to find out the nearest neighbors, and the missing value is estimated by taking the mean of the neighbors.
 
-### 1. 2. 5. [KNNImputer](https://scikit-learn.org/stable/modules/generated/sklearn.impute.KNNImputer.html#sklearn.impute.KNNImputer)
-Similar to the `IterativeImputer`, the `KNNImputer` is trying to estimate missing values from existing values. Here, this is done by using a `k-Nearest Neighbors` approach. In brief, a Euclidean distance metric is used to find out the nearest neighbors, and the missing value is estimated by taking the mean of the neighbors.
-
-### 1. 2. 6. None
+### 1. 2. 5. None
 When selecting None, no missing value imputation is performed. If the dataset exists, only some classifiers that can handle missing values, such as `xgboost` will be selectable.
 
 ---

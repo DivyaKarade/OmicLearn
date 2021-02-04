@@ -1,6 +1,5 @@
 ## **Table of Contents**
 
-- [**Table of Contents**](#table-of-contents)
 - [4. 1. Cross Validation](#4-1-cross-validation)
 - [4. 2. Scores](#4-2-scores)
   - [4. 2. 1. ROC AUC Score](#4-2-1-roc-auc-score)
@@ -17,9 +16,9 @@
 
 In order to evaluate the performance of a Machine Learning (ML) model, we can employ several methods. One commonly used method that can be universally applied is to train on a subset of the data and predict and evaluate on the remainder. This is used to investigate the performance of the model on previously unseen data. Generally speaking, one wants the model to generalize well, referring to the idea that a machine learning model should be able to capture the trend of the data. If this is not possible because the model is too simple, we refer to this as `underfitting`. Contrary to that, a model that is too complex could `overfit` and starts to capture sample-specific noise and thus will not be able to maintain accuracy when using another dataset.
 
-For a typical approach, one would split all available data into train, validation, and test set. Here, the train and validation sets are used to optimize a Machine Learning method, and the test set is used for a final test on unseen data. In the proteomics context, however, data is limited, and taking away additional data is often not possible.
+For a typical approach, one would split all available data into train, validation, and test (holdout) set. Here, the train and validation sets are used to optimize a Machine Learning method, and the test set is used for a final test on unseen data. As OmicLearn is intended to be an exploratory tool to assess the performance of algorithms when applying to specific data rather than having a classification model for production, no holdout set is used and the performance metrics have to be interpreted accordingly. This is also so that repeated analysis of the same dataset and choosing the same holdout set could lead to an unconscious selection bias and false confidence assessment. 
 
-One way to get an estimate on how a model would generalize while still trying to use all available data is Cross-Validation (CV). Here, data is repeatedly split into train and validation sets. 
+One way to get an estimate on how a model would generalize while still trying to use all available data is Cross-Validation (CV). Here, data is repeatedly split into train and validation sets. Note that the missing value imputation and feature selection will be applied to each split of the dataset during the cross-vacation phase and not on all data in the beginning. This is to avoid potential information leakage and overfitting the dataset.
 
 OmicLearn is using a stratified-k-fold split, meaning that the original class ratio will be preserved for the splits. 
 Also, it is possible to shuffle the data and repeatedly shuffle the data and splitting it. The average of multiple splits gives a more robust estimate of the model performance.  The number of splits and the number of repeats can be changed with `cv_splits` and `cv_repeats`.
