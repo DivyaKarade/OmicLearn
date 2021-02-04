@@ -59,4 +59,4 @@ All contributions are welcome. 👍
 
 When contributing to **OmicLearn**, please **[open a new issue](https://github.com/OmicEra/OmicLearn/issues/new/choose)** to report the bug or discuss the changes you plan before sending a PR (pull request).
 
-Also, be aware that you agree to the **`OmicEra Individual Contributor License Agreement`** by submitting your code. 🤝
+Also, be aware that you agree to the **[`OmicEra Individual Contributor License Agreement`](https://github.com/OmicEra/OmicLearn/blob/master/CLA.md)** by submitting your code. 🤝
