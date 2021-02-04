@@ -93,7 +93,7 @@ def main_components():
 
 # Show main text and data upload section
 def main_text_and_data_upload(state):
-    st.title("DEV | OmicLearn — ML for Omics Data")
+    st.title("OmicLearn — ML for Omics Datasets")
     st.info("""
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature.
