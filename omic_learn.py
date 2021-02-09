@@ -1,20 +1,26 @@
+"""OmicLearn main file."""
 import random
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
-from PIL import Image
 import streamlit as st
-from datetime import datetime
+from PIL import Image
+
 import utils.session_states as session_states
-from utils.helper import plot_roc_curve_cv, plot_pr_curve_cv, get_system_report
-from utils.helper import get_download_link, make_recording_widget, load_data, transform_dataset
-from utils.helper import plot_feature_importance, perform_cross_validation, plot_confusion_matrices
+from utils.helper import (get_download_link, get_system_report, load_data,
+                          make_recording_widget, perform_cross_validation,
+                          plot_confusion_matrices, plot_feature_importance,
+                          plot_pr_curve_cv, plot_roc_curve_cv,
+                          transform_dataset)
+
 icon = Image.open('./utils/omic_learn.png')
 
 # Checkpoint for XGBoost
 xgboost_installed = False
 try:
-    from xgboost import XGBClassifier
     import xgboost
+    from xgboost import XGBClassifier
     xgboost_installed = True
 except ModuleNotFoundError:
     st.error('Xgboost not installed. To use xgboost install using `conda install py-xgboost`')
@@ -176,7 +182,6 @@ def checkpoint_for_data_upload(state, record_widgets):
         state['class_1'] = multiselect("Select Class 1:", [_ for _ in unique_elements_lst if _ not in state.class_0], default=None)
         state['remainder'] = [_ for _ in state.not_proteins if _ is not state.target_column]
 
-
         if state.class_0 and state.class_1:
 
             st.subheader("Additional features")
@@ -190,12 +195,12 @@ def checkpoint_for_data_upload(state, record_widgets):
                 if len(exclusion_df) > 0:
                     st.text("The following features will be exlcuded:")
                     st.write(exclusion_df)
-                    exclusion_df_list = list(exclusion_df.iloc[:,0].unique())
+                    exclusion_df_list = list(exclusion_df.iloc[:, 0].unique())
                     state['exclude_features'] = multiselect("Select features to be excluded:", state.proteins, default=exclusion_df_list)
                 else:
                     state['exclude_features'] = multiselect("Select features to be excluded:", state.proteins, default=[])
             else:
-                state['exclude_features']  = []
+                state['exclude_features'] = []
 
             if st.checkbox("Manually select features"):
                 st.markdown("Manually select a subset of features. If only these features should be used, also set the `Feature selection` method to `None`. Otherwise feature selection will be applied.")
@@ -230,7 +235,8 @@ def generate_sidebar_elements(state, record_widgets):
     st.sidebar.markdown("# [Options](https://github.com/OmicEra/OmicLearn/wiki/METHODS)")
 
     # Sidebar -- Random State
-    state['random_state'] = slider_("Random State:", min_value = 0, max_value = 99, value=23)
+    state['random_state'] = slider_(
+        "Random State:", min_value=0, max_value=99, value=23)
 
     # Sidebar -- Preprocessing
     st.sidebar.markdown('## [Preprocessing](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing)')
@@ -243,7 +249,8 @@ def generate_sidebar_elements(state, record_widgets):
         normalization_params['method'] = selectbox_("Power transformation method:", ["Yeo-Johnson", "Box-Cox"]).lower()
     elif state.normalization == "QuantileTransformer":
         normalization_params['random_state'] = state.random_state
-        normalization_params['n_quantiles'] = number_input_("Number of quantiles:", value = 100, min_value = 1, max_value = 2000)
+        normalization_params['n_quantiles'] = number_input_(
+            "Number of quantiles:", value=100, min_value=1, max_value=2000)
         normalization_params['output_distribution'] = selectbox_("Output distribution method:", ["Uniform", "Normal"]).lower()
     if state.n_missing > 0:
         st.sidebar.markdown('## [Missing value imputation](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-1.-Preprocessing#1-2-imputation-of-missing-values)')
@@ -256,26 +263,30 @@ def generate_sidebar_elements(state, record_widgets):
 
     # Sidebar -- Feature Selection
     st.sidebar.markdown('## [Feature selection](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-2.-Feature-selection)')
-    feature_methods = ['ExtraTrees', 'k-best (mutual_info_classif)','k-best (f_classif)', 'k-best (chi2)', 'None']
+    feature_methods = ['ExtraTrees', 'k-best (mutual_info_classif)', 'k-best (f_classif)', 'k-best (chi2)', 'None']
     state['feature_method'] = selectbox_("Feature selection method:", feature_methods)
 
     if state.feature_method != 'None':
-        state['max_features'] = number_input_('Maximum number of features:', value = 20, min_value = 1, max_value = 2000)
+        state['max_features'] = number_input_('Maximum number of features:',
+                                              value=20, min_value=1,
+                                              max_value=2000)
     else:
         # Define `max_features` as 0 if `feature_method` is `None`
         state['max_features'] = 0
 
     if state.feature_method == "ExtraTrees":
-        state['n_trees'] = number_input_('Number of trees in the forest:', value = 100, min_value = 1, max_value = 2000)
+        state['n_trees'] = number_input_('Number of trees in the forest:',
+                                         value=100, min_value=1,
+                                         max_value=2000)
     else:
         state['n_trees'] = 0
 
     # Sidebar -- Classification method selection
     st.sidebar.markdown('## [Classification](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-3.-Classification#3-classification)')
+    classifiers = ['AdaBoost', 'LogisticRegression', 'KNeighborsClassifier',
+                   'RandomForest', 'DecisionTree', 'LinearSVC']
     if xgboost_installed:
-        classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC','XGBoost']
-    else:
-        classifiers = ['AdaBoost','LogisticRegression','KNeighborsClassifier','RandomForest','DecisionTree','LinearSVC']
+        classifiers += ['XGBoost']
 
     # Disable all other classification methods
     if (state.n_missing > 0) and (state.missing_value == 'None'):
@@ -287,58 +298,58 @@ def generate_sidebar_elements(state, record_widgets):
     classifier_params['random_state'] = state['random_state']
 
     if state.classifier == 'AdaBoost':
-        classifier_params['n_estimators'] = number_input_('Number of estimators:', value = 100, min_value = 1, max_value = 2000)
-        classifier_params['learning_rate'] = number_input_('Learning rate:', value = 1.0, min_value = 0.001, max_value = 100.0)
+        classifier_params['n_estimators'] = number_input_('Number of estimators:', value=100, min_value=1, max_value=2000)
+        classifier_params['learning_rate'] = number_input_('Learning rate:', value=1.0, min_value=0.001, max_value=100.0)
 
     elif state.classifier == 'KNeighborsClassifier':
-        classifier_params['n_neighbors'] = number_input_('Number of neighbors:', value = 100, min_value = 1, max_value = 2000)
+        classifier_params['n_neighbors'] = number_input_('Number of neighbors:', value=100, min_value=1, max_value=2000)
         classifier_params['weights'] = selectbox_("Select weight function used:", ["uniform", "distance"])
         classifier_params['algorithm'] = selectbox_("Algorithm for computing the neighbors:", ["auto", "ball_tree", "kd_tree", "brute"])
 
     elif state.classifier == 'LogisticRegression':
         classifier_params['penalty'] = selectbox_("Specify norm in the penalization:", ["l2", "l1", "ElasticNet", "None"]).lower()
         classifier_params['solver'] = selectbox_("Select the algorithm for optimization:", ["lbfgs", "newton-cg", "liblinear", "sag", "saga"])
-        classifier_params['max_iter'] = number_input_('Maximum number of iteration:', value = 100, min_value = 1, max_value = 2000)
-        classifier_params['C'] = number_input_('C parameter:', value = 1, min_value = 1, max_value = 100)
+        classifier_params['max_iter'] = number_input_('Maximum number of iteration:', value=100, min_value=1, max_value=2000)
+        classifier_params['C'] = number_input_('C parameter:', value=1, min_value=1, max_value=100)
 
     elif state.classifier == 'RandomForest':
-        classifier_params['n_estimators'] = number_input_('Number of estimators:', value = 100, min_value = 1, max_value = 2000)
-        classifier_params['criterion'] =  selectbox_("Function for measure the quality:", ["gini", "entropy"])
+        classifier_params['n_estimators'] = number_input_('Number of estimators:', value=100, min_value=1, max_value=2000)
+        classifier_params['criterion'] = selectbox_("Function for measure the quality:", ["gini", "entropy"])
         classifier_params['max_features'] = selectbox_("Number of max. features:", ["auto", "int", "sqrt", "log2"])
         if classifier_params['max_features'] == "int":
-            classifier_params['max_features'] = number_input_('Number of max. features:', value = 5, min_value = 1, max_value = 100)
+            classifier_params['max_features'] = number_input_('Number of max. features:', value=5, min_value=1, max_value=100)
 
     elif state.classifier == 'DecisionTree':
-        classifier_params['criterion'] =  selectbox_("Function for measure the quality:", ["gini", "entropy"])
+        classifier_params['criterion'] = selectbox_("Function for measure the quality:", ["gini", "entropy"])
         classifier_params['max_features'] = selectbox_("Number of max. features:", ["auto", "int", "sqrt", "log2"])
         if classifier_params['max_features'] == "int":
-            classifier_params['max_features'] = number_input_('Number of max. features:', value = 5, min_value = 1, max_value = 100)
+            classifier_params['max_features'] = number_input_('Number of max. features:', value=5, min_value=1, max_value=100)
 
     elif state.classifier == 'LinearSVC':
         classifier_params['penalty'] = selectbox_("Specify norm in the penalization:", ["l2", "l1"])
         classifier_params['loss'] = selectbox_("Select loss function:", ["squared_hinge", "hinge"])
-        classifier_params['C'] = number_input_('C parameter:', value = 1, min_value = 1, max_value = 100)
-        classifier_params['cv_generator'] = number_input_('Cross-validation generator:', value = 2, min_value = 2, max_value = 100)
+        classifier_params['C'] = number_input_('C parameter:', value=1, min_value=1, max_value=100)
+        classifier_params['cv_generator'] = number_input_('Cross-validation generator:', value=2, min_value=2, max_value=100)
 
     elif state.classifier == 'XGBoost':
-        classifier_params['learning_rate'] = eta = number_input_('Learning rate:', value = 0.3, min_value = 0.0, max_value = 1.0)
-        classifier_params['min_split_loss'] = gamma = number_input_('Min. split loss:', value = 0, min_value = 0, max_value = 100)
-        classifier_params['max_depth'] = number_input_('Max. depth:', value = 6, min_value = 0, max_value = 100)
-        classifier_params['min_child_weight'] = number_input_('Min. child weight:', value = 1, min_value = 0, max_value = 100)
-
+        classifier_params['learning_rate'] = number_input_('Learning rate:', value=0.3, min_value=0.0, max_value=1.0)
+        classifier_params['min_split_loss'] = number_input_('Min. split loss:', value=0, min_value=0, max_value=100)
+        classifier_params['max_depth'] = number_input_('Max. depth:', value=6, min_value=0, max_value=100)
+        classifier_params['min_child_weight'] = number_input_('Min. child weight:', value=1, min_value=0, max_value=100)
 
     state['classifier_params'] = classifier_params
 
     # Sidebar -- Cross-Validation
     st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
     state['cv_method'] = selectbox_("Specify CV method:", ["RepeatedStratifiedKFold", "StratifiedKFold", "StratifiedShuffleSplit"])
-    state['cv_splits'] = number_input_('CV Splits:', min_value = 2, max_value = 10, value=5)
+    state['cv_splits'] = number_input_('CV Splits:', min_value=2, max_value=10, value=5)
 
     # Define placeholder variables for CV
     if state.cv_method == 'RepeatedStratifiedKFold':
-        state['cv_repeats'] = number_input_('CV Repeats:', min_value = 1, max_value = 50, value=10)
+        state['cv_repeats'] = number_input_('CV Repeats:', min_value=1, max_value=50, value=10)
 
     return state
+
 
 # Display results and plots
 def classify_and_plot(state):
@@ -357,7 +368,7 @@ def classify_and_plot(state):
     else:
         st.markdown(f'This is the average feature importance from all {state.cv_splits} cross validation runs.')
     if cv_curves['feature_importances_'] is not None:
-        
+
         # Check whether all feature importance attributes are 0 or not
         if pd.DataFrame(cv_curves['feature_importances_']).isin([0]).all().all() == False:
             p, feature_df, feature_df_wo_links = plot_feature_importance(cv_curves['feature_importances_'])
@@ -396,7 +407,7 @@ def classify_and_plot(state):
     st.subheader('Confusion matrix')
     names = ['CV_split {}'.format(_+1) for _ in range(len(cv_curves['y_hats_']))]
     names.insert(0, 'Sum of all splits')
-    p  = plot_confusion_matrices(state.class_0, state.class_1, cv_curves['y_hats_'], names)
+    p = plot_confusion_matrices(state.class_0, state.class_1, cv_curves['y_hats_'], names)
     st.plotly_chart(p)
     if p:
         get_download_link(p, 'cm.pdf')
@@ -497,14 +508,14 @@ def generate_text(state):
             and precision-recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
         """
         text += cv_plain_text.format(state.cv_repeats, state.cv_splits, ''.join(state.class_0), ''.join(state.class_1),
-            state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
+                                     state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
     else:
         cv_plain_text = """
             When using {} cross-validation approach (n_splits={}) to classify {} vs. {}, we achieved a receiver operating characteristic (ROC)
             with an average AUC (area under the curve) of {:.2f} ({:.2f} std) and Precision-Recall (PR) Curve with an average AUC of {:.2f} ({:.2f} std).
         """
         text += cv_plain_text.format(state.cv_method, state.cv_splits, ''.join(state.class_0), ''.join(state.class_1),
-            state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
+                                     state.summary.loc['mean']['roc_auc'], state.summary.loc['std']['roc_auc'], state.summary.loc['mean']['pr_auc'], state.summary.loc['std']['pr_auc'])
 
     if state.cohort_column is not None:
         text += 'When training on one cohort and predicting on another to classify {} vs. {}, we achieved the following AUCs: '.format(''.join(state.class_0), ''.join(state.class_1))
@@ -529,7 +540,7 @@ def save_sessions(widget_values, user_name):
     sessions_df = pd.DataFrame(session_dict)
     sessions_df = sessions_df.T
     sessions_df = sessions_df.drop(sessions_df[sessions_df["user"] != user_name].index).reset_index(drop=True)
-    new_column_names = {k:v.replace(":", "").replace("Select", "") for k,v in zip(sessions_df.columns,sessions_df.columns)}
+    new_column_names = {k:v.replace(":", "").replace("Select", "") for k, v in zip(sessions_df.columns, sessions_df.columns)}
     sessions_df = sessions_df.rename(columns=new_column_names)
     sessions_df = sessions_df.drop("user", axis=1)
 
@@ -626,7 +637,7 @@ def OmicLearn_Main():
             widget_values[_+'_mean'] = state.summary.loc['mean'][_]
             widget_values[_+'_std'] = state.summary.loc['std'][_]
 
-        user_name = str(random.randint(0,10000)) + "OmicLearn"
+        user_name = str(random.randint(0, 10000)) + "OmicLearn"
         session_state = session_states.get(user_name=user_name)
         widget_values["user"] = session_state.user_name
         save_sessions(widget_values, session_state.user_name)
