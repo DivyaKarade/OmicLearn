@@ -27,11 +27,11 @@ def test_load_data():
 
     # csv
     df = pd.DataFrame({'A': [1, 1], 'B': [0, 0]})
-    csv_data = load_data('tests/test_csv_c.csv', 'Comma (,)')
+    csv_data = load_data('test_csv_c.csv', 'Comma (,)')
     print(csv_data)
     pd.testing.assert_frame_equal(csv_data, df)
 
-    csv_data = load_data('tests/test_csv_sc.csv', 'Semicolon (;)')
+    csv_data = load_data('test_csv_sc.csv', 'Semicolon (;)')
     print(csv_data)
     pd.testing.assert_frame_equal(csv_data, df)
 
