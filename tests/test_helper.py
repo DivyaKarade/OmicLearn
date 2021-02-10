@@ -1,9 +1,12 @@
+"""Tests for OmicLearn utils."""
 import sys
+from io import BytesIO
+
 import numpy as np
 import pandas as pd
+
 sys.path.append('..')
-from io import BytesIO
-from utils.helper import load_data, transform_dataset, normalize_dataset
+from utils.helper import load_data, normalize_dataset, transform_dataset
 
 state = {}
 
@@ -38,7 +41,9 @@ def test_transform_dataset():
     Test if the transformation is done correctly
     """
 
-    df = pd.DataFrame(np.array([[1, 2, 'm', '+'], [4, 5, 'w', '-'], [7, 8, 'm', '-']]), columns=['a', 'b', 'c', 'd'])
+    df = pd.DataFrame(
+        np.array([[1, 2, 'm', '+'], [4, 5, 'w', '-'], [7, 8, 'm', '-']]),
+        columns=['a', 'b', 'c', 'd'])
     df_t = transform_dataset(df, ['c'], ['a', 'b'])
     assert df_t['c'].dtype == np.dtype('int')
 
@@ -60,7 +65,8 @@ def test_normalize_dataset():
     normalization_params = {}
     df = pd.DataFrame({'Data': [1, 2, 3, 4]})
 
-    for normalization in ['StandardScaler', 'MinMaxScaler', 'RobustScaler', 'PowerTransformer', 'QuantileTransformer']:
+    for normalization in ['StandardScaler', 'MinMaxScaler', 'RobustScaler',
+                          'PowerTransformer', 'QuantileTransformer']:
         state['normalization'] = normalization
         if normalization == 'PowerTransformer':
             normalization_params['method'] = 'box-cox'
@@ -72,4 +78,5 @@ def test_normalize_dataset():
         else:
             pass
         state['normalization_params'] = normalization_params
-        normalize_dataset(df, state['normalization'], state['normalization_params'])
+        normalize_dataset(
+            df, state['normalization'], state['normalization_params'])
