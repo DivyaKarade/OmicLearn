@@ -477,6 +477,8 @@ def generate_text(state):
     # Normalization
     if state.normalization == 'None':
         text += 'No normalization on the data was performed. '
+    elif state.normalization in ['StandardScaler', 'MinMaxScaler', 'RobustScaler']:
+        text += f"Data was normalized in each using a {state.normalization} approach. "
     else:
         params = [f'{k} = {v}' for k, v in state.normalization_params.items()]
         text += f"Data was normalized in each using a {state.normalization} ({' '.join(params)}) approach. "
