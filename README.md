@@ -12,7 +12,7 @@
 
 ## OmicLearn
 
-Transparent exploration of machine learning approaches for omics datasets.
+Transparent exploration of machine learning for biomarker discovery from proteomics and omics data
 
 ## Installation & Running
 
