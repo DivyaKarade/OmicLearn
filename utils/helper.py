@@ -521,14 +521,23 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     layout_plotly = {
         "xaxis": {"title": "Predicted value"},
         "yaxis": {"title": "True value"},
-        "annotations": steps[0]['args'][1]['annotations']
+        "annotations": steps[0]['args'][1]['annotations'],
+        "paper_bgcolor":'rgba(0,0,0,0)',
+        "plot_bgcolor":'rgba(0,0,0,0)'
+
     }
+
     p = go.Figure(data=data, layout=layout_plotly)
 
     # Add slider
     sliders = [dict(currentvalue={"prefix": "CV Split: "}, pad = {"t": 72}, active = 0, steps = steps)]
     p.layout.update(sliders=sliders)
-    p.update_layout(autosize=False,width=700,height=700)
+    p.update_layout(autosize=False, height=700)#, #height=700)
+
+    p.update_yaxes(
+    scaleanchor = "x",
+    scaleratio = 1)
+
     return p
 
 def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
