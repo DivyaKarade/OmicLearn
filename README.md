@@ -4,7 +4,7 @@
 ![OmicLearn Tests](https://github.com/OmicEra/OmicLearn/workflows/OmicLearn%20Tests/badge.svg)
 ![OmicLearn Python Badges](https://img.shields.io/badge/Tested_with_Python-3.7-blue)
 ![OmicLearn Version](https://img.shields.io/badge/Release-v1.0.0-orange)
-![OmicLearn Release](https://img.shields.io/badge/Release%20Date-February%202021-green)
+![OmicLearn Release](https://img.shields.io/badge/Release%20Date-March%202021-green)
 ![OmicLearn License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
 ---
@@ -14,7 +14,7 @@ Transparent exploration of machine learning for biomarker discovery from proteom
 
 ## Access
 
-🟢 <a href="http://omiclearn.com/" target="_blank">omiclearn.com</a>
+🟢 <a href="http://omiclearn.com/" target="_blank">OmicLearn.com</a>
 
 🟢 <a href="https://share.streamlit.io/omicera/omiclearn/omic_learn.py" target="_blank">Streamlit Share (collects usage statistics - XGBoost not installed)</a>
 
