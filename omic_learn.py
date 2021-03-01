@@ -556,8 +556,8 @@ def generate_footer_parts():
     # Citations
     citations = """
         <br> <b>APA Format:</b> <br>
-        Torun, FM., Geyer, PE., Winter, SV., Doll, S., Strauss, MT. (2021).
-        Transparent exploration of machine learning approaches for clinical omics datasets. doi: 10.XXXX/XXXX.XX.XX.XXXXXX.
+        Torun FM, Virreira Winter S, Doll S, Riese FM, Vorobyev A, Mueller-Reif JB, Geyer PE, Strauss MT (2021).
+        Transparent exploration of machine learning for biomarker discovery from proteomics and omics data. doi: 10.XXXX/XXXX.XX.XX.XXXXXX.
     """
 
     # Put the footer with tabs
@@ -566,8 +566,8 @@ def generate_footer_parts():
             <div class="tab"> <input type="radio" id="tab-1" name="tab-group-1" checked> <label for="tab-1">Citations</label> <div class="content"> <p> {} </p> </div> </div>
             <div class="tab"> <input type="radio" id="tab-2" name="tab-group-1"> <label for="tab-2">Report Bugs</label> <div class="content">
                 <p><br>
-                    Firstly, thank you very much for taking your time and we appreciate all contributions. 👍 <br>
-                    You can report the bugs or request a feature using the link below or sending us a e-mail:
+                    We appreciate all contributions. 👍 <br>
+                    You can report the bugs or request a feature using the link below or sending us an e-mail:
                     <br><br>
                     <a class="download_link" href="https://github.com/OmicEra/OmicLearn/issues/new/choose" target="_blank">Report a bug via GitHub</a>
                     <a class="download_link" href="mailto:info@omicera.com">Report a bug via Email</a>

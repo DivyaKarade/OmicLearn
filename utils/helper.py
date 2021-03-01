@@ -128,7 +128,7 @@ def normalize_dataset(X, normalization, normalization_params):
 
 def select_features(feature_method, X, y, max_features, n_trees, random_state):
     """
-    Returns the features and their imp. attributes based on the given method and params 
+    Returns the features and their imp. attributes based on the given method and params
     """
     if feature_method == 'ExtraTrees':
         clf = ensemble.ExtraTreesClassifier(n_estimators=n_trees, random_state = random_state)
@@ -181,6 +181,7 @@ def plot_feature_importance(feature_importance):
     feature_df.columns = ['Feature_importance']
     feature_df = feature_df/feature_df.sum()
     feature_df['Std'] = feature_df_std.values
+
     feature_df = feature_df.sort_values(by='Feature_importance', ascending=False)
     feature_df = feature_df[feature_df['Feature_importance'] > 0]
     feature_df['Name'] = feature_df.index
@@ -192,8 +193,8 @@ def plot_feature_importance(feature_importance):
         feature_df = feature_df.iloc[:display_limit] # Show at most `display_limit` entries
         feature_df = feature_df.append(remainder)
 
-    feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.2f}'.format)
-    feature_df["Std"] = feature_df["Std"].map('{:.2f}'.format)
+    feature_df["Feature_importance"] = feature_df["Feature_importance"].map('{:.3f}'.format)
+    feature_df["Std"] = feature_df["Std"].map('{:.5f}'.format)
     feature_df_wo_links = feature_df.copy()
     feature_df["Name"] = feature_df["Name"].apply(lambda x: '<a href="https://www.ncbi.nlm.nih.gov/search/all/?term={}" title="Search on NCBI" target="_blank">{}</a>'.format(x, x)
                                                     if not x.startswith('_') and x!="Remainder" else x)
