@@ -550,7 +550,8 @@ def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):
             p.add_trace(go.Scatter(x=fpr, y=tpr, hovertemplate=hovertemplate, hoverinfo='all', mode='lines',
                         name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], roc_auc)))
         else:
-            p.add_trace(go.Scatter(x=fpr, y=tpr, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.1))
+            pass
+            #p.add_trace(go.Scatter(x=fpr, y=tpr, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.1))
         tpr = np.interp(base_fpr, fpr, tpr)
         tpr[0]=0.0
         tprs.append(tpr)
@@ -612,7 +613,8 @@ def plot_pr_curve_cv(pr_curve_results, class_ratio_test, cohort_combos = None):
             p.add_trace(go.Scatter(x=recall, y=precision, hovertemplate=hovertemplate, hoverinfo='all', mode='lines',
                                     name='Train on {}, Test on {}, AUC {:.2f}'.format(cohort_combos[idx][0], cohort_combos[idx][1], pr_auc)))
         else:
-            p.add_trace(go.Scatter(x=recall, y=precision, hoverinfo='skip', mode='lines', line=dict(color=blue_color), showlegend=False,  opacity=0.1))
+            pass
+            #p.add_trace(go.Scatter(x=recall, y=precision, hoverinfo='skip', mode='lines', line=dict(color=blue_color'), showlegend=False,  opacity=0.1))
         precision = np.interp(base_recall, recall, precision, period=100)
         precision[0]=1.0
         precisions.append(precision)
