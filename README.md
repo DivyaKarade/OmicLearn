@@ -1,6 +1,5 @@
 <p align="center"> <img src="https://user-images.githubusercontent.com/49681382/101802266-48204a00-3b20-11eb-85ec-08c123fca79e.png" height="270" width="277" /> </p>
 <h2 align="center"> 📰 Manual and Documentation is available at: <a href="https://github.com/OmicEra/OmicLearn/wiki" target="_blank">OmicLearn Wiki Page </a> </h2>
-<h2 align="center"> 🟢 OmicLearn is now accessible here: <a href="http://omiclearn.com/" target="_blank">omiclearn.com</a> </h2>
 
 ![OmicLearn Tests](https://github.com/OmicEra/OmicLearn/workflows/OmicLearn%20Tests/badge.svg)
 ![OmicLearn Python Badges](https://img.shields.io/badge/Tested_with_Python-3.7-blue)
@@ -9,10 +8,16 @@
 ![OmicLearn License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
 ---
-
 ## OmicLearn
 
 Transparent exploration of machine learning for biomarker discovery from proteomics and omics data
+
+## Access
+
+🟢 <a href="http://omiclearn.com/" target="_blank">omiclearn.com</a>
+
+🟢 <a href="https://share.streamlit.io/omicera/omiclearn/omic_learn.py" target="_blank">Streamlit Share (collects usage statistics - XGBoost not installed)</a>
+
 
 ## Installation & Running
 
