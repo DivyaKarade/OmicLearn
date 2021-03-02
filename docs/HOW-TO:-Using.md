@@ -1,4 +1,5 @@
 ## **Table of Contents**
+- [Access to OmicLearn](#access-to-omiclearn)
 - [Using OmicLearn](#using-omiclearn)
 - [Uploading data](#uploading-data)
   - [Sample Datasets](#sample-datasets)
@@ -12,8 +13,14 @@
 
 ---
 
+## Access to OmicLearn
+
+🟢 <a href="http://omiclearn.com/" target="_blank">OmicLearn.com</a>
+
+🟢 <a href="https://share.streamlit.io/omicera/omiclearn/omic_learn.py" target="_blank">Streamlit Share (collects usage statistics - XGBoost not installed)</a>
+
 ## Using OmicLearn
-[OmicLearn](http://omiclearn.com) enables researchers and scientists to explore the latest algorithms in machine learning (ML) for their usage in clinical proteomics.
+**OmicLearn** enables researchers and scientists to explore the latest algorithms in machine learning (ML) for their usage in clinical proteomics.
 
 The core steps of the pipeline are  `Preprocessing`, `Missing Value Imputation`, `Feature Selection`, `Classification`, and `Validation` of selected method/algorithms and are presented in the flowchart below:
 

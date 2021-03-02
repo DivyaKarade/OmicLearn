@@ -5,7 +5,13 @@
 
 #  OmicLearn
 
-**Transparent exploration of machine learning approaches for omics datasets.**
+**Transparent exploration of machine learning for biomarker discovery from proteomics and omics data.**
+
+🟢 <a href="http://omiclearn.com/" target="_blank">OmicLearn.com</a>
+
+🟢 <a href="https://share.streamlit.io/omicera/omiclearn/omic_learn.py" target="_blank">Streamlit Share (collects usage statistics - XGBoost not installed)</a>
+
+---
 
 Machine learning (ML) is becoming increasingly important in biomarker studies using mass spectrometry (MS)-based proteomics to define diagnostic and prognostic protein patterns. Although ML algorithms are well established, widespread use has been limited to a rather small group of experts with specialized knowledge. 
 
@@ -14,6 +20,7 @@ To apply ML to their datasets, experimental researchers often rely on collaborat
 OmicLearn uses the latest advances in the Python ML ecosystem, combined with web serving and visualization functionality (streamlit). Output tables from any proteomics experiment can be easily uploaded to a local or central web server enabling experimental scientists to explore the suitability of various ML algorithms to their data sets. With its robust, fast, easily maintainable, and expandable infrastructure, OmicLearn allows independent assessment of sometimes obscure ML results in a standardized and easily accessible format. 
 
 OmicLearn can also be used to apply ML to any other type of omics data such as genomics or metabolomics datasets. OmicLearn’s code is open source, and we host a web server for the exploration of the researcher’s results that can readily be cloned for internal use. 
+
 
 ---
 

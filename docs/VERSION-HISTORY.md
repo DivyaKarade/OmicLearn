@@ -11,6 +11,6 @@ On this page, you might find the list of the previous releases of **OmicLearn** 
 
 ### - `v1.0.0`
 
-> 📅 February 2020
+> 📅 March 2020
 >
 > This is the initial release of **OmicLearn**.
