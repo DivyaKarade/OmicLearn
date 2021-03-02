@@ -99,7 +99,7 @@ def main_components():
 
 # Show main text and data upload section
 def main_text_and_data_upload(state):
-    st.title("OmicLearn — ML for Omics Datasets")
+    st.title("OmicLearn — ML platform for biomarkers")
     st.info("""
         * Upload your excel / csv file here. Maximum size is 200 Mb.
         * Each row corresponds to a sample, each column to a feature.
@@ -340,7 +340,7 @@ def generate_sidebar_elements(state, record_widgets):
     state['classifier_params'] = classifier_params
 
     # Sidebar -- Cross-Validation
-    st.sidebar.markdown('## [Cross Validation](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
+    st.sidebar.markdown('## [Cross-validation](https://github.com/OmicEra/OmicLearn/wiki/METHODS-%7C-4.-Validation#4-1-cross-validation)')
     state['cv_method'] = selectbox_("Specify CV method:", ["RepeatedStratifiedKFold", "StratifiedKFold", "StratifiedShuffleSplit"])
     state['cv_splits'] = number_input_('CV Splits:', min_value=2, max_value=10, value=5)
 
@@ -356,10 +356,10 @@ def classify_and_plot(state):
 
     state.bar = st.progress(0)
     # Cross-Validation
-    st.markdown("Running Cross-Validation")
+    st.markdown("Running Cross-validation")
     cv_results, cv_curves = perform_cross_validation(state)
 
-    st.header('Cross-Validation')
+    st.header('Cross-validation')
 
     # Feature importances from the classifier
     st.subheader('Feature importances from the classifier')
@@ -414,7 +414,7 @@ def classify_and_plot(state):
         get_download_link(p, 'cm.svg')
 
     # Results
-    st.subheader('Run Results for `{}`'.format(state.classifier))
+    st.subheader('Run results for `{}`'.format(state.classifier))
     state['summary'] = pd.DataFrame(pd.DataFrame(cv_results).describe())
     st.write(state.summary)
     get_download_link(state.summary, "run_results.csv")
@@ -564,7 +564,7 @@ def generate_footer_parts():
     footer_parts_html = """
         <div class="tabs">
             <div class="tab"> <input type="radio" id="tab-1" name="tab-group-1" checked> <label for="tab-1">Citations</label> <div class="content"> <p> {} </p> </div> </div>
-            <div class="tab"> <input type="radio" id="tab-2" name="tab-group-1"> <label for="tab-2">Report Bugs</label> <div class="content">
+            <div class="tab"> <input type="radio" id="tab-2" name="tab-group-1"> <label for="tab-2">Report bugs</label> <div class="content">
                 <p><br>
                     We appreciate all contributions. 👍 <br>
                     You can report the bugs or request a feature using the link below or sending us an e-mail:
@@ -606,7 +606,7 @@ def OmicLearn_Main():
     state = generate_sidebar_elements(state, record_widgets)
 
     # Analysis Part
-    if (state.df is not None) and (state.class_0 and state.class_1) and (st.button('Run Analysis', key='run')):
+    if (state.df is not None) and (state.class_0 and state.class_1) and (st.button('Run analysis', key='run')):
 
         state.features = state.proteins + state.additional_features
 
