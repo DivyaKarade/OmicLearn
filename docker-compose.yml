@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     hostname: streamlit
     container_name: streamlit
-    command: gunicorn --workers=3 --bind=0.0.0.0:8000 core.wsgi:application
+    command: streamlit run omic_learn.py --browser.gatherUsageStats False
     restart: on-failure
     ports:
       - 8501:8501
