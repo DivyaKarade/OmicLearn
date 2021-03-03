@@ -14,7 +14,7 @@ Transparent exploration of machine learning for biomarker discovery from proteom
 
 ## Access
 
-🟢 <a href="http://omiclearn.com/" target="_blank">OmicLearn.com</a>
+🟢 <a href="https://omiclearn.com/" target="_blank">OmicLearn.com</a>
 
 🟢 <a href="https://share.streamlit.io/omicera/omiclearn/omic_learn.py" target="_blank">Streamlit Share (collects usage statistics - XGBoost not installed)</a>
 
