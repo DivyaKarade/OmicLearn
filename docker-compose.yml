@@ -3,8 +3,8 @@ version: '3.8'
 services:
   streamlit:
     build:
-      context: deployment/app/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: deployment/app/Dockerfile
     hostname: streamlit
     container_name: streamlit
     command: streamlit run omic_learn.py --browser.gatherUsageStats False
