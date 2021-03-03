@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  streamlit:
+    build:
+      context: deployment/app/
+      dockerfile: Dockerfile
+    hostname: streamlit
+    container_name: streamlit
+    command: gunicorn --workers=3 --bind=0.0.0.0:8000 core.wsgi:application
+    restart: on-failure
+    ports:
+      - 8501:8501
+    networks:
+      nginx_network:
+        aliases:
+          - streamlit
+  nginx:
+    build:
+      context: deployment/nginx/
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 80:80
+    links:
+      - streamlit:streamlit
+    depends_on:
+      - streamlit
+    networks:
+      - nginx_network
+networks:
+  nginx_network:
+    driver: bridge
