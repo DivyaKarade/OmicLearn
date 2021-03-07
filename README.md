@@ -12,6 +12,16 @@
 
 Transparent exploration of machine learning for biomarker discovery from proteomics and omics data
 
+
+## Manuscript
+📰 <a href="https://doi.org/10.1101/2021.03.05.434053" target="_blank">Open-access article: **Transparent exploration of machine learning for biomarker discovery from proteomics and omics data**</a>
+
+> **Citation:** <br>
+> Transparent exploration of machine learning for biomarker discovery from proteomics and omics data <br>
+> Furkan M Torun, Sebastian Virreira Winter, Sophia Doll, Felix M Riese, Artem Vorobyev, Johannes B Müller-Reif, Philipp E Geyer, Maximilian T Strauss <br>
+> bioRxiv 2021.03.05.434053; doi: https://doi.org/10.1101/2021.03.05.434053
+
+
 ## Access
 
 🟢 <a href="https://omiclearn.com/" target="_blank">OmicLearn.com</a>
