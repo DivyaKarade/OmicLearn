@@ -622,6 +622,7 @@ def OmicLearn_Main():
 
     # Sidebar widgets
     state = generate_sidebar_elements(state, record_widgets)
+    
     # Analysis Part
     if len(state.df) > 0 and not (state.class_0 and state.class_1):
         st.error('Start with defining classes.')
@@ -629,11 +630,10 @@ def OmicLearn_Main():
     elif (state.df is not None) and (state.class_0 and state.class_1) and (st.button('Run analysis', key='run')):
         state.features = state.proteins + state.additional_features
 
-        class_names = [state.df[state.target_column].value_counts().index[0], state.df_sub[state.target_column].value_counts().index[1]]
         st.markdown("Using the following features: Class 0 `{}`, Class 1 `{}`".format(state.class_0, state.class_1))
         subset = state.df_sub[state.df_sub[state.target_column].isin(state.class_0) | state.df_sub[state.target_column].isin(state.class_1)].copy()
 
-        state.y = subset[state.target_column].isin(state.class_0)  #is class 0 will be 1!
+        state.y = subset[state.target_column].isin(state.class_0)  # is class 0 will be 1!
         state.X = transform_dataset(subset, state.additional_features, state.proteins)
 
         if state.cohort_column is not None:
