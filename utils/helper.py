@@ -49,15 +49,31 @@ def load_data(file_buffer, delimiter):
     """
     Load data to pandas dataframe
     """
+
+    warnings = []
     df = pd.DataFrame()
     if file_buffer is not None:
         if delimiter == "Excel File":
             df = pd.read_excel(file_buffer)
+
+            #check if all columns are strings valid_columns = []
+            error = False
+            valid_columns = []
+            for idx, _ in enumerate(df.columns):
+                if isinstance(_, str):
+                    valid_columns.append(_)
+                else:
+                    warnings.append(f'Removing column {idx} with value {_} as type is {type(_)} and not string.')
+                    error = True
+            if error:
+                warnings.append("Errors detected when importing Excel file. Please check that Excel did not convert protein names to dates.")
+                df = df[valid_columns]
+
         elif delimiter == "Comma (,)":
             df = pd.read_csv(file_buffer, sep=',')
         elif delimiter == "Semicolon (;)":
             df = pd.read_csv(file_buffer, sep=';')
-    return df
+    return df, warnings
 
 @st.cache(persist=True)
 def transform_dataset(subset, additional_features, proteins):
@@ -530,7 +546,7 @@ def plot_confusion_matrices(class_0, class_1, results, names):
     sliders = [dict(currentvalue={"prefix": "CV Split: "}, pad = {"t": 72}, active = 0, steps = steps)]
     p.layout.update(sliders=sliders)
     p.update_layout(autosize=False, width=700, height=700)
-    
+
     return p
 
 def plot_roc_curve_cv(roc_curve_results, cohort_combos = None):

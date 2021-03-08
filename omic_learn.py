@@ -111,7 +111,12 @@ def main_text_and_data_upload(state):
     st.markdown("By uploading a file, you agree that you accepting [the licence agreement](https://github.com/OmicEra/OmicLearn).")
     delimiter = st.selectbox("Determine the delimiter in your dataset", ["Excel File", "Comma (,)", "Semicolon (;)"])
     state['sample_file'] = st.selectbox("Or select sample file here:", ["None", "Alzheimer", "Sample"])
-    state['df'] = load_data(file_buffer, delimiter)
+
+    df, warnings = load_data(file_buffer, delimiter)
+
+    for warning in warnings:
+        st.warning(warning)
+    state['df'] = df
 
     return state
 
