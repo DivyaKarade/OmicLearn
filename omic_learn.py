@@ -122,7 +122,7 @@ def main_text_and_data_upload(state):
 def checkpoint_for_data_upload(state, record_widgets):
     multiselect = record_widgets.multiselect
     dataframe_length = len(state.df)
-    max_df_length = 250
+    max_df_length = 50
 
     # Sample dataset / uploaded file selection
     if state.sample_file != 'None' and dataframe_length:
@@ -140,9 +140,9 @@ def checkpoint_for_data_upload(state, record_widgets):
     elif 0 < dataframe_length < max_df_length:
         st.text("Using the following dataset:")
         st.write(state.df)
-    elif dataframe_length > 250:
+    elif dataframe_length > max_df_length:
         st.text("Using the following dataset:")
-        st.info("The dataframe is too large, displaying the first 250 rows.")
+        st.info(f"The dataframe is too large, displaying the first {max_df_length} rows.")
         st.write(
             state.df.head(max_df_length)
         )
