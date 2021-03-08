@@ -623,7 +623,7 @@ def OmicLearn_Main():
     # Sidebar widgets
     state = generate_sidebar_elements(state, record_widgets)
     # Analysis Part
-    if len(state.df) > 0 and not (state.class_0 or state.class_1):
+    if len(state.df) > 0 and not (state.class_0 and state.class_1):
         st.error('Start with defining classes.')
 
     elif (state.df is not None) and (state.class_0 and state.class_1) and (st.button('Run analysis', key='run')):
