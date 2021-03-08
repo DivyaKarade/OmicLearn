@@ -557,7 +557,7 @@ def generate_footer_parts():
     citations = """
         <br> <b>APA Format:</b> <br>
         Torun FM, Virreira Winter S, Doll S, Riese FM, Vorobyev A, Mueller-Reif JB, Geyer PE, Strauss MT (2021).
-        Transparent exploration of machine learning for biomarker discovery from proteomics and omics data. doi: 10.XXXX/XXXX.XX.XX.XXXXXX.
+        Transparent exploration of machine learning for biomarker discovery from proteomics and omics data. doi: https://doi.org/10.1101/2021.03.05.434053.
     """
 
     # Put the footer with tabs
