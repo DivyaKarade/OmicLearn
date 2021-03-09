@@ -128,13 +128,14 @@ def checkpoint_for_data_upload(state, record_widgets):
     if state.sample_file != 'None' and dataframe_length:
         st.warning("Please, either choose a sample file or set it as `None` to work on your file")
         state['df'] = pd.DataFrame()
-    elif state.sample_file != 'None' and state.sample_file == "Alzheimer":
-        st.info("""
-            **This dataset is retrieved from the following paper and the code for parsing is available at
-            [GitHub](https://github.com/OmicEra/OmicLearn/blob/master/data/Alzheimer_paper.ipynb):**\n
-            Bader, J., Geyer, P., Müller, J., Strauss, M., Koch, M., & Leypoldt, F. et al. (2020).
-            Proteome profiling in cerebrospinal fluid reveals novel biomarkers of Alzheimer's disease.
-            Molecular Systems Biology, 16(6). doi: [10.15252/msb.20199356](http://doi.org/10.15252/msb.20199356) """)
+    elif state.sample_file != 'None':
+        if state.sample_file == "Alzheimer":
+            st.info("""
+                **This dataset is retrieved from the following paper and the code for parsing is available at
+                [GitHub](https://github.com/OmicEra/OmicLearn/blob/master/data/Alzheimer_paper.ipynb):**\n
+                Bader, J., Geyer, P., Müller, J., Strauss, M., Koch, M., & Leypoldt, F. et al. (2020).
+                Proteome profiling in cerebrospinal fluid reveals novel biomarkers of Alzheimer's disease.
+                Molecular Systems Biology, 16(6). doi: [10.15252/msb.20199356](http://doi.org/10.15252/msb.20199356) """)
         state['df'] = pd.read_excel('data/' + state.sample_file + '.xlsx')
         st.write(state.df)
     elif 0 < dataframe_length < max_df_length:
@@ -151,9 +152,10 @@ def checkpoint_for_data_upload(state, record_widgets):
 
     state['n_missing'] = state.df.isnull().sum().sum()
 
-    if dataframe_length and state.n_missing > 0:
-        st.warning('Found {} missing values. '
-                   'Use missing value imputation or xgboost classifier.'.format(state.n_missing))
+    if len(state.df) > 0:
+        if state.n_missing > 0:
+            st.warning('Found {} missing values. '
+                       'Use missing value imputation or xgboost classifier.'.format(state.n_missing))
         # Distinguish the features from others
         state['proteins'] = [_ for _ in state.df.columns.to_list() if _[0] != '_']
         state['not_proteins'] = [_ for _ in state.df.columns.to_list() if _[0] == '_']
@@ -185,7 +187,7 @@ def checkpoint_for_data_upload(state, record_widgets):
         st.write(unique_elements)
         unique_elements_lst = unique_elements.index.tolist()
 
-        # # Dataset -- Define the classes
+        # Dataset -- Define the classes
         st.subheader("Define classes".format(state.target_column))
         state['class_0'] = multiselect("Select Class 0:", unique_elements_lst, default=None)
         state['class_1'] = multiselect("Select Class 1:",
