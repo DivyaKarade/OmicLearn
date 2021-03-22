@@ -203,25 +203,7 @@ def checkpoint_for_data_upload(state, record_widgets):
 
             st.subheader("Additional features")
             st.text("Select additional features. All non numerical values will be encoded (e.g. M/F -> 0,1)")
-            # File uploading for additional features
-            additional_file_buffer = st.file_uploader("Upload your CSV (comma(,) seperated) file here in which each row corresponds to a feature to be added.", type=["csv"])
-            additional_df, add_df_warnings = load_data(additional_file_buffer, "Comma (,)")
-            for warning in add_df_warnings:
-                st.warning(warning)
-
-            if len(additional_df) > 0:
-                st.text("The following features will be added:")
-                st.write(additional_df)
-                additional_df_list = list(additional_df.iloc[:, 0].unique())
-                state['additional_features'] = multiselect(
-                    "Select additional features for trainig:", 
-                    state.remainder, 
-                    default=additional_df_list)
-            else:
-                state['additional_features'] = multiselect(
-                    "Select additional features for trainig:", 
-                    state.remainder, 
-                    default=[])
+            state['additional_features'] = multiselect("Select additional features for trainig:", state.remainder, default=None)
 
             # Exclude features
             if st.checkbox("Exclude features"):
