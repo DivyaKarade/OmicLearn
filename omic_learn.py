@@ -205,10 +205,15 @@ def checkpoint_for_data_upload(state, record_widgets):
             st.text("Select additional features. All non numerical values will be encoded (e.g. M/F -> 0,1)")
             state['additional_features'] = multiselect("Select additional features for trainig:", state.remainder, default=None)
 
+            # Exclude features
             if st.checkbox("Exclude features"):
+                
                 # File uploading target_column for exclusion
                 exclusion_file_buffer = st.file_uploader("Upload your CSV (comma(,) seperated) file here in which each row corresponds to a feature to be excluded.", type=["csv"])
-                exclusion_df = load_data(exclusion_file_buffer, "Comma (,)")
+                exclusion_df, exc_df_warnings = load_data(exclusion_file_buffer, "Comma (,)")
+                for warning in exc_df_warnings:
+                    st.warning(warning)
+
                 if len(exclusion_df) > 0:
                     st.text("The following features will be exlcuded:")
                     st.write(exclusion_df)
